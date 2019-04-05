@@ -1,4 +1,4 @@
-package de.htwg.se.wizard.model
+package de.htwg.se.wizard.model.cards
 
 import org.scalatest.{Matchers, WordSpec}
 

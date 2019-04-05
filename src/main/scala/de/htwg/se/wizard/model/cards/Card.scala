@@ -1,4 +1,4 @@
-package de.htwg.se.wizard.model
+package de.htwg.se.wizard.model.cards
 
 abstract class Card() {
   def hasColor: Boolean

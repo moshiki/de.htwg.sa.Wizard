@@ -1,4 +1,6 @@
-package de.htwg.se.wizard.model
+package de.htwg.se.wizard.model.cards
+
+import de.htwg.se.wizard.model.Player
 
 case class DefaultCard(color: String, number: Integer, owner: Player) extends Card {
   def hasColor: Boolean = true
