@@ -4,7 +4,7 @@ import de.htwg.se.wizard.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class JesterCardSpec extends WordSpec with Matchers{
-  "A Card" when {
+  "A JesterCard" when {
     "is Jester" should {
       val jesterCard = JesterCard(null)
       "is a jester" in{
