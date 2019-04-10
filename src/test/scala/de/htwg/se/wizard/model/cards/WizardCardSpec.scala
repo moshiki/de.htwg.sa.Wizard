@@ -1,5 +1,6 @@
 package de.htwg.se.wizard.model.cards
 
+import de.htwg.se.wizard.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class WizardCardSpec extends WordSpec with Matchers {
@@ -19,6 +20,13 @@ class WizardCardSpec extends WordSpec with Matchers {
         wizardCard.hasOwner should be(false)
       }
 
+      val wizardCardWithOwner = WizardCard(Player("TestPlayer"))
+      "has owner" in {
+        wizardCardWithOwner.hasOwner should be(true)
+      }
+      "has owner 'TestPlayer'" in {
+        wizardCardWithOwner.owner.name should be ("TestPlayer")
+      }
     }
   }
 }
