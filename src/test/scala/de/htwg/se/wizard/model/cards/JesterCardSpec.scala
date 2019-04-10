@@ -4,8 +4,8 @@ import de.htwg.se.wizard.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class JesterCardSpec extends WordSpec with Matchers{
-  "A JesterCard" when {
-    "is Jester" should {
+  "A Card" when {
+    "is a JesterCard" should {
       val jesterCard = JesterCard(null)
       "is a jester" in{
         jesterCard.isJester should be(true)
@@ -13,10 +13,10 @@ class JesterCardSpec extends WordSpec with Matchers{
       "is no wizard" in {
         jesterCard.isWizard should be(false)
       }
-      "has no color" in {
+      "has no colour" in {
         jesterCard.hasColor should be(false)
       }
-      "has no player as owner" in {
+      "has no owner" in {
         jesterCard.hasOwner should be(false)
       }
 
