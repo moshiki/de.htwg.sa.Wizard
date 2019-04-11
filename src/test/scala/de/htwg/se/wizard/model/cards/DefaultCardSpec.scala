@@ -3,7 +3,7 @@ package de.htwg.se.wizard.model.cards
 import de.htwg.se.wizard.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
-class CardSpec extends WordSpec with Matchers {
+class DefaultCardSpec extends WordSpec with Matchers {
   "A Card" when {
     "is Card" should {
       val card = DefaultCard("blue", 2, Player("Player"))
