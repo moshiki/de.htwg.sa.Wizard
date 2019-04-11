@@ -5,25 +5,32 @@ import org.scalatest.{Matchers, WordSpec}
 
 class DefaultCardSpec extends WordSpec with Matchers {
   "A Card" when {
-    "is Card" should {
-      val card = DefaultCard("blue", 2, Player("Player"))
+    "is DefaultCard" should {
+      val defaultCard = DefaultCard("blue", 2, null)
 
-      "has Color" in {
-        card.hasColor should be(true)
+      "has color" in {
+        defaultCard.hasColor should be(true)
       }
-      "is no Wizard" in {
-        card.isWizard should be(false)
+      "is no wizard" in {
+        defaultCard.isWizard should be(false)
       }
-      "is no Jester" in {
-        card.isJester should be(false)
+      "is no jester" in {
+        defaultCard.isJester should be(false)
       }
       "number is 2" in {
-        card.number should be(2)
+        defaultCard.number should be(2)
+      }
+      "has no owner" in {
+        defaultCard.hasOwner should be(false)
       }
 
-
+      val defCardWithOwner = DefaultCard("blue", 2, Player("TestPlayer"))
+      "has owner" in {
+        defCardWithOwner.hasOwner should be(true)
+      }
+      "has owner 'TestPayer" in {
+        defCardWithOwner.owner.name should be("TestPlayer")
+      }
     }
-
   }
-
 }
