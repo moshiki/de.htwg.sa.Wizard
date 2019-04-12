@@ -9,4 +9,6 @@ case class DefaultCard(color: String, number: Integer, owner: Player) extends Ca
   def isWizard: Boolean = false
   def isJester: Boolean = false
   def hasOwner: Boolean = owner != null
+
+  override def toString: String = color + " " + number
 }
