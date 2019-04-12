@@ -35,7 +35,7 @@ class DefaultCardSpec extends WordSpec with Matchers {
       }
     }
 
-    "is not a vaild DefaultCard" should {
+    "is not a valid DefaultCard" should {
       "throws IllegalArgumentsException for number greater than 13" in {
         an [IllegalArgumentException] should be thrownBy DefaultCard("blue", 14, null)
       }
