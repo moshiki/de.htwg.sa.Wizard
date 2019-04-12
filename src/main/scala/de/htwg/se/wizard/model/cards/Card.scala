@@ -6,5 +6,7 @@ trait Card {
   def isJester: Boolean
   def hasOwner: Boolean
 
+  override def toString: String
+
 
 }
