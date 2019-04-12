@@ -4,8 +4,8 @@ import de.htwg.se.wizard.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class WizardCardSpec extends WordSpec with Matchers {
-  "A Card" when {
-    "is a WizardCard" should {
+  "A WizardCard" when {
+    "is a WizardCard without owner" should {
       val wizardCard = WizardCard(null)
       "is a wizard" in {
         wizardCard.isWizard should be(true)
@@ -19,7 +19,9 @@ class WizardCardSpec extends WordSpec with Matchers {
       "has no owner" in {
         wizardCard.hasOwner should be(false)
       }
+    }
 
+    "is a WizardCard with owner 'TestPlayer'" should {
       val wizardCardWithOwner = WizardCard(Player("TestPlayer"))
       "has owner" in {
         wizardCardWithOwner.hasOwner should be(true)

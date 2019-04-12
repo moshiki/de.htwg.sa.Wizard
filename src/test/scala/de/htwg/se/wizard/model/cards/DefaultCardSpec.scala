@@ -5,25 +5,27 @@ import org.scalatest.{Matchers, WordSpec}
 
 class DefaultCardSpec extends WordSpec with Matchers {
   "A Card" when {
-    "is DefaultCard" should {
+    "is a blue DefaultCard of value 2 without owner" should {
       val defaultCard = DefaultCard("blue", 2, null)
 
-      "has color" in {
+      "have color" in {
         defaultCard.hasColor should be(true)
       }
-      "is no wizard" in {
+      "be no wizard" in {
         defaultCard.isWizard should be(false)
       }
-      "is no jester" in {
+      "be no jester" in {
         defaultCard.isJester should be(false)
       }
-      "number is 2" in {
+      "have a value of 2" in {
         defaultCard.number should be(2)
       }
-      "has no owner" in {
+      "have no owner" in {
         defaultCard.hasOwner should be(false)
       }
+    }
 
+    "is a blue DefaultCard of value 2 with owner 'TestPlayer" should {
       val defCardWithOwner = DefaultCard("blue", 2, Player("TestPlayer"))
       "has owner" in {
         defCardWithOwner.hasOwner should be(true)
@@ -31,7 +33,9 @@ class DefaultCardSpec extends WordSpec with Matchers {
       "has owner 'TestPayer" in {
         defCardWithOwner.owner.name should be("TestPlayer")
       }
+    }
 
+    "is not a vaild DefaultCard" should {
       "throws IllegalArgumentsException for number greater than 13" in {
         an [IllegalArgumentException] should be thrownBy DefaultCard("blue", 14, null)
       }
