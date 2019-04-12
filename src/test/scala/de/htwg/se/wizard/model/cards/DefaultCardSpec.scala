@@ -36,7 +36,7 @@ class DefaultCardSpec extends WordSpec with Matchers {
         an [AssertionError] should be thrownBy DefaultCard("blue", 14, null)
       }
       "throws IllegalArgumentsException for number less than 1" in {
-        an [AssertionError] should be thrownBy DefaultCard("blue", 0, null)
+        an [IllegalArgumentException] should be thrownBy DefaultCard("blue", 0, null)
       }
 
       "throws IllegalArgumentException for wrong Color" in {
