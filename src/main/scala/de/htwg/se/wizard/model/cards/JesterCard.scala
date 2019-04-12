@@ -7,4 +7,6 @@ case class JesterCard(owner: Player) extends Card {
   def isWizard: Boolean = false
   def isJester: Boolean = true
   def hasOwner: Boolean = owner != null
+
+  override def toString: String = "Jester"
 }
