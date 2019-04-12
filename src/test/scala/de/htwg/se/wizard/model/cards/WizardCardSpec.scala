@@ -30,5 +30,12 @@ class WizardCardSpec extends WordSpec with Matchers {
         wizardCardWithOwner.owner.name should be ("TestPlayer")
       }
     }
+
+    "has the right String representation" should {
+      val wizardCard = DefaultCard("blue", 2, Player("TestPlayer"))
+      "Have a nice String representation" in {
+        wizardCard.toString should be("Wizard")
+      }
+    }
   }
 }
