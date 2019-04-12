@@ -5,4 +5,6 @@ trait Card {
   def isWizard: Boolean
   def isJester: Boolean
   def hasOwner: Boolean
+
+
 }

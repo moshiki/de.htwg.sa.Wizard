@@ -46,7 +46,13 @@ class DefaultCardSpec extends WordSpec with Matchers {
       "throws IllegalArgumentException for wrong Color" in {
         an [IllegalArgumentException] should be thrownBy DefaultCard("purple", 2, null)
       }
+    }
 
+    "has the right String representation" should {
+      val defCard = DefaultCard("blue", 2, Player("TestPlayer"))
+      "Have a nice String representation" in {
+        defCard.toString should be("blue 2")
+      }
     }
   }
 }
