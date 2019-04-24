@@ -2,7 +2,7 @@ package de.htwg.se.wizard.model.cards
 
 import de.htwg.se.wizard.model.Player
 
-abstract class Card(owner: Option[Player] = None) {
+abstract class Card(owner: Option[Player]) {
   def hasColor: Boolean
 
   def isWizard: Boolean
