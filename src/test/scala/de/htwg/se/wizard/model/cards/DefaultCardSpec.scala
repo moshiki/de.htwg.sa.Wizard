@@ -46,7 +46,26 @@ class DefaultCardSpec extends WordSpec with Matchers {
       "throws IllegalArgumentException for wrong Color" in {
         an [IllegalArgumentException] should be thrownBy DefaultCard("purple", 2, null)
       }
+    }
 
+    "can be compared to another DefaultCard" should {
+      val card = DefaultCard("red", 5, null)
+      "be equal to another DefaultCard with same number, but different color" in {
+        val equalCard = card.copy(color = "blue")
+        equalCard == card should be(true)
+      }
+      "be equal to another DefaultCard with same number, but different owner" in {
+        val equalCard = card.copy(owner = Player("test"))
+        card == equalCard should be(true)
+      }
+      "be more than another DefaultCard with a lower number" in {
+        val lowerCard = DefaultCard("red", 4, null)
+        card > lowerCard should be(true)
+      }
+      "be less than another DefaultCard with a higher number" in {
+        val higherCard = DefaultCard("red", 6, null)
+        card < higherCard should be(true)
+      }
     }
   }
 }
