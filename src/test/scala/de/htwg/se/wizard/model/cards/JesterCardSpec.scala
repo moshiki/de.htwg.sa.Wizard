@@ -6,7 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 class JesterCardSpec extends WordSpec with Matchers {
   "A JesterCard" when {
     "is a JesterCard without owner" should {
-      val jesterCard = JesterCard(null)
+      val jesterCard = JesterCard()
       "is a jester" in {
         jesterCard.isJester should be(true)
       }

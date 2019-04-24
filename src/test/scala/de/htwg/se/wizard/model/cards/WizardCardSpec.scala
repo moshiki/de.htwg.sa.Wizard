@@ -6,7 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 class WizardCardSpec extends WordSpec with Matchers {
   "A WizardCard" when {
     "is a WizardCard without owner" should {
-      val wizardCard = WizardCard(null)
+      val wizardCard = WizardCard()
       "is a wizard" in {
         wizardCard.isWizard should be(true)
       }
