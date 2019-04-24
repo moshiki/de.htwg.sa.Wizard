@@ -55,7 +55,7 @@ class DefaultCardSpec extends WordSpec with Matchers {
         equalCard == card should be(true)
       }
       "be equal to another DefaultCard with same number, but different owner" in {
-        val equalCard = card.copy(owner = Player("test"))
+        val equalCard = card.copy(owner = Some(Player("test")))
         card == equalCard should be(true)
       }
       "be more than another DefaultCard with a lower number" in {
