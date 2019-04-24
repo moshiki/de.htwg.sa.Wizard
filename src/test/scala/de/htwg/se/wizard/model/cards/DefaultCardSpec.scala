@@ -26,12 +26,12 @@ class DefaultCardSpec extends WordSpec with Matchers {
     }
 
     "is a blue DefaultCard of value 2 with owner 'TestPlayer" should {
-      val defCardWithOwner = DefaultCard("blue", 2, Player("TestPlayer"))
+      val defCardWithOwner = DefaultCard("blue", 2, Some(Player("TestPlayer")))
       "has owner" in {
         defCardWithOwner.hasOwner should be(true)
       }
       "has owner 'TestPayer" in {
-        defCardWithOwner.owner.name should be("TestPlayer")
+        defCardWithOwner.ownerName should be("TestPlayer")
       }
     }
 
@@ -69,7 +69,7 @@ class DefaultCardSpec extends WordSpec with Matchers {
     }
 
     "has the right String representation" should {
-      val defCard = DefaultCard("blue", 2, Player("TestPlayer"))
+      val defCard = DefaultCard("blue", 2)
       "Have a nice String representation" in {
         defCard.toString should be("blue 2")
       }
