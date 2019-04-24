@@ -32,7 +32,7 @@ class WizardCardSpec extends WordSpec with Matchers {
     }
 
     "has the right String representation" should {
-      val wizardCard = WizardCard(Some(Player("TestPlayer")))
+      val wizardCard = WizardCard()
       "Have a nice String representation" in {
         wizardCard.toString should be("Wizard")
       }

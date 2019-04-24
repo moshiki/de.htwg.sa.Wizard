@@ -32,7 +32,7 @@ class JesterCardSpec extends WordSpec with Matchers {
     }
 
     "has the right String representation" should {
-      val jesterCard = JesterCard
+      val jesterCard = JesterCard()
       "Have a nice String representation" in {
         jesterCard.toString should be("Jester")
       }
