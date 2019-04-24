@@ -3,7 +3,7 @@ package de.htwg.se.wizard.model.cards
 import de.htwg.se.wizard.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
-class JesterCardSpec extends WordSpec with Matchers{
+class JesterCardSpec extends WordSpec with Matchers {
   "A JesterCard" when {
     "is a JesterCard without owner" should {
       val jesterCard = JesterCard(null)

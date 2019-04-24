@@ -27,7 +27,7 @@ class WizardCardSpec extends WordSpec with Matchers {
         wizardCardWithOwner.hasOwner should be(true)
       }
       "has owner 'TestPlayer'" in {
-        wizardCardWithOwner.owner.name should be ("TestPlayer")
+        wizardCardWithOwner.owner.name should be("TestPlayer")
       }
     }
 
