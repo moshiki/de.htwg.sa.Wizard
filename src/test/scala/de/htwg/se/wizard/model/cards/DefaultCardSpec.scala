@@ -37,22 +37,43 @@ class DefaultCardSpec extends WordSpec with Matchers {
 
     "is not a valid DefaultCard" should {
       "throws IllegalArgumentsException for number greater than 13" in {
-        an [IllegalArgumentException] should be thrownBy DefaultCard("blue", 14, null)
+        an[IllegalArgumentException] should be thrownBy DefaultCard("blue", 14, null)
       }
       "throws IllegalArgumentsException for number less than 1" in {
-        an [IllegalArgumentException] should be thrownBy DefaultCard("blue", 0, null)
+        an[IllegalArgumentException] should be thrownBy DefaultCard("blue", 0, null)
       }
 
       "throws IllegalArgumentException for wrong Color" in {
-        an [IllegalArgumentException] should be thrownBy DefaultCard("purple", 2, null)
+        an[IllegalArgumentException] should be thrownBy DefaultCard("purple", 2, null)
       }
     }
 
-    "has the right String representation" should {
-      val defCard = DefaultCard("blue", 2, Player("TestPlayer"))
-      "Have a nice String representation" in {
-        defCard.toString should be("blue 2")
+    "can be compared to another DefaultCard" should {
+      val card = DefaultCard("red", 5, null)
+      "be equal to another DefaultCard with same number, but different color" in {
+        val equalCard = card.copy(color = "blue")
+        equalCard == card should be(true)
+      }
+      "be equal to another DefaultCard with same number, but different owner" in {
+        val equalCard = card.copy(owner = Player("test"))
+        card == equalCard should be(true)
+      }
+      "be more than another DefaultCard with a lower number" in {
+        val lowerCard = DefaultCard("red", 4, null)
+        card > lowerCard should be(true)
+      }
+      "be less than another DefaultCard with a higher number" in {
+        val higherCard = DefaultCard("red", 6, null)
+        card < higherCard should be(true)
+      }
+    }
+
+      "has the right String representation" should {
+        val defCard = DefaultCard("blue", 2, Player("TestPlayer"))
+        "Have a nice String representation" in {
+          defCard.toString should be("blue 2")
+        }
       }
     }
   }
-}
+
