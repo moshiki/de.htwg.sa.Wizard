@@ -18,12 +18,20 @@ object Wizard {
     //val names = Seq()
 
     for(a <- 1 to numberOfPlayers) {
-      println("Player " + a)
+      print("Player " + a + " ")
       val player = Player(readLine())
       names.update(a-1, player.toString)
     }
-    println(names.mkString(","))
+    println(names.mkString(", "))
 
+    var input = ""
+
+    while(input != "q") {
+      input = readLine()
+    }
+    if(input == "q") {
+      System.exit(1)
+    }
 
 
 
