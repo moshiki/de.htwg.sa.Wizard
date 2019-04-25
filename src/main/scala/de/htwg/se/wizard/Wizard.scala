@@ -20,8 +20,9 @@ object Wizard {
     for(a <- 1 to numberOfPlayers) {
       println("Player " + a)
       val player = Player(readLine())
+      names.update(a-1, player.toString)
     }
-    println(names)
+    println(names.mkString(","))
 
 
 
