@@ -5,7 +5,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 class CardStackSpec extends WordSpec with Matchers{
   "An initial CardStack" should {
-    val cardStack = CardStack.initiaize
+    val cardStack = CardStack.initialize
     "contain 4 wizards" in {
       cardStack.count(_.isWizard) should be(4)
     }
