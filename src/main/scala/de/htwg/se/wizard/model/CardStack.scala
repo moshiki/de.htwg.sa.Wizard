@@ -2,6 +2,10 @@ package de.htwg.se.wizard.model
 
 import de.htwg.se.wizard.model.cards._
 
+import scala.collection.mutable.ListBuffer
+
+import scala.util.Random
+
 object CardStack {
   val initialize: List[Card] = {
     val wizards = List.fill(4)(WizardCard())
@@ -12,5 +16,11 @@ object CardStack {
     } yield DefaultCard(color, number)
 
     wizards ::: jesters ::: normals
+  }
+
+  def shuffleCards(a:List[Card]): List[Card] = {
+
+    var listBuffer = new ListBuffer[String]()
+    Random.shuffle(a)
   }
 }
