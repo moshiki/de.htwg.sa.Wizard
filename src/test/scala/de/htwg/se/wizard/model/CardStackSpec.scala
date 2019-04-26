@@ -18,6 +18,7 @@ class CardStackSpec extends WordSpec with Matchers{
     "have 52 normal cards" in {
       cardStack.count(_.isInstanceOf[DefaultCard]) should be(52)
     }
+
     val defaultCards = cardStack.filter(_.isInstanceOf[DefaultCard]).map(_.asInstanceOf[DefaultCard])
     "have 13 red cards" in {
       defaultCards.count(_.color == "red") should be(13)
@@ -30,6 +31,12 @@ class CardStackSpec extends WordSpec with Matchers{
     }
     "have 13 green cards" in {
       defaultCards.count(_.color == "green") should be(13)
+    }
+
+    "have 4 cards of value 1 to 13" in {
+      for (i <- 1 to 13) {
+        defaultCards.count(_.number == i) should be(4)
+      }
     }
   }
 }
