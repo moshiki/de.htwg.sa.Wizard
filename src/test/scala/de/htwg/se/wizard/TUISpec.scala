@@ -40,7 +40,7 @@ class TUISpec extends WordSpec with Matchers {
   }
 
   "The number of Rounds" should {
-    "be 20" in {
+    "should be 20 with 3 players" in {
       val rounds = tui.numberOfRounds(3)
       rounds should be (20)
     }
