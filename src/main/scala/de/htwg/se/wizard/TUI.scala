@@ -1,6 +1,7 @@
 package de.htwg.se.wizard
 
 import de.htwg.se.wizard.model.Player
+import de.htwg.se.wizard.model.CardStack
 
 import scala.io.StdIn._
 
@@ -37,11 +38,16 @@ class TUI {
   }
 
   def run(): String = {
+    val initialStack = CardStack()
     val players = setup()
     val rounds = numberOfRounds(players.size)
 
-    for (i <- 1 to rounds) {
+    for {round <- 1 to rounds
+      currentPlayer <- 1 to players.size} {
 
+      println(playerTurn(players, round, currentPlayer, initialStack))
     }
   }
+
+  def playerTurn(players: IndexedSeq[Player], round: Int, currentPlayer: Int, cardStack: Any)
 }
