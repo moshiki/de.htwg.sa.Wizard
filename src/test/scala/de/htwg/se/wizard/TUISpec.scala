@@ -40,6 +40,9 @@ class TUISpec extends WordSpec with Matchers{
       val rounds = tui.numberOfRounds(5)
       rounds should be (12)
     }
+    "throw IllegalArgumentException" in {
+      an[IllegalArgumentException] should be thrownBy tui.numberOfRounds(8)
+    }
   }
 
 
