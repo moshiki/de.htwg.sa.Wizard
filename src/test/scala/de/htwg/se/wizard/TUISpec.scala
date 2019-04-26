@@ -10,12 +10,12 @@ class TUISpec extends WordSpec with Matchers{
       for (i <- 3 to 6) {
         val playerCount = tui.getNumberOfPlayers(i)
         playerCount should be >= 3
-        playerCount should be <= 6
+        playerCount should be <= 5
       }
     }
     "throw an Exception if to many or less players are wanted" in {
       an [IllegalArgumentException] should be thrownBy tui.getNumberOfPlayers(2)
-      an [IllegalArgumentException] should be thrownBy tui.getNumberOfPlayers(7)
+      an [IllegalArgumentException] should be thrownBy tui.getNumberOfPlayers(6)
     }
   }
 }

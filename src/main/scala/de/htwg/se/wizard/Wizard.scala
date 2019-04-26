@@ -35,6 +35,8 @@ object Wizard {
       System.exit(1)
     }
 
+    val tui = new TUI()
+    tui.run()
 
 
   }
