@@ -6,7 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 class TUISpec extends WordSpec with Matchers {
   val tui = new TUI()
   "An initialized Game" should {
-    "only allow 3 to 6 players" in {
+    "only allow 3 to 5 players" in {
       for (i <- 3 to 5) {
         val playerCount = tui.getNumberOfPlayers(i)
         playerCount should be >= 3
@@ -30,4 +30,13 @@ class TUISpec extends WordSpec with Matchers {
 
     }
   }
+  "The number of Elements" should {
+    "be 3" in {
+      val test = Array("Lisa", "Hans", "Peter")
+      val indexedSeq = tui.playerSetup(test)
+      indexedSeq.length should be (3)
+    }
+  }
+
+
 }
