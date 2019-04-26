@@ -18,6 +18,7 @@ class TUISpec extends WordSpec with Matchers{
       an [IllegalArgumentException] should be thrownBy tui.getNumberOfPlayers(6)
     }
   }
+
   "The number of Elements" should {
     "be 3" in {
       val test = Array("Lisa", "Hans", "Peter")
@@ -25,6 +26,15 @@ class TUISpec extends WordSpec with Matchers{
       indexedSeq.length should be (3)
     }
   }
+
+  "The number of Rounds" should {
+    "be 20" in {
+      val rounds = tui.numberOfRounds(3)
+      rounds should be (20)
+    }
+  }
+
+
 
 
 }
