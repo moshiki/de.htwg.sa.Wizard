@@ -36,6 +36,10 @@ class TUISpec extends WordSpec with Matchers{
       val rounds = tui.numberOfRounds(4)
       rounds should be (15)
     }
+    "be 12" in {
+      val rounds = tui.numberOfRounds(5)
+      rounds should be (12)
+    }
   }
 
 
