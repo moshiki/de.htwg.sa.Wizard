@@ -8,7 +8,7 @@ object Wizard {
 
 
   def main(args: Array[String]): Unit = {
-    val student = Player("Vanessa and Flo")
+    /*val student = Player("Vanessa and Flo")
     println("Welcome to Wizard, a project for SE by " + student)
 
     print("Give the number of Players: ")
@@ -33,7 +33,7 @@ object Wizard {
     }
     if(input == "q") {
       System.exit(1)
-    }
+    }*/
 
     val tui = new TUI()
     tui.run()

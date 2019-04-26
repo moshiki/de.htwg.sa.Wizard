@@ -2,6 +2,7 @@ package de.htwg.se.wizard
 
 import de.htwg.se.wizard.model.Player
 import de.htwg.se.wizard.model.CardStack
+import de.htwg.se.wizard.model.cards._
 
 import scala.io.StdIn._
 
@@ -12,7 +13,7 @@ class TUI {
   }
 
   def playerSetup(names: Array[String]): IndexedSeq[Player] = {
-    for {i <- 1 to names.length} yield Player(names(i))
+    for {i <- names.indices} yield Player(names(i))
   }
 
   def numberOfRounds(number: Int): Int = {
@@ -20,7 +21,7 @@ class TUI {
       case 3 => 20
       case 4 => 15
       case 5 => 12
-      case _ => throw IllegalArgumentException
+      case _ => throw new IllegalArgumentException
     }
   }
 
@@ -38,16 +39,27 @@ class TUI {
   }
 
   def run(): String = {
-    val initialStack = CardStack()
+    val initialStack = CardStack.initialize
     val players = setup()
     val rounds = numberOfRounds(players.size)
 
     for {round <- 1 to rounds
-      currentPlayer <- 1 to players.size} {
+      currentPlayer <- players.indices} {
 
       println(playerTurn(players, round, currentPlayer, initialStack))
+      val cardSelection = readInt()
     }
+
+    "See you again!"
   }
 
-  def playerTurn(players: IndexedSeq[Player], round: Int, currentPlayer: Int, cardStack: Any)
+  def playerTurn(players: IndexedSeq[Player], round: Int, currentPlayer: Int, cardStack: List[Card]): String = {
+    val indexGenerator = scala.util.Random
+    val cards = for {i <- 1 to round} yield cardStack(indexGenerator.nextInt(cardStack.size - 1))
+
+    val firstString = "Round " + round + " - Player " + (currentPlayer + 1) + " (" + players(currentPlayer).name + ")"
+    val secondString = "Select one of the following cards:"
+
+    firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
+  }
 }
