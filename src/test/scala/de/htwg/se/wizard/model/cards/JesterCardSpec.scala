@@ -18,6 +18,7 @@ class JesterCardSpec extends WordSpec with Matchers {
       }
       "has no owner" in {
         jesterCard.hasOwner should be(false)
+        jesterCard.ownerName should be("unknown")
       }
     }
 

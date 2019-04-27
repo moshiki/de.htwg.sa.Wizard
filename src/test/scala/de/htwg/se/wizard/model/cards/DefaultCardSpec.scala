@@ -22,6 +22,7 @@ class DefaultCardSpec extends WordSpec with Matchers {
       }
       "have no owner" in {
         defaultCard.hasOwner should be(false)
+        defaultCard.ownerName should be("unknown")
       }
     }
 

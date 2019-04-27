@@ -18,6 +18,7 @@ class WizardCardSpec extends WordSpec with Matchers {
       }
       "has no owner" in {
         wizardCard.hasOwner should be(false)
+        wizardCard.ownerName should be("unknown")
       }
     }
 
