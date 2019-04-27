@@ -31,8 +31,8 @@ class TUISpec extends WordSpec with Matchers {
     }
   }
 
-  "The number of Elements" should {
-    "be 3" in {
+  "The number of Players returned" should {
+    "be 3 with an input of 3 names" in {
       val test = Array("Lisa", "Hans", "Peter")
       val indexedSeq = tui.playerSetup(test)
       indexedSeq.length should be (3)
