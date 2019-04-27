@@ -54,18 +54,24 @@ class DefaultCardSpec extends WordSpec with Matchers {
       "be equal to another DefaultCard with same number, but different color" in {
         val equalCard = card.copy(color = "blue")
         equalCard == card should be(true)
+        card equals equalCard should be(true)
       }
       "be equal to another DefaultCard with same number, but different owner" in {
         val equalCard = card.copy(owner = Some(Player("test")))
         card == equalCard should be(true)
+        card equals equalCard should be(true)
       }
       "be more than another DefaultCard with a lower number" in {
         val lowerCard = DefaultCard("red", 4)
         card > lowerCard should be(true)
+        card == lowerCard should be(false)
+        card equals lowerCard should be(false)
       }
       "be less than another DefaultCard with a higher number" in {
         val higherCard = DefaultCard("red", 6)
         card < higherCard should be(true)
+        card == higherCard should be(false)
+        card equals higherCard should be(false)
       }
     }
 
