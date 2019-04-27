@@ -75,6 +75,17 @@ class DefaultCardSpec extends WordSpec with Matchers {
       }
     }
 
+    "can be compared with another object-type" should {
+      "be false" in {
+        val wizardCard = WizardCard()
+        val defaultCard = DefaultCard("red", 2)
+        //noinspection ComparingUnrelatedTypes
+        defaultCard equals wizardCard should be (false)
+        //noinspection ComparingUnrelatedTypes
+        defaultCard == wizardCard should be(false)
+      }
+    }
+
     "has the right String representation" should {
       val defCard = DefaultCard("blue", 2)
       "Have a nice String representation" in {
