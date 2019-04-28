@@ -44,7 +44,9 @@ class RoundManager {
   def eval(input: String): Unit = {
     if (needsSetup) {
       if (numberOfPlayers == 0) {
-        Player.getNumberOfPlayers(input.asInstanceOf[Int])
+        val number = RoundManager.toInt(input)
+        if (number.isEmpty) return
+        numberOfPlayers = Player.getNumberOfPlayers(number.get)
       } else {
         updatePlayers(input)
       }
@@ -54,7 +56,7 @@ class RoundManager {
   }
 
   def updatePlayers(input: String): Unit = {
-    players = players :: Player(input) :: Nil
+    players = players ::: List(Player(input))
   }
 
   def currentStateToString: String = {
@@ -62,6 +64,16 @@ class RoundManager {
       getSetupStrings
     } else {
       getPlayerStateStrings
+    }
+  }
+}
+
+object RoundManager {
+  def toInt(s: String): Option[Int] = {
+    try {
+      Some(s.toInt)
+    } catch {
+      case _: Exception => None
     }
   }
 }
