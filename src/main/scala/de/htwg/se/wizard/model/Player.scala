@@ -17,11 +17,11 @@ object Player {
     for {i <- names.indices} yield Player(names(i))
   }
 
-  def playerTurn(players: IndexedSeq[Player], round: Int, currentPlayer: Int, cardStack: List[Card]): String = {
+  def playerTurn(player: Player, round: Int, cardStack: List[Card]): String = {
     val indexGenerator = scala.util.Random
     val cards = for {_ <- 1 to round} yield cardStack(indexGenerator.nextInt(cardStack.size - 1))
 
-    val firstString = "Round " + round + " - Player " + (currentPlayer + 1) + " (" + players(currentPlayer).name + ")"
+    val firstString = "Round " + round + " - Player: " + player.name
     val secondString = "Select one of the following cards:"
 
     firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"

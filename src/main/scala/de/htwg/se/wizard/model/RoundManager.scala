@@ -7,8 +7,7 @@ class RoundManager {
   var players: IndexedSeq[Player] = IndexedSeq()
   var roundNumbers: Int = 0
   var currentPlayer: Int = 0
-  var currentRound: Int = 0
-  var numberOfRounds: Int = {
+  val numberOfRounds: Int = {
     players.size match {
       case 0 => 0
       case 3 => 20
@@ -20,4 +19,16 @@ class RoundManager {
 
   val initialCardStack: List[Card] = CardStack.initialize
 
+  def nextPlayer: Int = {
+    if (currentPlayer == players.size - 1) 0
+    else currentPlayer + 1
+  }
+
+  val getCurrentState: (Int, Int, Boolean) = {
+    (currentPlayer, needsSetup)
+  }
+
+  def currentStateToString: String = {
+    "Hello, this is a test."
+  }
 }
