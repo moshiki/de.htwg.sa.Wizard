@@ -44,8 +44,12 @@ class CardStackSpec extends WordSpec with Matchers{
     val cardStack = CardStack.initialize
     val shuffledCardStack = CardStack.shuffleCards(cardStack)
 
-    "contain 60 cards" in {
+    "contains 60 cards" in {
       shuffledCardStack.size should be(60)
+    }
+
+    "contains 4 Wizards" in {
+      shuffledCardStack.count(_.isWizard) should be(4)
     }
   }
 }
