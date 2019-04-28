@@ -19,8 +19,6 @@ object CardStack {
   }
 
   def shuffleCards(a:List[Card]): List[Card] = {
-
-    var listBuffer = new ListBuffer[String]()
     Random.shuffle(a)
   }
 }
