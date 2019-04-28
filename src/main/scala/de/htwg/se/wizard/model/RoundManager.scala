@@ -1,7 +1,5 @@
 package de.htwg.se.wizard.model
 
-import java.lang.ClassCastException
-
 import de.htwg.se.wizard.model.cards.Card
 
 class RoundManager {
@@ -44,7 +42,7 @@ class RoundManager {
   }
 
   def eval(input: String): Unit = {
-    if (needsSetup){
+    if (needsSetup) {
       if (numberOfPlayers == 0) {
         Player.getNumberOfPlayers(input.asInstanceOf[Int])
       } else {
