@@ -9,15 +9,6 @@ import scala.io.StdIn._
 
 class TUI(controller: Controller) extends Observer{
 
-  def numberOfRounds(number: Int): Int = {
-    number match {
-      case 3 => 20
-      case 4 => 15
-      case 5 => 12
-      case _ => throw new IllegalArgumentException
-    }
-  }
-
   def setup(): IndexedSeq[Player] = {
     println("Welcome to Wizard!\nPlease enter the number of Players[1-6]:")
     val numberOfPlayer = getNumberOfPlayers(readInt())
