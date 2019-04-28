@@ -47,9 +47,11 @@ class CardStackSpec extends WordSpec with Matchers{
     "contains 60 cards" in {
       shuffledCardStack.size should be(60)
     }
-
     "contains 4 Wizards" in {
       shuffledCardStack.count(_.isWizard) should be(4)
+    }
+    "contains 4 Jesters" in {
+      shuffledCardStack.count(_.isJester) should be(4)
     }
   }
 }
