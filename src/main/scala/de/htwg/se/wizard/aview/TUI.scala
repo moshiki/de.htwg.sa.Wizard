@@ -1,20 +1,13 @@
-package de.htwg.se.wizard
+package de.htwg.se.wizard.aview
 
-import de.htwg.se.wizard.model.Player
-import de.htwg.se.wizard.model.CardStack
+import de.htwg.se.wizard.controller.Controller
+import de.htwg.se.wizard.model.{CardStack, Player}
 import de.htwg.se.wizard.model.cards._
+import de.htwg.se.wizard.util.Observer
 
 import scala.io.StdIn._
 
-class TUI {
-  def getNumberOfPlayers(number: Int): Int = {
-    if (number < 3 || number > 5) throw new IllegalArgumentException
-    number
-  }
-
-  def playerSetup(names: Array[String]): IndexedSeq[Player] = {
-    for {i <- names.indices} yield Player(names(i))
-  }
+class TUI(controller: Controller) extends Observer{
 
   def numberOfRounds(number: Int): Int = {
     number match {
@@ -53,13 +46,5 @@ class TUI {
     "See you again!"
   }
 
-  def playerTurn(players: IndexedSeq[Player], round: Int, currentPlayer: Int, cardStack: List[Card]): String = {
-    val indexGenerator = scala.util.Random
-    val cards = for {i <- 1 to round} yield cardStack(indexGenerator.nextInt(cardStack.size - 1))
-
-    val firstString = "Round " + round + " - Player " + (currentPlayer + 1) + " (" + players(currentPlayer).name + ")"
-    val secondString = "Select one of the following cards:"
-
-    firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
-  }
+  override def update(): Unit = println(controller.getCurrentPlayerState)
 }

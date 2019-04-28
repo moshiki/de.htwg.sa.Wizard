@@ -1,6 +1,8 @@
 package de.htwg.se.wizard
 
+import de.htwg.se.wizard.aview.TUI
 import de.htwg.se.wizard.model.Player
+
 import scala.io.StdIn.readLine
 import scala.io.StdIn.readInt
 
