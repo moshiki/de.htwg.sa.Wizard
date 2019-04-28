@@ -63,5 +63,8 @@ class CardStackSpec extends WordSpec with Matchers{
     "has 13 blue cards" in {
       shuffledDefaultcards.count(_.color == "blue") should be(13)
     }
+    "has 13 yellow cards" in {
+      shuffledDefaultcards.count(_.color == "yellow") should be(13)
+    }
   }
 }
