@@ -8,6 +8,7 @@ class RoundManager {
   var players: List[Player] = Nil
   var currentPlayer: Int = 0
   var currentRound: Int = 0
+  var gameOver: Boolean = false
 
   val initialCardStack: List[Card] = CardStack.initialize
 
@@ -42,6 +43,8 @@ class RoundManager {
 
   def getPlayerStateStrings: String = {
     currentPlayer = nextPlayer
+    if (currentRound == roundsForThisGame && currentPlayer == 0) gameOver = true
+    if (gameOver) return "\nGame Over! Press 'q' to quit."
     if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound = currentRound + 1
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
   }
