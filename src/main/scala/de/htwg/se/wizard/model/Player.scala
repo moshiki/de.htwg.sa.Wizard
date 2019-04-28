@@ -13,10 +13,6 @@ object Player {
     number
   }
 
-  def playerSetup(names: Array[String]): IndexedSeq[Player] = {
-    for {i <- names.indices} yield Player(names(i))
-  }
-
   def playerTurn(player: Player, round: Int, cardStack: List[Card]): String = {
     val indexGenerator = scala.util.Random
     val cards = for {_ <- 1 to round} yield cardStack(indexGenerator.nextInt(cardStack.size - 1))

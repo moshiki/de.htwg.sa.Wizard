@@ -1,11 +1,13 @@
 package de.htwg.se.wizard.model
 
+import java.lang.ClassCastException
+
 import de.htwg.se.wizard.model.cards.Card
 
 class RoundManager {
   var needsSetup: Boolean = true
   var numberOfPlayers: Int = 0
-  var players: IndexedSeq[Player] = IndexedSeq()
+  var players: List[Player] = List()
   var currentPlayer: Int = 0
   var currentRound: Int = 0
   val numberOfRounds: Int = {
@@ -41,10 +43,27 @@ class RoundManager {
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
   }
 
+  def eval(input: String): Unit = {
+    if (needsSetup){
+      if (numberOfPlayers == 0) {
+        Player.getNumberOfPlayers(input.asInstanceOf[Int])
+      } else {
+        updatePlayers(input)
+      }
+    } else {
+      // Put method that moves cards onto new stack here
+    }
+  }
+
+  def updatePlayers(input: String): Unit = {
+    players = players :: Player(input) :: Nil
+  }
+
   def currentStateToString: String = {
-    needsSetup match {
-      case true => getSetupStrings
-      case _ => getPlayerStateStrings
+    if (needsSetup) {
+      getSetupStrings
+    } else {
+      getPlayerStateStrings
     }
   }
 }
