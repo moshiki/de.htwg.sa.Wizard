@@ -56,5 +56,9 @@ class CardStackSpec extends WordSpec with Matchers{
     "has 52 normal cards" in {
       shuffledCardStack.count(_.isInstanceOf[DefaultCard]) should be(52)
     }
+    val shuffledDefaultcards = shuffledCardStack.filter(_.isInstanceOf[DefaultCard]).map(_.asInstanceOf[DefaultCard])
+    "has 13 red cards" in {
+      shuffledDefaultcards.count(_.color == "red") should be(13)
+    }
   }
 }
