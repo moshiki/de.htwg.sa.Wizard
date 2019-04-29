@@ -12,7 +12,7 @@ class RoundManager {
 
   val initialCardStack: List[Card] = CardStack.initialize
 
-  def roundsForThisGame:Int = {
+  def roundsForThisGame: Int = {
     numberOfPlayers match {
       case 0 => 0
       case 3 => 20
@@ -34,11 +34,9 @@ class RoundManager {
 
   def getSetupStrings: String = {
     if (numberOfPlayers == 0) return "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
-    if (players.size < numberOfPlayers) {
-      currentPlayer = nextPlayerSetup
-      return "Player " + currentPlayer + ", please enter your name:"
-    }
-    ""
+
+    currentPlayer = nextPlayerSetup
+    "Player " + currentPlayer + ", please enter your name:"
   }
 
   def getPlayerStateStrings: String = {

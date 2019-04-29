@@ -31,6 +31,9 @@ class RoundManagerSpec extends WordSpec with Matchers{
       }
     }
     "in setup mode" should {
+      "ask for the next player's name correctly" in {
+        roundManager.getSetupStrings should be("Player 1, please enter your name:")
+      }
       "get the next player correctly" in {
         roundManager.numberOfPlayers = 3
         roundManager.currentPlayer = 0
@@ -54,6 +57,23 @@ class RoundManagerSpec extends WordSpec with Matchers{
       "increment the player count up to one value less than the number provided by the user" in {
         roundManager.currentPlayer = 2
         roundManager.nextPlayer should be(0)
+      }
+      "get the current players round String when in game" in {
+        roundManager.players = List(Player("Name"))
+        roundManager.numberOfPlayers = 3
+        roundManager.currentPlayer = 2
+        roundManager.getPlayerStateStrings should startWith
+        """
+           Round 1 - Player 1 (test1)
+           Select one of the following cards:
+        """.stripMargin
+      }
+      "set the state to game over and get the related String" in {
+        roundManager.numberOfPlayers = 3
+        roundManager.currentPlayer = 2
+        roundManager.currentRound = 20
+        roundManager.getPlayerStateStrings should be("\nGame Over! Press 'q' to quit.")
+        roundManager.gameOver should be(true)
       }
     }
   }
