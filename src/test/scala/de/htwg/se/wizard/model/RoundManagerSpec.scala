@@ -2,7 +2,7 @@ package de.htwg.se.wizard.model
 
 import org.scalatest.{Matchers, WordSpec}
 
-class RoundManagerSpec extends WordSpec with Matchers{
+class RoundManagerSpec extends WordSpec with Matchers {
   "A Round Manager" when {
     "new" should {
       val roundManager = new RoundManager()
@@ -39,7 +39,7 @@ class RoundManagerSpec extends WordSpec with Matchers{
         roundManager.roundsForThisGame should be(12)
 
         roundManager.numberOfPlayers = 6
-        an [IllegalArgumentException] shouldBe thrownBy(roundManager.roundsForThisGame)
+        an[IllegalArgumentException] shouldBe thrownBy(roundManager.roundsForThisGame)
       }
     }
     "in setup mode" should {
