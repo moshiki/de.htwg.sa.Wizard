@@ -14,6 +14,14 @@ class RoundManagerSpec extends WordSpec with Matchers{
           "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
         )
       }
+      "evaluate the input correctly, so that the number of players does not get set if input is not a number" in {
+        roundManager.eval("bla")
+        roundManager.numberOfPlayers should be(0)
+      }
+      "evaluate the input correctly, so that the number of players gets set if input is a number" in {
+        roundManager.eval("5")
+        roundManager.numberOfPlayers should be(5)
+      }
     }
     "has the number of players initialized" should {
       "calculate the number of rounds to play correctly" in {
@@ -47,8 +55,15 @@ class RoundManagerSpec extends WordSpec with Matchers{
         roundManager.currentPlayer = 3
         roundManager.nextPlayerSetup should be(0)
       }
+      "switch to normal mode once enough players entered their name" in {
+        roundManager.numberOfPlayers = 3
+        roundManager.players = List(Player("1"), Player("2"))
+        roundManager.eval("3")
+        roundManager.needsSetup should be(false)
+      }
     }
     "in normal mode" should {
+
       "get the next player correctly" in {
         roundManager.numberOfPlayers = 3
         roundManager.currentPlayer = 0
