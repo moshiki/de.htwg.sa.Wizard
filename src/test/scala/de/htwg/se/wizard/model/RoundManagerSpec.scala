@@ -30,5 +30,31 @@ class RoundManagerSpec extends WordSpec with Matchers{
         an [IllegalArgumentException] shouldBe thrownBy(roundManager.roundsForThisGame)
       }
     }
+    "in setup mode" should {
+      "get the next player correctly" in {
+        roundManager.numberOfPlayers = 3
+        roundManager.currentPlayer = 0
+        roundManager.nextPlayerSetup should be(1)
+      }
+      "increment the player count up to the number provided by the user" in {
+        roundManager.currentPlayer = 2
+        roundManager.nextPlayerSetup should be(3)
+      }
+      "reset the player count when there's no next player" in {
+        roundManager.currentPlayer = 3
+        roundManager.nextPlayerSetup should be(0)
+      }
+    }
+    "in normal mode" should {
+      "get the next player correctly" in {
+        roundManager.numberOfPlayers = 3
+        roundManager.currentPlayer = 0
+        roundManager.nextPlayer should be(1)
+      }
+      "increment the player count up to one value less than the number provided by the user" in {
+        roundManager.currentPlayer = 2
+        roundManager.nextPlayer should be(0)
+      }
+    }
   }
 }
