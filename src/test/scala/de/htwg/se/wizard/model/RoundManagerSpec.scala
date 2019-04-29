@@ -3,9 +3,12 @@ package de.htwg.se.wizard.model
 import org.scalatest.{Matchers, WordSpec}
 
 class RoundManagerSpec extends WordSpec with Matchers{
-  val roundManager = new RoundManager()
   "A Round Manager" when {
     "new" should {
+      val roundManager = new RoundManager()
+      "return the correct status String" in {
+        roundManager.currentStateToString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
+      }
       "set the number of rounds to play to 0" in {
         roundManager.roundsForThisGame should be(0)
       }
@@ -24,6 +27,7 @@ class RoundManagerSpec extends WordSpec with Matchers{
       }
     }
     "has the number of players initialized" should {
+      val roundManager = new RoundManager()
       "calculate the number of rounds to play correctly" in {
         roundManager.numberOfPlayers = 3
         roundManager.roundsForThisGame should be(20)
@@ -39,11 +43,16 @@ class RoundManagerSpec extends WordSpec with Matchers{
       }
     }
     "in setup mode" should {
+      val roundManager = new RoundManager()
+      roundManager.numberOfPlayers = 3
+      "return the correct status String" in {
+        roundManager.currentStateToString should be("Player 1, please enter your name:")
+      }
       "ask for the next player's name correctly" in {
+        roundManager.currentPlayer = 0
         roundManager.getSetupStrings should be("Player 1, please enter your name:")
       }
       "get the next player correctly" in {
-        roundManager.numberOfPlayers = 3
         roundManager.currentPlayer = 0
         roundManager.nextPlayerSetup should be(1)
       }
@@ -55,15 +64,29 @@ class RoundManagerSpec extends WordSpec with Matchers{
         roundManager.currentPlayer = 3
         roundManager.nextPlayerSetup should be(0)
       }
+      "add a player correctly to a list of all players" in {
+        roundManager.updatePlayers("Name")
+        roundManager.players should be(List(Player("Name")))
+      }
       "switch to normal mode once enough players entered their name" in {
-        roundManager.numberOfPlayers = 3
         roundManager.players = List(Player("1"), Player("2"))
         roundManager.eval("3")
         roundManager.needsSetup should be(false)
       }
     }
     "in normal mode" should {
-
+      val roundManager = new RoundManager()
+      roundManager.needsSetup = false
+      "return the correct status String" in {
+        roundManager.players = List(Player("Name"))
+        roundManager.numberOfPlayers = 3
+        roundManager.currentPlayer = 2
+        roundManager.currentStateToString should startWith
+        """
+           Round 1 - Player 1 (test1)
+           Select one of the following cards:
+        """.stripMargin
+      }
       "get the next player correctly" in {
         roundManager.numberOfPlayers = 3
         roundManager.currentPlayer = 0
@@ -89,6 +112,21 @@ class RoundManagerSpec extends WordSpec with Matchers{
         roundManager.currentRound = 20
         roundManager.getPlayerStateStrings should be("\nGame Over! Press 'q' to quit.")
         roundManager.gameOver should be(true)
+      }
+      "be in game over mode even after not quitting" in {
+        roundManager.getPlayerStateStrings should be("\nGame Over! Press 'q' to quit.")
+        roundManager.gameOver should be(true)
+      }
+    }
+    "can convert a string to a number correctly" should {
+      "return an Int packed in Some when there is a number" in {
+        val number = RoundManager.toInt("5")
+        number.isDefined should be(true)
+        number.get should be(5)
+      }
+      "return None when there is no number" in {
+        val number = RoundManager.toInt("bla")
+        number.isEmpty should be(true)
       }
     }
   }
