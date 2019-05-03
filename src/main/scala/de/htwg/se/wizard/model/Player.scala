@@ -2,8 +2,7 @@ package de.htwg.se.wizard.model
 
 import de.htwg.se.wizard.model.cards.Card
 
-case class Player(name: String) {
-
+case class Player(name: String, playersPrediction: Int) {
   override def toString: String = name
 }
 
@@ -22,4 +21,6 @@ object Player {
 
     firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
   }
+
+
 }

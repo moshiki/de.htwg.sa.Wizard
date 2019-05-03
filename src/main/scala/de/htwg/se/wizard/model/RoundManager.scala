@@ -10,6 +10,7 @@ class RoundManager {
   var currentPlayer: Int = 0
   var currentRound: Int = 0
   var gameOver: Boolean = false
+  var playersPrediction = 0
 
   def setNumberOfPlayers(number: Int): Unit = {
     numberOfPlayers = Player.getNumberOfPlayers(number)
@@ -26,7 +27,7 @@ class RoundManager {
   }
 
   def updatePlayers(input: String): Unit = {
-    players = players ::: List(Player(input))
+    players = players ::: List(Player(input, playersPrediction))
   }
 
   def getSetupStrings: String = {
@@ -62,5 +63,9 @@ class RoundManager {
   def nextPlayer: Int = {
     if (currentPlayer < numberOfPlayers - 1) currentPlayer + 1
     else 0
+  }
+
+  def updatePlayersPrediction: Int = {
+
   }
 }
