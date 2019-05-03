@@ -84,6 +84,10 @@ class RoundManagerSpec extends WordSpec with Matchers {
         roundManager.getPlayerStateStrings should be("\nGame Over! Press 'q' to quit.")
         roundManager.gameOver should be(true)
       }
+      "evaluate each other input correctly" in {
+        roundManager.evaluate(5)
+        roundManager.currentRound should be(5)
+      }
       "be in game over mode even after not quitting" in {
         roundManager.getPlayerStateStrings should be("\nGame Over! Press 'q' to quit.")
         roundManager.gameOver should be(true)

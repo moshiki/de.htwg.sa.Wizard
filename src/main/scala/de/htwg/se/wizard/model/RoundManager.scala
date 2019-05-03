@@ -22,6 +22,7 @@ class RoundManager {
 
   def evaluate(selectedCard: Int): Unit = {
     // Put method that moves cards onto new stack here
+    currentRound = selectedCard // REMOVE THIS LATER!
   }
 
   def updatePlayers(input: String): Unit = {
