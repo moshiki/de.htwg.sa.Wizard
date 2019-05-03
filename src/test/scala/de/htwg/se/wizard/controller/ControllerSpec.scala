@@ -20,11 +20,19 @@ class ControllerSpec extends WordSpec with Matchers {
       "should return the welcome message after initialisation" in {
         controller.getCurrentState should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
       }
+      "evaluate the input correctly, so that the number of players does not get set if input is not a number" in {
+        controller.eval("bla")
+        roundManager.numberOfPlayers should be(0)
+      }
+      "evaluate the input correctly, so that the number of players gets set if input is a number" in {
+        controller.eval("5")
+        roundManager.numberOfPlayers should be(5)
+      }
       "ask for the players name in setup mode" in {
         roundManager.numberOfPlayers = 3
-        "return the correct status String" in {
-          controller.getCurrentState should be("Player 1, please enter your name:")
-        }
+      }
+      "return the correct status String" in {
+        controller.getCurrentState should be("Player 1, please enter your name:")
       }
       "get the current players round String when in game" in {
         roundManager.players = List(Player("Name"))
@@ -37,6 +45,8 @@ class ControllerSpec extends WordSpec with Matchers {
         """.stripMargin
       }
       "notify its Observer after evaluating an input string" in {
+        roundManager.needsSetup = true
+        roundManager.numberOfPlayers = 0
         controller.eval("4")
         observer.updated should be(true)
         controller.roundManager.numberOfPlayers should be(4)

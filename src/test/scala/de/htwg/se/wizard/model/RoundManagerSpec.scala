@@ -9,19 +9,6 @@ class RoundManagerSpec extends WordSpec with Matchers {
       "set the number of rounds to play to 0" in {
         roundManager.roundsForThisGame should be(0)
       }
-      "return the welcome message when asking for the current state" in {
-        roundManager.currentStateToString should be(
-          "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
-        )
-      }
-      "evaluate the input correctly, so that the number of players does not get set if input is not a number" in {
-        roundManager.eval("bla")
-        roundManager.numberOfPlayers should be(0)
-      }
-      "evaluate the input correctly, so that the number of players gets set if input is a number" in {
-        roundManager.eval("5")
-        roundManager.numberOfPlayers should be(5)
-      }
     }
     "has the number of players initialized" should {
       val roundManager = new RoundManager()
@@ -42,6 +29,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
     "in setup mode" should {
       val roundManager = new RoundManager()
       "ask for the next player's name correctly" in {
+        roundManager.numberOfPlayers = 3
         roundManager.currentPlayer = 0
         roundManager.getSetupStrings should be("Player 1, please enter your name:")
       }
@@ -63,7 +51,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
       "switch to normal mode once enough players entered their name" in {
         roundManager.players = List(Player("1"), Player("2"))
-        roundManager.eval("3")
+        roundManager.addPlayer("3")
         roundManager.needsSetup should be(false)
       }
     }
