@@ -11,31 +11,21 @@ class RoundManager {
   var currentRound: Int = 0
   var gameOver: Boolean = false
 
-  def eval(input: String): Unit = {
-    if (needsSetup) {
-      if (numberOfPlayers == 0) {
-        val number = RoundManager.toInt(input)
-        if (number.isEmpty) return
-        numberOfPlayers = Player.getNumberOfPlayers(number.get)
-      } else {
+  def setNumberOfPlayers(number: Int): Unit = {
+    numberOfPlayers = Player.getNumberOfPlayers(number)
+  }
+
+  def addPlayer(input: String): Unit = {
         updatePlayers(input)
         if (players.size == numberOfPlayers) needsSetup = false
-      }
-    } else {
-      // Put method that moves cards onto new stack here
-    }
+  }
+
+  def evaluate(selectedCard: Int): Unit = {
+    // Put method that moves cards onto new stack here
   }
 
   def updatePlayers(input: String): Unit = {
     players = players ::: List(Player(input))
-  }
-
-  def currentStateToString: String = {
-    if (needsSetup) {
-      getSetupStrings
-    } else {
-      getPlayerStateStrings
-    }
   }
 
   def getSetupStrings: String = {
@@ -71,15 +61,5 @@ class RoundManager {
   def nextPlayer: Int = {
     if (currentPlayer < numberOfPlayers - 1) currentPlayer + 1
     else 0
-  }
-}
-
-object RoundManager {
-  def toInt(s: String): Option[Int] = {
-    try {
-      Some(s.toInt)
-    } catch {
-      case _: Exception => None
-    }
   }
 }
