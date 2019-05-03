@@ -31,14 +31,21 @@ class ControllerSpec extends WordSpec with Matchers {
       "ask for the players name in setup mode" in {
         roundManager.numberOfPlayers = 3
       }
+      "update the players when in setup mode" in {
+        roundManager.needsSetup = true
+        roundManager.numberOfPlayers = 3
+        controller.eval("name")
+        roundManager.players.head.name should be("name")
+      }
       "return the correct status String" in {
         controller.getCurrentState should be("Player 1, please enter your name:")
       }
       "get the current players round String when in game" in {
+        roundManager.needsSetup = false
         roundManager.players = List(Player("Name"))
         roundManager.numberOfPlayers = 3
         roundManager.currentPlayer = 2
-        roundManager.getPlayerStateStrings should startWith
+        controller.getCurrentState should startWith
         """
            Round 1 - Player 1 (test1)
            Select one of the following cards:
@@ -50,6 +57,11 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.eval("4")
         observer.updated should be(true)
         controller.roundManager.numberOfPlayers should be(4)
+      }
+      "notify its Observer after evaluating an input string in normal mode" in {
+        roundManager.needsSetup = false
+        controller.eval("4")
+        observer.updated should be(true)
       }
     }
     "can convert a string to a number correctly" should {
