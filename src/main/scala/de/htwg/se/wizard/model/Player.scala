@@ -2,7 +2,7 @@ package de.htwg.se.wizard.model
 
 import de.htwg.se.wizard.model.cards.Card
 
-case class Player(name: String, playersPrediction: Int) {
+case class Player(name: String, playerPrediction: Int) {
   override def toString: String = name
 }
 
@@ -20,6 +20,13 @@ object Player {
     val secondString = "Select one of the following cards:"
 
     firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
+  }
+
+  def playerPrediction(player: Player, round: Int): String = {
+    val firstString = "Round " + round + " - Player: " + player.name
+    val string = "Enter the amount of stitches you think you will get: "
+    firstString + "\n" + string
+
   }
 
 
