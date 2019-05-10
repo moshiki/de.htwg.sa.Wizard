@@ -42,7 +42,7 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "get the current players round String when in game" in {
         roundManager.needsSetup = false
-        roundManager.players = List(Player("Name"))
+        roundManager.players = List(Player("Name", 0))
         roundManager.numberOfPlayers = 3
         roundManager.currentPlayer = 2
         controller.getCurrentState should startWith

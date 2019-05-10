@@ -23,7 +23,7 @@ class JesterCardSpec extends WordSpec with Matchers {
     }
 
     "is a JesterCard with owner 'TestPlayer'" should {
-      val jesterCardWithPlayer = JesterCard(Some(Player("TestPlayer")))
+      val jesterCardWithPlayer = JesterCard(Some(Player("TestPlayer", 0)))
       "has an owner" in {
         jesterCardWithPlayer.hasOwner should be(true)
       }
