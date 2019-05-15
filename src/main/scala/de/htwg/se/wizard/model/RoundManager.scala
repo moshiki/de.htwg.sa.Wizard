@@ -30,8 +30,6 @@ class RoundManager {
   }
 
   def getSetupStrings: String = {
-    if (numberOfPlayers == 0) return "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
-
     currentPlayer = nextPlayerSetup
     "Player " + currentPlayer + ", please enter your name:"
   }

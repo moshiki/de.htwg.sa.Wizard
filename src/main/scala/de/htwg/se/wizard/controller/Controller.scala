@@ -4,14 +4,14 @@ import de.htwg.se.wizard.model.RoundManager
 import de.htwg.se.wizard.util.Observable
 
 class Controller(var roundManager: RoundManager) extends Observable {
-  var state = preSetupState() //preSetup, setup, game, gameOver
+  var state: ControllerState = preSetupState(roundManager) //preSetup, setup, game, gameOver
+
+  def nextState(): Unit = state = state.nextState
 
 
   def eval(input: String): Unit = {
     if (roundManager.needsSetup && roundManager.numberOfPlayers == 0) {
-      val number = Controller.toInt(input)
-      if (number.isEmpty) return
-      roundManager.setNumberOfPlayers(number.get)
+
     } else if (roundManager.needsSetup) {
       roundManager.addPlayer(input)
     } else {
@@ -45,18 +45,38 @@ trait ControllerState {
   def nextState: ControllerState
 }
 
-case class preSetupState() extends ControllerState {
+case class preSetupState(roundManager: RoundManager) extends ControllerState {
+  override def eval(input: String): Unit = {
+    val number = Controller.toInt(input)
+    if (number.isEmpty) return
+    roundManager.setNumberOfPlayers(number.get)
+  }
 
+  override def getCurrentState: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
+
+  override def nextState: ControllerState = setupState(roundManager)
 }
 
-case class setupState() extends ControllerState {
+case class setupState(roundManager: RoundManager) extends ControllerState {
+  override def eval(input: String): Unit = ???
 
+  override def getCurrentState: String = ???
+
+  override def nextState: ControllerState = ???
 }
 
-case class inGameState() extends ControllerState {
+case class inGameState(roundManager: RoundManager) extends ControllerState {
+  override def eval(input: String): Unit = ???
 
+  override def getCurrentState: String = ???
+
+  override def nextState: ControllerState = ???
 }
 
-case class gameOverState() extends ControllerState {
+case class gameOverState(roundManager: RoundManager) extends ControllerState {
+  override def eval(input: String): Unit = ???
 
+  override def getCurrentState: String = ???
+
+  override def nextState: ControllerState = ???
 }
