@@ -10,21 +10,11 @@ class Controller(var roundManager: RoundManager) extends Observable {
 
 
   def eval(input: String): Unit = {
-    if (roundManager.needsSetup && roundManager.numberOfPlayers == 0) {
-
-    } else if (roundManager.needsSetup) {
-
-    } else {
-
-    }
-
+    state.eval(input)
     notifyObservers()
   }
 
-  def getCurrentState: String = {
-    if (roundManager.needsSetup)
-    else
-  }
+  def getCurrentStateAsString: String = state.getCurrentStateAsString
 }
 
 object Controller {
@@ -41,7 +31,7 @@ object Controller {
 trait ControllerState {
   def eval(input: String): Unit
 
-  def getCurrentState: String
+  def getCurrentStateAsString: String
 
   def nextState: ControllerState
 }
@@ -54,7 +44,7 @@ case class preSetupState(roundManager: RoundManager) extends ControllerState {
     roundManager.setNumberOfPlayers(number.get)
   }
 
-  override def getCurrentState: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
+  override def getCurrentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
 
   override def nextState: ControllerState = setupState(roundManager)
 }
@@ -63,7 +53,7 @@ case class preSetupState(roundManager: RoundManager) extends ControllerState {
 case class setupState(roundManager: RoundManager) extends ControllerState {
   override def eval(input: String): Unit = roundManager.addPlayer(input)
 
-  override def getCurrentState: String = roundManager.getSetupStrings
+  override def getCurrentStateAsString: String = roundManager.getSetupStrings
 
   override def nextState: ControllerState = inGameState(roundManager)
 }
@@ -76,7 +66,7 @@ case class inGameState(roundManager: RoundManager) extends ControllerState {
     roundManager.evaluate(selectedCard.get)
   }
 
-  override def getCurrentState: String = roundManager.getPlayerStateStrings
+  override def getCurrentStateAsString: String = roundManager.getPlayerStateStrings
 
   override def nextState: ControllerState = gameOverState(roundManager)
 }
@@ -85,7 +75,7 @@ case class inGameState(roundManager: RoundManager) extends ControllerState {
 case class gameOverState(roundManager: RoundManager) extends ControllerState {
   override def eval(input: String): Unit = ()
 
-  override def getCurrentState: String = "\nGame Over! Press 'q' to quit."
+  override def getCurrentStateAsString: String = "\nGame Over! Press 'q' to quit."
 
   override def nextState: ControllerState = this
 }

@@ -18,7 +18,7 @@ class ControllerSpec extends WordSpec with Matchers {
     controller.add(observer)
     "observed by an Observer" should {
       "should return the welcome message after initialisation" in {
-        controller.getCurrentState should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
+        controller.getCurrentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
       }
       "evaluate the input correctly, so that the number of players does not get set if input is not a number" in {
         controller.eval("bla")
@@ -38,14 +38,14 @@ class ControllerSpec extends WordSpec with Matchers {
         roundManager.players.head.name should be("name")
       }
       "return the correct status String" in {
-        controller.getCurrentState should be("Player 1, please enter your name:")
+        controller.getCurrentStateAsString should be("Player 1, please enter your name:")
       }
       "get the current players round String when in game" in {
         roundManager.needsSetup = false
         roundManager.players = List(Player("Name"))
         roundManager.numberOfPlayers = 3
         roundManager.currentPlayer = 2
-        controller.getCurrentState should startWith
+        controller.getCurrentStateAsString should startWith
         """
            Round 1 - Player 1 (test1)
            Select one of the following cards:

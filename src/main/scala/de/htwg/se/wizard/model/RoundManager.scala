@@ -4,12 +4,10 @@ import de.htwg.se.wizard.model.cards.Card
 
 class RoundManager {
   val initialCardStack: List[Card] = CardStack.initialize
-  var needsSetup: Boolean = true
   var numberOfPlayers: Int = 0
   var players: List[Player] = Nil
   var currentPlayer: Int = 0
   var currentRound: Int = 0
-  var gameOver: Boolean = false
 
   def setNumberOfPlayers(number: Int): Unit = {
     numberOfPlayers = Player.getNumberOfPlayers(number)
@@ -42,7 +40,6 @@ class RoundManager {
   def getPlayerStateStrings: String = {
     currentPlayer = nextPlayer
     if (currentRound == roundsForThisGame && currentPlayer == 0) gameOver = true
-    if (gameOver) return
     if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound = currentRound + 1
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
   }
