@@ -1,8 +1,9 @@
 package de.htwg.se.wizard.model
 
 import de.htwg.se.wizard.model.cards.Card
+import de.htwg.se.wizard.util.ControllerUpdateStateObservable
 
-class RoundManager {
+class RoundManager extends ControllerUpdateStateObservable {
   val initialCardStack: List[Card] = CardStack.initialize
   var numberOfPlayers: Int = 0
   var players: List[Player] = Nil
@@ -15,7 +16,7 @@ class RoundManager {
 
   def addPlayer(input: String): Unit = {
         updatePlayers(input)
-        if (players.size == numberOfPlayers) needsSetup = false
+        if (players.size == numberOfPlayers) triggerNextState()
   }
 
   def evaluate(selectedCard: Int): Unit = {
@@ -39,7 +40,7 @@ class RoundManager {
 
   def getPlayerStateStrings: String = {
     currentPlayer = nextPlayer
-    if (currentRound == roundsForThisGame && currentPlayer == 0) gameOver = true
+    if (currentRound == roundsForThisGame && currentPlayer == 0) triggerNextState()
     if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound = currentRound + 1
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
   }

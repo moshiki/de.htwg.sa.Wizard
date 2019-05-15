@@ -1,10 +1,12 @@
 package de.htwg.se.wizard.controller
 
 import de.htwg.se.wizard.model.RoundManager
-import de.htwg.se.wizard.util.Observable
+import de.htwg.se.wizard.util.{Observable, ControllerUpdateStateObserver}
 
-class Controller(var roundManager: RoundManager) extends Observable {
-  var state: ControllerState = preSetupState(roundManager) //preSetup, setup, game, gameOver
+class Controller(var roundManager: RoundManager) extends Observable with ControllerUpdateStateObserver {
+  roundManager.add(this)
+
+  var state: ControllerState = preSetupState(roundManager)
 
   def nextState(): Unit = state = state.nextState
 
@@ -15,6 +17,8 @@ class Controller(var roundManager: RoundManager) extends Observable {
   }
 
   def getCurrentStateAsString: String = state.getCurrentStateAsString
+
+  override def update(): Unit = nextState()
 }
 
 object Controller {
