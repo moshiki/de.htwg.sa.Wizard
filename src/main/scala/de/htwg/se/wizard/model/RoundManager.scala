@@ -48,6 +48,7 @@ class RoundManager {
     if (gameOver) return "\nGame Over! Press 'q' to quit."
     if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound = currentRound + 1
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
+    Player.playerPrediction(players(currentPlayer), currentRound)
   }
 
   def roundsForThisGame: Int = {
@@ -65,9 +66,9 @@ class RoundManager {
     else 0
   }
 
-  def updatePlayerPrediction= {
+  def updatePlayerPrediction: Unit = {
     currentPlayer = nextPlayer
-    Player.playerPrediction(players(currentPlayer), currentRound)
+    playerPrediction = Player.playerPrediction(players(currentPlayer), currentRound).toInt
 
   }
 }

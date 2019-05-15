@@ -12,6 +12,8 @@ class Controller(var roundManager: RoundManager) extends Observable {
     } else if (roundManager.needsSetup) {
       roundManager.addPlayer(input)
     } else {
+      val stitch = Controller.toInt(input)
+      roundManager.updatePlayerPrediction
       val selectedCard = Controller.toInt(input)
       if (selectedCard.isEmpty) return
       roundManager.evaluate(selectedCard.get)
