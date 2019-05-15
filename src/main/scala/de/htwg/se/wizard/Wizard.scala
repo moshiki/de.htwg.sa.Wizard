@@ -7,7 +7,7 @@ import de.htwg.se.wizard.model.RoundManager
 import scala.io.StdIn.readLine
 
 object Wizard {
-  val controller = new Controller(new RoundManager())
+  val controller = new Controller(RoundManager())
   val tui = new TUI(controller)
   controller.notifyObservers()
 

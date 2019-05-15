@@ -3,7 +3,7 @@ package de.htwg.se.wizard.model
 import de.htwg.se.wizard.model.cards.Card
 import de.htwg.se.wizard.util.ControllerUpdateStateObservable
 
-class RoundManager extends ControllerUpdateStateObservable {
+case class RoundManager() extends ControllerUpdateStateObservable {
   val initialCardStack: List[Card] = CardStack.initialize
   var numberOfPlayers: Int = 0
   var players: List[Player] = Nil

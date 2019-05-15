@@ -6,7 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 class TUISpec extends WordSpec with Matchers {
   "A Wizard Tui" should {
-    val controller = new Controller(new RoundManager)
+    val controller = new Controller(RoundManager())
     val tui = new TUI(controller)
     "register itself in the controller" in {
         controller.subscribers.contains(tui) should be(true)

@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.util
 
 trait ControllerUpdateStateObserver {
-  def update(): Unit
+  def switchToNextState(): Unit
 }
 
 class ControllerUpdateStateObservable {
@@ -11,5 +11,5 @@ class ControllerUpdateStateObservable {
 
   def remove(s: ControllerUpdateStateObserver): Unit = subscribers = subscribers.filterNot(o => o == s)
 
-  def triggerNextState(): Unit = subscribers.foreach(o => o.update())
+  def triggerNextState(): Unit = subscribers.foreach(o => o.switchToNextState())
 }

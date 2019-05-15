@@ -6,7 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 class RoundManagerSpec extends WordSpec with Matchers {
   "A Round Manager" when {
     "new" should {
-      val roundManager = new RoundManager()
+      val roundManager = RoundManager()
       val controller = new Controller(roundManager)
       "set the number of rounds to play to 0" in {
         roundManager.roundsForThisGame should be(0)
@@ -19,7 +19,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
     }
     "has the number of players initialized" should {
-      val roundManager = new RoundManager()
+      val roundManager = RoundManager()
       "calculate the number of rounds to play correctly" in {
         roundManager.numberOfPlayers = 3
         roundManager.roundsForThisGame should be(20)
@@ -35,7 +35,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
     }
     "controller is in setup mode" should {
-      val roundManager = new RoundManager()
+      val roundManager = RoundManager()
       val controller = new Controller(roundManager)
       "ask for the next player's name correctly" in {
         roundManager.numberOfPlayers = 3
@@ -66,7 +66,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
     }
     "controller is in game mode" should {
-      val roundManager = new RoundManager()
+      val roundManager = RoundManager()
       val controller = new Controller(roundManager)
       roundManager.numberOfPlayers = 3
       "put the selected card on the middle stack" in {
@@ -93,7 +93,7 @@ Select one of the following cards:""".stripMargin)
         roundManager.currentPlayer = 2
         roundManager.currentRound = 20
         roundManager.getPlayerStateStrings should be("\nGame Over! Press 'q' to quit.")
-        controller.state should not equal(oldState)
+        controller.state should not equal oldState
       }
     }
   }

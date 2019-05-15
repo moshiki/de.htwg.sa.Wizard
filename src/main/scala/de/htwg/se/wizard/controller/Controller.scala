@@ -8,9 +8,6 @@ class Controller(var roundManager: RoundManager) extends Observable with Control
 
   var state: ControllerState = preSetupState(roundManager)
 
-  def nextState(): Unit = state = state.nextState
-
-
   def eval(input: String): Unit = {
     state.eval(input)
     notifyObservers()
@@ -18,7 +15,9 @@ class Controller(var roundManager: RoundManager) extends Observable with Control
 
   def getCurrentStateAsString: String = state.getCurrentStateAsString
 
-  override def update(): Unit = nextState()
+  def nextState(): Unit = state = state.nextState
+
+  override def switchToNextState(): Unit = nextState()
 }
 
 object Controller {
@@ -72,11 +71,11 @@ case class inGameState(roundManager: RoundManager) extends ControllerState {
 
   override def getCurrentStateAsString: String = roundManager.getPlayerStateStrings
 
-  override def nextState: ControllerState = gameOverState(roundManager)
+  override def nextState: ControllerState = gameOverState()
 }
 
 
-case class gameOverState(roundManager: RoundManager) extends ControllerState {
+case class gameOverState() extends ControllerState {
   override def eval(input: String): Unit = ()
 
   override def getCurrentStateAsString: String = "\nGame Over! Press 'q' to quit."
