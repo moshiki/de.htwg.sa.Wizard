@@ -49,49 +49,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
         roundManager.updatePlayers("Name")
         roundManager.players should be(List(Player("Name")))
       }
-      "switch to normal mode once enough players entered their name" in {
-        roundManager.players = List(Player("1"), Player("2"))
-        roundManager.addPlayer("3")
-        roundManager.needsSetup should be(false)
-      }
-    }
-    "in normal mode" should {
-      val roundManager = new RoundManager()
-      roundManager.needsSetup = false
-      "get the next player correctly" in {
-        roundManager.numberOfPlayers = 3
-        roundManager.currentPlayer = 0
-        roundManager.nextPlayer should be(1)
-      }
-      "increment the player count up to one value less than the number provided by the user" in {
-        roundManager.currentPlayer = 2
-        roundManager.nextPlayer should be(0)
-      }
-      "get the current players round String when in game" in {
-        roundManager.players = List(Player("Name"))
-        roundManager.numberOfPlayers = 3
-        roundManager.currentPlayer = 2
-        roundManager.getPlayerStateStrings should startWith
-        """
-           Round 1 - Player 1 (test1)
-           Select one of the following cards:
-        """.stripMargin
-      }
-      "set the state to game over and get the related String" in {
-        roundManager.numberOfPlayers = 3
-        roundManager.currentPlayer = 2
-        roundManager.currentRound = 20
-        roundManager.getPlayerStateStrings should be("\nGame Over! Press 'q' to quit.")
-        roundManager.gameOver should be(true)
-      }
-      "evaluate each other input correctly" in {
-        roundManager.evaluate(5)
-        roundManager.currentRound should be(5)
-      }
-      "be in game over mode even after not quitting" in {
-        roundManager.getPlayerStateStrings should be("\nGame Over! Press 'q' to quit.")
-        roundManager.gameOver should be(true)
-      }
+
     }
   }
 }

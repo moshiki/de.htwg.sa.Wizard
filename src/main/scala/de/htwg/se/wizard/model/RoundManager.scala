@@ -12,6 +12,7 @@ class RoundManager extends ControllerUpdateStateObservable {
 
   def setNumberOfPlayers(number: Int): Unit = {
     numberOfPlayers = Player.getNumberOfPlayers(number)
+    triggerNextState()
   }
 
   def addPlayer(input: String): Unit = {
@@ -40,7 +41,10 @@ class RoundManager extends ControllerUpdateStateObservable {
 
   def getPlayerStateStrings: String = {
     currentPlayer = nextPlayer
-    if (currentRound == roundsForThisGame && currentPlayer == 0) triggerNextState()
+    if (currentRound == roundsForThisGame && currentPlayer == 0) {
+      triggerNextState()
+      return "\nGame Over! Press 'q' to quit."
+    }
     if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound = currentRound + 1
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
   }
