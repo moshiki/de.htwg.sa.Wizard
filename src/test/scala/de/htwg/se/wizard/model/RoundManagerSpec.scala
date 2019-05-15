@@ -47,10 +47,10 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
       "add a player correctly to a list of all players" in {
         roundManager.updatePlayers("Name")
-        roundManager.players should be(List(Player("Name")))
+        roundManager.players should be(List(Player("Name", 0)))
       }
       "switch to normal mode once enough players entered their name" in {
-        roundManager.players = List(Player("1"), Player("2"))
+        roundManager.players = List(Player("1", 0), Player("2", 0))
         roundManager.addPlayer("3")
         roundManager.needsSetup should be(false)
       }
@@ -68,7 +68,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
         roundManager.nextPlayer should be(0)
       }
       "get the current players round String when in game" in {
-        roundManager.players = List(Player("Name"))
+        roundManager.players = List(Player("Name", 0))
         roundManager.numberOfPlayers = 3
         roundManager.currentPlayer = 2
         roundManager.getPlayerStateStrings should startWith

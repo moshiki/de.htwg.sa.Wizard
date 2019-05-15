@@ -10,6 +10,7 @@ class RoundManager {
   var currentPlayer: Int = 0
   var currentRound: Int = 0
   var gameOver: Boolean = false
+  var playerPrediction = 0
 
   def setNumberOfPlayers(number: Int): Unit = {
     numberOfPlayers = Player.getNumberOfPlayers(number)
@@ -26,7 +27,7 @@ class RoundManager {
   }
 
   def updatePlayers(input: String): Unit = {
-    players = players ::: List(Player(input))
+    players = players ::: List(Player(input, playerPrediction))
   }
 
   def getSetupStrings: String = {
@@ -47,6 +48,7 @@ class RoundManager {
     if (gameOver) return "\nGame Over! Press 'q' to quit."
     if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound = currentRound + 1
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
+    Player.playerPrediction(players(currentPlayer), currentRound)
   }
 
   def roundsForThisGame: Int = {
@@ -62,5 +64,11 @@ class RoundManager {
   def nextPlayer: Int = {
     if (currentPlayer < numberOfPlayers - 1) currentPlayer + 1
     else 0
+  }
+
+  def updatePlayerPrediction: Unit = {
+    currentPlayer = nextPlayer
+    playerPrediction = Player.playerPrediction(players(currentPlayer), currentRound).toInt
+
   }
 }

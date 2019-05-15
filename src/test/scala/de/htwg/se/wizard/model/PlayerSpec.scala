@@ -6,7 +6,7 @@ class PlayerSpec extends WordSpec with Matchers {
 
   "A Player" when {
     "new" should {
-      val player = Player("Name")
+      val player = Player("Name", 0)
       "have a name" in {
         player.name should be("Name")
       }
