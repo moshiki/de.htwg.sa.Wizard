@@ -42,7 +42,7 @@ class RoundManager {
   def getPlayerStateStrings: String = {
     currentPlayer = nextPlayer
     if (currentRound == roundsForThisGame && currentPlayer == 0) gameOver = true
-    if (gameOver) return "\nGame Over! Press 'q' to quit."
+    if (gameOver) return
     if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound = currentRound + 1
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
   }

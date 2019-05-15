@@ -15,9 +15,7 @@ class Controller(var roundManager: RoundManager) extends Observable {
     } else if (roundManager.needsSetup) {
 
     } else {
-      val selectedCard = Controller.toInt(input)
-      if (selectedCard.isEmpty) return
-      roundManager.evaluate(selectedCard.get)
+
     }
 
     notifyObservers()
@@ -25,7 +23,7 @@ class Controller(var roundManager: RoundManager) extends Observable {
 
   def getCurrentState: String = {
     if (roundManager.needsSetup)
-    else roundManager.getPlayerStateStrings
+    else
   }
 }
 
@@ -72,18 +70,22 @@ case class setupState(roundManager: RoundManager) extends ControllerState {
 
 
 case class inGameState(roundManager: RoundManager) extends ControllerState {
-  override def eval(input: String): Unit = ???
+  override def eval(input: String): Unit = {
+    val selectedCard = Controller.toInt(input)
+    if (selectedCard.isEmpty) return
+    roundManager.evaluate(selectedCard.get)
+  }
 
-  override def getCurrentState: String = ???
+  override def getCurrentState: String = roundManager.getPlayerStateStrings
 
-  override def nextState: ControllerState = ???
+  override def nextState: ControllerState = gameOverState(roundManager)
 }
 
 
 case class gameOverState(roundManager: RoundManager) extends ControllerState {
-  override def eval(input: String): Unit = ???
+  override def eval(input: String): Unit = ()
 
-  override def getCurrentState: String = ???
+  override def getCurrentState: String = "\nGame Over! Press 'q' to quit."
 
-  override def nextState: ControllerState = ???
+  override def nextState: ControllerState = this
 }
