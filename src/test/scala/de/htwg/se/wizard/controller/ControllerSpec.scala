@@ -56,13 +56,22 @@ class ControllerSpec extends WordSpec with Matchers {
     val controller = new Controller(roundManager)
     val state = preSetupState(roundManager, controller)
     "does nothing when trying to evaluate a string that's not a number" in {
-      val old = roundManager.copy()
+      val old = roundManager
       state.eval("AAA")
       roundManager should be(old)
     }
     "set the number of players correctly" in {
       state.eval("3")
       roundManager.numberOfPlayers should be(3)
+    }
+    "register the controller in the new roundManager" in {
+      state.eval("3")
+      state.roundManager.subscribers contains controller should be (true)
+    }
+    "trigger the controller to switch to the next state" in {
+      val old = state
+      state.eval("3")
+      controller.state should not be old
     }
     "return the correct state string" in {
       state.getCurrentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")

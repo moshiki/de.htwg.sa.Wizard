@@ -48,6 +48,7 @@ case class preSetupState(var roundManager: RoundManager, controller: Controller)
     if (number.isEmpty) return
     if (!roundManager.checkNumberOfPlayers(number.get)) return
     roundManager = RoundStrategy.execute(number.get, roundManager)
+    roundManager.add(controller)
     controller.switchToNextState()
   }
 
