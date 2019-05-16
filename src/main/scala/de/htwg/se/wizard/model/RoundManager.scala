@@ -1,38 +1,34 @@
 package de.htwg.se.wizard.model
 
 import de.htwg.se.wizard.model.cards.Card
+import de.htwg.se.wizard.util.ControllerUpdateStateObservable
 
-class RoundManager {
+case class RoundManager() extends ControllerUpdateStateObservable {
   val initialCardStack: List[Card] = CardStack.initialize
-  var needsSetup: Boolean = true
   var numberOfPlayers: Int = 0
   var players: List[Player] = Nil
   var currentPlayer: Int = 0
   var currentRound: Int = 0
-  var gameOver: Boolean = false
-  var playerPrediction = 0
 
   def setNumberOfPlayers(number: Int): Unit = {
     numberOfPlayers = Player.getNumberOfPlayers(number)
+    triggerNextState()
   }
 
   def addPlayer(input: String): Unit = {
         updatePlayers(input)
-        if (players.size == numberOfPlayers) needsSetup = false
+        if (players.size == numberOfPlayers) triggerNextState()
   }
 
   def evaluate(selectedCard: Int): Unit = {
     // Put method that moves cards onto new stack here
-    currentRound = selectedCard // REMOVE THIS LATER!
   }
 
   def updatePlayers(input: String): Unit = {
-    players = players ::: List(Player(input, playerPrediction))
+    players = players ::: List(Player(input))
   }
 
   def getSetupStrings: String = {
-    if (numberOfPlayers == 0) return "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
-
     currentPlayer = nextPlayerSetup
     "Player " + currentPlayer + ", please enter your name:"
   }
@@ -44,11 +40,12 @@ class RoundManager {
 
   def getPlayerStateStrings: String = {
     currentPlayer = nextPlayer
-    if (currentRound == roundsForThisGame && currentPlayer == 0) gameOver = true
-    if (gameOver) return "\nGame Over! Press 'q' to quit."
+    if (currentRound == roundsForThisGame && currentPlayer == 0) {
+      triggerNextState()
+      return "\nGame Over! Press 'q' to quit."
+    }
     if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound = currentRound + 1
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
-    Player.playerPrediction(players(currentPlayer), currentRound)
   }
 
   def roundsForThisGame: Int = {
@@ -64,11 +61,5 @@ class RoundManager {
   def nextPlayer: Int = {
     if (currentPlayer < numberOfPlayers - 1) currentPlayer + 1
     else 0
-  }
-
-  def updatePlayerPrediction: Unit = {
-    currentPlayer = nextPlayer
-    playerPrediction = Player.playerPrediction(players(currentPlayer), currentRound).toInt
-
   }
 }

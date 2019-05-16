@@ -13,5 +13,5 @@ class TUI(controller: Controller) extends Observer{
     }
   }
 
-  override def update(): Unit = println(controller.getCurrentState)
+  override def update(): Unit = println(controller.getCurrentStateAsString)
 }
