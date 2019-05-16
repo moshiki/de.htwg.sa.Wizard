@@ -1,8 +1,4 @@
-package de.htwg.se.wizard.model
-
-import de.htwg.se.wizard.model.cards._
-
-import scala.collection.mutable.ListBuffer
+package de.htwg.se.wizard.model.cards
 
 import scala.util.Random
 
