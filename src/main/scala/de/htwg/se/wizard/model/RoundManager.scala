@@ -66,3 +66,24 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     else 0
   }
 }
+
+object RoundManager {
+  case class Builder() {
+    var numberOfPlayers:Int = 0
+    var numberOfRounds:Int = 0
+
+    def withNumberOfPlayers(players: Int): Builder = {
+      numberOfPlayers = players
+      this
+    }
+
+    def withNumberOfRounds(rounds: Int): Builder = {
+      numberOfRounds = rounds
+      this
+    }
+
+    def build(): RoundManager = {
+      RoundManager(numberOfPlayers, numberOfRounds)
+    }
+  }
+}

@@ -108,4 +108,10 @@ Select one of the following cards:""".stripMargin)
       }
     }
   }
+  "A RoundManager Builder" when {
+    "builds a correct RoundManager" in {
+      val roundManager = RoundManager.Builder().withNumberOfPlayers(3).withNumberOfRounds(20).build()
+      roundManager should be(RoundManager(3, 20))
+    }
+  }
 }
