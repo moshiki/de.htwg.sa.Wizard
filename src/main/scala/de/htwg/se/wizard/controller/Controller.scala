@@ -44,7 +44,9 @@ case class preSetupState(roundManager: RoundManager) extends ControllerState {
   override def eval(input: String): Unit = {
     val number = Controller.toInt(input)
     if (number.isEmpty) return
-    roundManager.setNumberOfPlayers(number.get)
+    if (!roundManager.checkNumberOfPlayers(number.get)) return
+    // roundStrategy
+
   }
 
   override def getCurrentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"

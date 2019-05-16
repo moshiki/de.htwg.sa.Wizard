@@ -7,9 +7,9 @@ case class Player(name: String, playerPrediction: Int = 0) {
 }
 
 object Player {
-  def getNumberOfPlayers(number: Int): Int = {
-    if (number < 3 || number > 5) throw new IllegalArgumentException
-    number
+  def checkNumberOfPlayers(number: Int): Boolean = {
+    if (number < 3 || number > 5) return false
+    true
   }
 
   def playerTurn(player: Player, round: Int, cardStack: List[Card]): String = {

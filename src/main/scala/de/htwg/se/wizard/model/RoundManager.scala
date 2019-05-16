@@ -3,16 +3,15 @@ package de.htwg.se.wizard.model
 import de.htwg.se.wizard.model.cards.Card
 import de.htwg.se.wizard.util.ControllerUpdateStateObservable
 
-case class RoundManager() extends ControllerUpdateStateObservable {
+case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) extends ControllerUpdateStateObservable {
   val initialCardStack: List[Card] = CardStack.initialize
-  var numberOfPlayers: Int = 0
   var players: List[Player] = Nil
   var currentPlayer: Int = 0
   var currentRound: Int = 0
 
-  def setNumberOfPlayers(number: Int): Unit = {
-    numberOfPlayers = Player.getNumberOfPlayers(number)
-    triggerNextState()
+  def checkNumberOfPlayers(number: Int): Boolean = {
+    Player.checkNumberOfPlayers(number)
+    //triggerNextState()
   }
 
   def addPlayer(input: String): Unit = {
