@@ -8,5 +8,16 @@ case class ResultTable(rows: Int = 20, columns: Int = 6) {
     else points(round - 1)(player) = result + points(round - 2)(player)
   }
 
-  override def toString: String = super.toString
+  override def toString: String = {
+    val horizontalBar = "#" + ("##############" * columns)
+    def oneLine(line: Int) = points(line).mkString("#      ", "      #      ", "      #")
+    var returnString = ""
+    for (i <- points.indices) {
+      returnString += horizontalBar + "\n"
+      returnString += oneLine(i) + "\n"
+    }
+
+    returnString += horizontalBar
+    returnString
+  }
 }
