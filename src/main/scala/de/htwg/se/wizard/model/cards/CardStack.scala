@@ -4,8 +4,8 @@ import scala.util.Random
 
 object CardStack {
   val initialize: List[Card] = {
-    val wizards = List.fill(4)(WizardCard())
-    val jesters = List.fill(4)(JesterCard())
+    val wizards = List.fill(4)(Card.apply("wizard"))
+    val jesters = List.fill(4)(Card.apply("jester"))
     val normals = for {
       color <- List("red", "blue", "yellow", "green")
       number <- 1 to 13

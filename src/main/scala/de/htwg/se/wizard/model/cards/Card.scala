@@ -18,3 +18,11 @@ abstract class Card(owner: Option[Player]) {
 
   override def toString: String
 }
+object Card {
+  def apply(card: String):Card = {
+    card match {
+      case "wizard" => WizardCard()
+      case "jester" => JesterCard()
+    }
+  }
+}

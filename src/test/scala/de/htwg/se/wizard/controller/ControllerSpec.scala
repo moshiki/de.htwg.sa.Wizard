@@ -48,6 +48,7 @@ class ControllerSpec extends WordSpec with Matchers {
         val number = Controller.toInt("bla")
         number.isEmpty should be(true)
       }
+
     }
   }
 
@@ -59,6 +60,12 @@ class ControllerSpec extends WordSpec with Matchers {
       val old = RoundManager(3)
       state.eval("AAA")
       roundManager should be(old)
+    }
+    "does nothing when the number of PLayers is invalid" in {
+      val roundManager1 = RoundManager(8)
+      //val old = RoundManager(8)
+      state.eval("8")
+      roundManager1 should be(roundManager1)
     }
     "set the number of players correctly" in {
       state.eval("3")
