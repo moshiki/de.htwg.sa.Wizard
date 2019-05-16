@@ -2,7 +2,7 @@ package de.htwg.se.wizard.model
 
 import de.htwg.se.wizard.model.cards.Card
 
-case class Player(name: String, playerPrediction: Int) {
+case class Player(name: String, playerPrediction: Int = 0) {
   override def toString: String = name
 }
 
