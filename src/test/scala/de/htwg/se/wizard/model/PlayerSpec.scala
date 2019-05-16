@@ -18,6 +18,11 @@ class PlayerSpec extends WordSpec with Matchers {
           """Round 1 - Player: Name
 Select one of the following cards:""".stripMargin)
       }
+      "get the correct String for stitches" in {
+        Player.playerPrediction(player, 1) should startWith(
+          """Round 1 - Player: Name
+            |Enter the amount of stitches you think you will get:""".stripMargin)
+      }
     }
   }
 
