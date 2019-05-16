@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model
 
-import de.htwg.se.wizard.model.cards.Card
+import de.htwg.se.wizard.model.cards.{Card, CardStack}
 import de.htwg.se.wizard.util.ControllerUpdateStateObservable
 
 case class RoundManager() extends ControllerUpdateStateObservable {
