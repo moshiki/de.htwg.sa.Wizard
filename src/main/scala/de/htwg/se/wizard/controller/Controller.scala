@@ -15,7 +15,7 @@ class Controller(var roundManager: RoundManager) extends Observable with Control
 
   def getCurrentStateAsString: String = state.getCurrentStateAsString
 
-  def nextState(): Unit = state = state.nextState
+  def nextState(): Unit = state = state.nextState; roundManager = state.getRoundManager
 
   override def switchToNextState(): Unit = nextState()
 }
@@ -31,21 +31,24 @@ object Controller {
 }
 
 
-trait ControllerState {
+abstract class ControllerState(roundManager: RoundManager) {
   def eval(input: String): Unit
 
   def getCurrentStateAsString: String
 
   def nextState: ControllerState
+
+  def getRoundManager: RoundManager = roundManager
 }
 
 
-case class preSetupState(roundManager: RoundManager, controller: Controller) extends ControllerState {
+case class preSetupState(var roundManager: RoundManager, controller: Controller) extends ControllerState(roundManager) {
   override def eval(input: String): Unit = {
     val number = Controller.toInt(input)
     if (number.isEmpty) return
     if (!roundManager.checkNumberOfPlayers(number.get)) return
-    val roundManager2 = RoundStrategy.execute(number.get, roundManager)
+    roundManager = RoundStrategy.execute(number.get, roundManager)
+    roundManager.add(controller)
     controller.switchToNextState()
   }
 
@@ -55,7 +58,7 @@ case class preSetupState(roundManager: RoundManager, controller: Controller) ext
 }
 
 
-case class setupState(roundManager: RoundManager) extends ControllerState {
+case class setupState(roundManager: RoundManager) extends ControllerState(roundManager) {
   override def eval(input: String): Unit = roundManager.addPlayer(input)
 
   override def getCurrentStateAsString: String = roundManager.getSetupStrings
@@ -64,7 +67,7 @@ case class setupState(roundManager: RoundManager) extends ControllerState {
 }
 
 
-case class inGameState(roundManager: RoundManager) extends ControllerState {
+case class inGameState(roundManager: RoundManager) extends ControllerState(roundManager) {
   override def eval(input: String): Unit = {
     val selectedCard = Controller.toInt(input)
     if (selectedCard.isEmpty) return
@@ -73,11 +76,11 @@ case class inGameState(roundManager: RoundManager) extends ControllerState {
 
   override def getCurrentStateAsString: String = roundManager.getPlayerStateStrings
 
-  override def nextState: ControllerState = gameOverState()
+  override def nextState: ControllerState = gameOverState(roundManager)
 }
 
 
-case class gameOverState() extends ControllerState {
+case class gameOverState(roundManager: RoundManager) extends ControllerState(roundManager) {
   override def eval(input: String): Unit = ()
 
   override def getCurrentStateAsString: String = "\nGame Over! Press 'q' to quit."

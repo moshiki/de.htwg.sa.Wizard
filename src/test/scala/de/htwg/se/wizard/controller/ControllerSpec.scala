@@ -53,11 +53,11 @@ class ControllerSpec extends WordSpec with Matchers {
   }
 
   "A preSetupState" when {
-    val roundManager = RoundManager(3)
+    var roundManager = RoundManager(3)
     val controller = new Controller(roundManager)
     val state = preSetupState(roundManager, controller)
     "does nothing when trying to evaluate a string that's not a number" in {
-      val old = RoundManager(3)
+      val old = roundManager
       state.eval("AAA")
       roundManager should be(old)
     }
@@ -69,12 +69,22 @@ class ControllerSpec extends WordSpec with Matchers {
     }
     "set the number of players correctly" in {
       state.eval("3")
-      roundManager.getNumberOfPlayers() should be(3)
+      roundManager.numberOfPlayers should be(3)
+    }
+    "register the controller in the new roundManager" in {
+      state.eval("3")
+      state.roundManager.subscribers contains controller should be (true)
+    }
+    "trigger the controller to switch to the next state" in {
+      val old = state
+      state.eval("3")
+      controller.state should not be old
     }
     "return the correct state string" in {
       state.getCurrentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
     }
     "return the correct next state" in {
+      roundManager = state.roundManager
       state.nextState should be(setupState(roundManager))
     }
   }
@@ -86,7 +96,6 @@ class ControllerSpec extends WordSpec with Matchers {
       roundManager.players.contains(Player("Name")) should be(true)
     }
     "return the correct state string" in {
-      roundManager.getNumberOfPlayers()
       roundManager.players = Nil
       state.getCurrentStateAsString should be("Player 1, please enter your name:")
     }
@@ -107,7 +116,6 @@ class ControllerSpec extends WordSpec with Matchers {
       // TODO: extend once implemented
     }
     "return the correct state string" in {
-      roundManager.getNumberOfPlayers()
       roundManager.currentRound = 1
       roundManager.currentPlayer = 2
       roundManager.players = List(Player("Name"))
@@ -116,11 +124,11 @@ class ControllerSpec extends WordSpec with Matchers {
 Select one of the following cards:""".stripMargin)
     }
     "return the correct next state" in {
-      state.nextState should be(gameOverState())
+      state.nextState should be(gameOverState(roundManager))
     }
   }
   "A gameOverState" should {
-    val state = gameOverState()
+    val state = gameOverState(RoundManager())
     "do nothing when evaluating" in {
       state.eval("5")
     }
