@@ -15,7 +15,6 @@ object RoundStrategy {
     case 3 => strategy3Players(roundManager)
     case 4 => strategy4Players(roundManager)
     case 5 => strategy5Players(roundManager)
-    case _ => throw new IllegalArgumentException
 
   }
 
