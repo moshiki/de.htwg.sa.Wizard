@@ -58,7 +58,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
         roundManager.addPlayer("Name")
         roundManager.players should be(List(Player("Name")))
       }
-      "trigger the next state when enough players enterd their names" in {
+      "trigger the next state when enough players entered their names" in {
         val oldState = controller.state
         roundManager.addPlayer("Player 2")
         roundManager.addPlayer("Player 3")
@@ -81,7 +81,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
         roundManager.nextPlayer should be(0)
       }
       "return the correct state string" in {
-        roundManager.players = List(Player("Name"))
+        roundManager.players = List(Player("Name"), Player("P2"))
         roundManager.currentPlayer = 2
         roundManager.getPlayerStateStrings should startWith(
         """Round 1 - Player: Name
@@ -92,6 +92,12 @@ Select one of the following cards:""".stripMargin)
         roundManager.currentRound = 0
         roundManager.getPlayerStateStrings
         roundManager.currentRound should be(1)
+      }
+      "not increase the current round when its not correct to do so" in {
+        roundManager.currentPlayer = 0
+        roundManager.currentRound = 0
+        roundManager.getPlayerStateStrings
+        roundManager.currentRound should be(0)
       }
       "trigger the next state and return game over when game is over" in {
         val oldState = controller.state

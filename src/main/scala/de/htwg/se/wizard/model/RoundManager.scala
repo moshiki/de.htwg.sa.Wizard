@@ -42,8 +42,13 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
       triggerNextState()
       return "\nGame Over! Press 'q' to quit."
     }
-    if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound = currentRound + 1
+    currentRound = nextRound
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
+  }
+
+  def nextRound: Int = {
+    if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound + 1
+    else currentRound
   }
 
   def roundsForThisGame: Int = {
