@@ -15,9 +15,26 @@ class ResultTableSpec extends WordSpec with Matchers{
       table.points(0).length should be(5)
     }
     val table = ResultTable()
-    "update the result correctly in the table" in {
+    "update the result correctly in the first round" in {
       table.updatePoints(1, 0, 5)
       table.points(0)(0) should be(5)
+    }
+    "update the result correctly in all future rounds" in {
+      table.updatePoints(2, 0, -3)
+      table.points(1)(0) should be(2)
+    }
+    "have a nice string representation" in {
+      val printTable = ResultTable(2, 3)
+      printTable.points(0)(1) = 5
+      printTable.toString should be(
+        """
+          |###########################################
+          |#      0      #      5      #      0      #
+          |###########################################
+          |#      0      #      0      #      0      #
+          |###########################################
+        """
+        .stripMargin)
     }
   }
 }
