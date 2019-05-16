@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.controller
 
-import de.htwg.se.wizard.model.RoundManager
+import de.htwg.se.wizard.model.{RoundManager, RoundStrategy}
 import de.htwg.se.wizard.util.{Observable, ControllerUpdateStateObserver}
 
 class Controller(var roundManager: RoundManager) extends Observable with ControllerUpdateStateObserver {
@@ -45,7 +45,7 @@ case class preSetupState(roundManager: RoundManager, controller: Controller) ext
     val number = Controller.toInt(input)
     if (number.isEmpty) return
     if (!roundManager.checkNumberOfPlayers(number.get)) return
-    // TODO:roundStrategy
+    val roundManager2 = RoundStrategy.execute(number.get, roundManager)
     controller.switchToNextState()
   }
 

@@ -5,22 +5,22 @@ object RoundStrategy {
 
   def strategy(numberOfPlayers: Int, roundManager: RoundManager) = numberOfPlayers match {
     case 3 => strategy3Players(roundManager)
-    case 4 => strategy4Players
-    case 5 => strategy5Players
+    case 4 => strategy4Players(roundManager)
+    case 5 => strategy5Players(roundManager)
     case _ => throw new IllegalArgumentException
 
   }
 
-  def strategy3Players(roundManager: RoundManager) = {
+  def strategy3Players(roundManager: RoundManager):RoundManager = {
     roundManager.copy(3, 20)
   }
 
-  def strategy4Players = {
-    new RoundManager(4, 15)
+  def strategy4Players(roundManager: RoundManager):RoundManager = {
+    roundManager.copy(4, 15)
   }
 
-  def strategy5Players = {
-    new RoundManager(5,12)
+  def strategy5Players(roundManager: RoundManager):RoundManager = {
+     roundManager.copy(5,12)
   }
 }
 
