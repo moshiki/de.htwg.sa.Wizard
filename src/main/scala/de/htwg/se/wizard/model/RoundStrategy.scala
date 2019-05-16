@@ -19,15 +19,15 @@ object RoundStrategy {
   }
 
   def strategy3Players(roundManager: RoundManager):RoundManager = {
-    roundManager.copy(3, 20)
+    RoundManager.Builder().withNumberOfPlayers(3).withNumberOfRounds(20).build()
   }
 
   def strategy4Players(roundManager: RoundManager):RoundManager = {
-    roundManager.copy(4, 15)
+    RoundManager.Builder().withNumberOfPlayers(4).withNumberOfRounds(15).build()
   }
 
   def strategy5Players(roundManager: RoundManager):RoundManager = {
-     roundManager.copy(5,12)
+    RoundManager.Builder().withNumberOfPlayers(5).withNumberOfRounds(12).build()
   }
 }
 
