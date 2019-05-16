@@ -9,6 +9,10 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   var currentPlayer: Int = 0
   var currentRound: Int = 0
 
+  def getNumberOfPlayers(): Int = {
+     numberOfPlayers
+  }
+
   def checkNumberOfPlayers(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)
   }

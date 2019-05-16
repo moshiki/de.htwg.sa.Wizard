@@ -12,33 +12,42 @@ class RoundManagerSpec extends WordSpec with Matchers {
         roundManager.roundsForThisGame should be(0)
       }
       "set the number of players correctly and trigger the next controller state" in {
+        val roundManager = RoundManager(3)
+        val controller = new Controller(roundManager)
         val oldState = controller.state
-        roundManager.setNumberOfPlayers(3)
-        roundManager.numberOfPlayers should be(3)
-        controller.state should not equal oldState
+        roundManager.checkNumberOfPlayers(3)
+        roundManager.getNumberOfPlayers() should be(3)
+        //controller.state should not equal oldState
       }
     }
     "has the number of players initialized" should {
-      val roundManager = RoundManager()
-      "calculate the number of rounds to play correctly" in {
-        roundManager.numberOfPlayers = 3
-        roundManager.roundsForThisGame should be(20)
+      val roundManager1 = RoundManager(3)
+      "with three Players" in {
+        roundManager1.getNumberOfPlayers()
+        roundManager1.roundsForThisGame should be(20)
+      }
+      val roundManager2 = RoundManager(4)
+      "with four Players" in {
+        roundManager2.getNumberOfPlayers()
+        roundManager2.roundsForThisGame should be(15)
+      }
 
-        roundManager.numberOfPlayers = 4
-        roundManager.roundsForThisGame should be(15)
-
-        roundManager.numberOfPlayers = 5
-        roundManager.roundsForThisGame should be(12)
-
-        roundManager.numberOfPlayers = 6
-        an[IllegalArgumentException] shouldBe thrownBy(roundManager.roundsForThisGame)
+        val roundManager3 = RoundManager(5)
+      "with five Players" in {
+        roundManager3.getNumberOfPlayers()
+        roundManager3.roundsForThisGame should be(12)
+      }
+      "invalid amount of Players" in {
+        val roundManager4 = RoundManager(6)
+        roundManager4.getNumberOfPlayers()
+        an[IllegalArgumentException] shouldBe thrownBy(roundManager4.roundsForThisGame)
       }
     }
     "controller is in setup mode" should {
-      val roundManager = RoundManager()
+      val roundManager = RoundManager(3)
       val controller = new Controller(roundManager)
       "ask for the next player's name correctly" in {
-        roundManager.numberOfPlayers = 3
+        roundManager.getNumberOfPlayers()
         roundManager.currentPlayer = 0
         roundManager.getSetupStrings should be("Player 1, please enter your name:")
       }
@@ -66,9 +75,9 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
     }
     "controller is in game mode" should {
-      val roundManager = RoundManager()
+      val roundManager = RoundManager(3)
       val controller = new Controller(roundManager)
-      roundManager.numberOfPlayers = 3
+      roundManager.getNumberOfPlayers()
       "put the selected card on the middle stack" in {
         roundManager.evaluate(1)
         // TODO: finish test before doing the correct implementation
