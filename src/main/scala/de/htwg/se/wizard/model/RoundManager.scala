@@ -11,7 +11,6 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)
-    //triggerNextState()
   }
 
   def addPlayer(input: String): Unit = {

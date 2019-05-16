@@ -6,7 +6,7 @@ import de.htwg.se.wizard.util.{Observable, ControllerUpdateStateObserver}
 class Controller(var roundManager: RoundManager) extends Observable with ControllerUpdateStateObserver {
   roundManager.add(this)
 
-  var state: ControllerState = preSetupState(roundManager)
+  var state: ControllerState = preSetupState(roundManager, this)
 
   def eval(input: String): Unit = {
     state.eval(input)
@@ -40,13 +40,13 @@ trait ControllerState {
 }
 
 
-case class preSetupState(roundManager: RoundManager) extends ControllerState {
+case class preSetupState(roundManager: RoundManager, controller: Controller) extends ControllerState {
   override def eval(input: String): Unit = {
     val number = Controller.toInt(input)
     if (number.isEmpty) return
     if (!roundManager.checkNumberOfPlayers(number.get)) return
-    // roundStrategy
-
+    // TODO:roundStrategy
+    controller.switchToNextState()
   }
 
   override def getCurrentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
