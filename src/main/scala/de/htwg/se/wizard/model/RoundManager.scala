@@ -8,6 +8,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   var players: List[Player] = Nil
   var currentPlayer: Int = 0
   var currentRound: Int = 0
+  var predictionPerRound: List[Int] = Nil
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)
@@ -20,6 +21,9 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   def evaluate(selectedCard: Int): Unit = {
     // Put method that moves cards onto new stack here
+  }
+  def updatePlayerPrediction(input: Int): Unit = {
+    predictionPerRound = List(Int(input))
   }
 
   def updatePlayers(input: String): Unit = {
@@ -43,7 +47,9 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
       return "\nGame Over! Press 'q' to quit."
     }
     currentRound = nextRound
+    Player.playerPrediction(players(currentPlayer), currentRound)
     Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
+
   }
 
   def nextRound: Int = {
