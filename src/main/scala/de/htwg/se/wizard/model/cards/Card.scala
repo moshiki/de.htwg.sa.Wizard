@@ -16,7 +16,9 @@ abstract class Card(owner: Option[Player]) {
     case _ => "unknown"
   }
 
-  override def toString: String
+  def getStringRep: String
+
+  override def toString: String = "C:" + getStringRep
 }
 object Card {
   def apply(card: String):Card = {

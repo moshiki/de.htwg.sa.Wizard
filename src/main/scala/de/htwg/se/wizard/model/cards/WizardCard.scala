@@ -9,5 +9,5 @@ case class WizardCard(owner: Option[Player] = None) extends Card(owner) {
 
   def isJester: Boolean = false
 
-  override def toString: String = "Wizard"
+  override def getStringRep: String = "Wizard"
 }
