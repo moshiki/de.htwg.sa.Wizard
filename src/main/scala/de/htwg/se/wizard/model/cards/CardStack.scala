@@ -33,6 +33,6 @@ object CardStack {
       val highestCardMatchingTrumpColor = cardsWithHighestNumberInNormalCards.filter(_.color == color)
       if (highestCardMatchingTrumpColor.nonEmpty) highestCardMatchingTrumpColor.head.owner.get
       else cardsWithHighestNumberInNormalCards.head.owner.get
-    } else null
+    } else jesterCards.head.owner.get
   }
 }
