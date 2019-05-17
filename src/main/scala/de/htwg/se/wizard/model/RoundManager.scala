@@ -22,8 +22,10 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   def evaluate(selectedCard: Int): Unit = {
     // Put method that moves cards onto new stack here
   }
+
   def updatePlayerPrediction(input: Int): Unit = {
-    predictionPerRound = List(Int(input))
+    if(currentPlayer == 0) predictionPerRound = Nil
+    predictionPerRound = predictionPerRound ::: List(input)
   }
 
   def updatePlayers(input: String): Unit = {
@@ -47,8 +49,14 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
       return "\nGame Over! Press 'q' to quit."
     }
     currentRound = nextRound
-    Player.playerPrediction(players(currentPlayer), currentRound)
-    Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
+    if(predictionPerRound.size < numberOfPlayers) {
+      Player.playerPrediction(players(currentPlayer), currentRound)
+    }
+    else {
+      Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
+    }
+
+
 
   }
 
