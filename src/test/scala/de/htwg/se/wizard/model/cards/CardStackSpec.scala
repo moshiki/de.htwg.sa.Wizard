@@ -1,5 +1,6 @@
 package de.htwg.se.wizard.model.cards
 
+import de.htwg.se.wizard.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class CardStackSpec extends WordSpec with Matchers{
@@ -71,6 +72,34 @@ class CardStackSpec extends WordSpec with Matchers{
     "has 4 cards of value 1 to 13" in {
       for (i <- 1 to 13) {
         shuffledDefaultcards.count(_.number == i) should be(4)
+      }
+    }
+  }
+  "A CardStack that determines the owner of the highest card" when {
+    "there are different default cards" in {
+      val cardList = List(DefaultCard("blue", 12, Some(Player("Olaf"))), DefaultCard("red", 13, Some(Player("Tim"))))
+      CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Tim"))
+    }
+    "there is a wizardCard in the stack" in {
+      val cardList = List(WizardCard(Some(Player("Olaf"))), DefaultCard("red", 13, Some(Player("Tim"))))
+      CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Olaf"))
+    }
+    "there are only wizardCards in the stack" in {
+      val cardList = List(WizardCard(Some(Player("Olaf"))), WizardCard(Some(Player("Tim"))))
+      CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Olaf"))
+    }
+    "there are two DefaultCards of same value" in {
+      val cardList = List(DefaultCard("blue", 13, Some(Player("Olaf"))), DefaultCard("red", 13, Some(Player("Tim"))))
+      CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Olaf"))
+    }
+    "there are two cards of same value, but one is in the trump color" in {
+      val cardList = List(DefaultCard("blue", 12, Some(Player("Olaf"))), DefaultCard("red", 13, Some(Player("Tim"))))
+      CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Tim"))
+    }
+    "there are only jesterCards in the stack" in {
+      "there are only wizardCards in the stack" in {
+        val cardList = List(JesterCard(Some(Player("Olaf"))), JesterCard(Some(Player("Tim"))))
+        CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Olaf"))
       }
     }
   }
