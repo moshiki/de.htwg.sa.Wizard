@@ -93,8 +93,8 @@ class CardStackSpec extends WordSpec with Matchers {
       CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Olaf"))
     }
     "there are two cards of same value, but one is in the trump color" in {
-      val cardList = List(DefaultCard("blue", 12, Some(Player("Olaf"))), DefaultCard("red", 13, Some(Player("Tim"))))
-      CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Tim"))
+      val cardList = List(DefaultCard("blue", 13, Some(Player("Olaf"))), DefaultCard("red", 13, Some(Player("Tim"))))
+      CardStack.getPlayerOfHighestCard(cardList, "red") should be(Player("Tim"))
     }
     "there are only jesterCards in the stack" in {
       val cardList = List(JesterCard(Some(Player("Olaf"))), JesterCard(Some(Player("Tim"))))
