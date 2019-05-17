@@ -3,7 +3,7 @@ package de.htwg.se.wizard.model.cards
 import de.htwg.se.wizard.model.Player
 import org.scalatest.{Matchers, WordSpec}
 
-class CardStackSpec extends WordSpec with Matchers{
+class CardStackSpec extends WordSpec with Matchers {
   "An initial CardStack" should {
     val cardStack = CardStack.initialize
     "contain 60 cards" in {
@@ -97,10 +97,8 @@ class CardStackSpec extends WordSpec with Matchers{
       CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Tim"))
     }
     "there are only jesterCards in the stack" in {
-      "there are only wizardCards in the stack" in {
-        val cardList = List(JesterCard(Some(Player("Olaf"))), JesterCard(Some(Player("Tim"))))
-        CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Olaf"))
-      }
+      val cardList = List(JesterCard(Some(Player("Olaf"))), JesterCard(Some(Player("Tim"))))
+      CardStack.getPlayerOfHighestCard(cardList, "green") should be(Player("Olaf"))
     }
   }
 }

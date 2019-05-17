@@ -1,5 +1,7 @@
 package de.htwg.se.wizard.model.cards
 
+import de.htwg.se.wizard.model.Player
+
 import scala.util.Random
 
 object CardStack {
@@ -14,7 +16,17 @@ object CardStack {
     wizards ::: jesters ::: normals
   }
 
-  def shuffleCards(a:List[Card]): List[Card] = {
+  def shuffleCards(a: List[Card]): List[Card] = {
     Random.shuffle(a)
+  }
+
+  def getPlayerOfHighestCard(cardList: List[Card], color: String): Player = {
+    val wizardCards = cardList.filter(card => card.isWizard).map(card => card.asInstanceOf[WizardCard])
+    val defaultCards = cardList.filterNot(card => card.isWizard || card.isJester)
+      .map(card => card.asInstanceOf[DefaultCard]).sortWith(_ > _)
+    val jesterCards = cardList.filter(card => card.isJester).map(card => card.asInstanceOf[JesterCard])
+
+    if (wizardCards.nonEmpty) wizardCards.head.owner.get
+    else null
   }
 }
