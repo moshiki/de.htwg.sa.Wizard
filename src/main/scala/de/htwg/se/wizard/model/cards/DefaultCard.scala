@@ -2,7 +2,7 @@ package de.htwg.se.wizard.model.cards
 
 import de.htwg.se.wizard.model.Player
 
-case class DefaultCard(color: String, number: Integer, owner: Option[Player] = None)
+case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
   extends Card(owner) with Ordered[DefaultCard] {
   require(number >= 1 && number <= 13)
   require(color == "blue" || color == "red" || color == "yellow" || color == "green")

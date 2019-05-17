@@ -27,6 +27,12 @@ object CardStack {
     val jesterCards = cardList.filter(card => card.isJester).map(card => card.asInstanceOf[JesterCard])
 
     if (wizardCards.nonEmpty) wizardCards.head.owner.get
-    else null
+    else if (defaultCards.nonEmpty) {
+      val highestNumber = defaultCards.head.number
+      val cardsWithHighestNumberInNormalCards = defaultCards.filter(_.number == highestNumber)
+      val highestCardMatchingTrumpColor = cardsWithHighestNumberInNormalCards.filter(_.color == color)
+      if (highestCardMatchingTrumpColor.nonEmpty) highestCardMatchingTrumpColor.head.owner.get
+      else cardsWithHighestNumberInNormalCards.head.owner.get
+    } else null
   }
 }
