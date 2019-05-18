@@ -7,8 +7,10 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   val initialCardStack: List[Card] = CardStack.initialize
   var players: List[Player] = Nil
   var currentPlayer: Int = 0
-  var currentRound: Int = 0
+  var currentRound: Int = 1
   var predictionPerRound: List[Int] = Nil
+  var nextRoundB: Boolean = true
+  var mod: Int = 0
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)
@@ -21,11 +23,14 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   def evaluate(selectedCard: Int): Unit = {
     // Put method that moves cards onto new stack here
+    if(currentPlayer == numberOfPlayers -1) mod += 1
+
   }
 
   def updatePlayerPrediction(input: Int): Unit = {
     if(currentPlayer == 0) predictionPerRound = Nil
     predictionPerRound = predictionPerRound ::: List(input)
+    if(predictionPerRound.size == numberOfPlayers) nextRoundB = false
   }
 
   def updatePlayers(input: String): Unit = {
@@ -44,24 +49,25 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   def getPlayerStateStrings: String = {
     currentPlayer = nextPlayer
+    currentRound = nextRound
     if (currentRound == roundsForThisGame && currentPlayer == 0) {
       triggerNextState()
       return "\nGame Over! Press 'q' to quit."
     }
-    currentRound = nextRound
     if(predictionPerRound.size < numberOfPlayers) {
       Player.playerPrediction(players(currentPlayer), currentRound)
     }
     else {
       Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
+
+
     }
-
-
-
   }
 
   def nextRound: Int = {
-    if (currentPlayer == 0 && currentRound != roundsForThisGame) currentRound + 1
+    if (currentPlayer == 0 && currentRound != roundsForThisGame && predictionPerRound.size == numberOfPlayers && mod != 1) {
+      nextRoundB = true
+      currentRound + 1}
     else currentRound
   }
 
