@@ -9,6 +9,7 @@ class Controller(var roundManager: RoundManager) extends Observable with Control
   var state: ControllerState = preSetupState(roundManager, this)
 
   def eval(input: String): Unit = {
+   /* if(inGameState == 0) state.evalPlayerPrediction(input)*/
     state.eval(input)
     notifyObservers()
   }
@@ -34,6 +35,8 @@ object Controller {
 abstract class ControllerState(roundManager: RoundManager) {
   def eval(input: String): Unit
 
+ /* def evalPlayerPrediction(input: String): Unit*/
+
   def getCurrentStateAsString: String
 
   def nextState: ControllerState
@@ -52,6 +55,8 @@ case class preSetupState(var roundManager: RoundManager, controller: Controller)
     controller.switchToNextState()
   }
 
+  /*override def evalPlayerPrediction(input: String): Unit = ()*/
+
   override def getCurrentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
 
   override def nextState: ControllerState = setupState(roundManager)
@@ -60,6 +65,8 @@ case class preSetupState(var roundManager: RoundManager, controller: Controller)
 
 case class setupState(roundManager: RoundManager) extends ControllerState(roundManager) {
   override def eval(input: String): Unit = roundManager.addPlayer(input)
+
+  /*override def evalPlayerPrediction(input: String): Unit = ()*/
 
   override def getCurrentStateAsString: String = roundManager.getSetupStrings
 
@@ -71,8 +78,15 @@ case class inGameState(roundManager: RoundManager) extends ControllerState(round
   override def eval(input: String): Unit = {
     val selectedCard = Controller.toInt(input)
     if (selectedCard.isEmpty) return
+    if(roundManager.nextRoundB)roundManager.updatePlayerPrediction(selectedCard.get)
     roundManager.evaluate(selectedCard.get)
   }
+
+  /*override def evalPlayerPrediction(input: String): Unit = {
+    val prediction = Controller.toInt(input)
+    if(prediction.isEmpty) return
+    roundManager.updatePlayerPrediction(prediction.get)
+  }*/
 
   override def getCurrentStateAsString: String = roundManager.getPlayerStateStrings
 
@@ -82,6 +96,8 @@ case class inGameState(roundManager: RoundManager) extends ControllerState(round
 
 case class gameOverState(roundManager: RoundManager) extends ControllerState(roundManager) {
   override def eval(input: String): Unit = ()
+
+  /*override def evalPlayerPrediction(input: String): Unit = ()*/
 
   override def getCurrentStateAsString: String = "\nGame Over! Press 'q' to quit."
 

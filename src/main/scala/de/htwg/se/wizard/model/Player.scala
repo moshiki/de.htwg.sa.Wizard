@@ -1,8 +1,7 @@
 package de.htwg.se.wizard.model
-
 import de.htwg.se.wizard.model.cards.Card
 
-case class Player(name: String, playerPrediction: Int = 0) {
+case class Player(name: String, playerPrediction: Option[List[Int]] = None) {
   override def toString: String = name
 }
 
@@ -28,6 +27,4 @@ object Player {
     firstString + "\n" + string
 
   }
-
-
 }
