@@ -83,18 +83,30 @@ class RoundManagerSpec extends WordSpec with Matchers {
       "return the correct state string of reading in the prediction" in {
         roundManager.players = List(Player("Name"), Player("P2"))
         roundManager.currentPlayer = 2
-        roundManager.updatePlayerPrediction(3)
-        roundManager.updatePlayerPrediction(2)
-        roundManager.updatePlayerPrediction(1)
         roundManager.getPlayerStateStrings should startWith(
-        """Round 2 - Player: Name
+        """Round 1 - Player: Name
 Enter the amount of stitches you think you will get: """.stripMargin)
       }
+
+      "update predictionPerRound correctly" in {
+        roundManager.updatePlayerPrediction(3)
+        roundManager.predictionPerRound should be(List(3))
+      }
+
+      "empty predictionPerRound once a new round starts " in {
+        roundManager.currentPlayer = 0
+        roundManager.updatePlayerPrediction(1)
+        roundManager.predictionPerRound should be(List(1))
+      }
+
+
+
+
       "increase the current round when it's player ones turn again" in {
         roundManager.currentPlayer = 2
         roundManager.currentRound = 1
         roundManager.getPlayerStateStrings
-        roundManager.currentRound should be(2)
+        roundManager.currentRound should be(1)
       }
       "not increase the current round when its not correct to do so" in {
         roundManager.currentPlayer = 0
