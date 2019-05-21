@@ -88,6 +88,13 @@ class RoundManagerSpec extends WordSpec with Matchers {
 Enter the amount of stitches you think you will get: """.stripMargin)
       }
 
+      "should ask player for his prediction if Prediction list is empty" in {
+        roundManager.currentPlayer = 0
+        roundManager.getPlayerStateStrings
+        roundManager.predictionPerRound.size should be(0)
+
+      }
+
       "update predictionPerRound correctly" in {
         roundManager.updatePlayerPrediction(3)
         roundManager.predictionPerRound should be(List(3))
