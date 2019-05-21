@@ -113,12 +113,6 @@ Enter the amount of stitches you think you will get: """.stripMargin)
 
       "return the correct state string once all players told their prediction" in {
         roundManager.currentPlayer = 0
-        roundManager.updatePlayerPrediction(1)
-        roundManager.currentPlayer = 1
-        roundManager.updatePlayerPrediction(2)
-        roundManager.currentPlayer = 2
-        roundManager.updatePlayerPrediction(3)
-        roundManager.currentPlayer = 0
         roundManager.players = List(Player("Name"), Player("P2"))
         roundManager.getPlayerStateStrings should startWith(
           """Round 1 - Player: P2
