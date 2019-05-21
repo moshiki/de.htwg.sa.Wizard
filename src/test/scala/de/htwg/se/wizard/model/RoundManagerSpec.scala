@@ -111,13 +111,25 @@ Enter the amount of stitches you think you will get: """.stripMargin)
         roundManager.mod should be(0)
       }
 
+      "return the correct state string once all players told their prediction" in {
+        roundManager.currentPlayer = 0
+        roundManager.updatePlayerPrediction(1)
+        roundManager.currentPlayer = 1
+        roundManager.updatePlayerPrediction(2)
+        roundManager.currentPlayer = 2
+        roundManager.updatePlayerPrediction(3)
+        roundManager.currentPlayer = 0
+        roundManager.players = List(Player("Name"), Player("P2"))
+        roundManager.getPlayerStateStrings should startWith(
+          """Round 1 - Player: P2
+Select one of the following cards:""".stripMargin)
+      }
 
-
-
-      "increase the current round when it's player ones turn again" in {
+      "increase the current round when it's player ones turn again and set NextRoundB true" in {
         roundManager.currentPlayer = 2
         roundManager.currentRound = 1
         roundManager.getPlayerStateStrings
+        roundManager.nextRoundB should be(true)
         roundManager.currentRound should be(2)
       }
       "not increase the current round when its not correct to do so" in {
