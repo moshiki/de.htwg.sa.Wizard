@@ -80,24 +80,27 @@ class RoundManagerSpec extends WordSpec with Matchers {
         roundManager.currentPlayer = 2
         roundManager.nextPlayer should be(0)
       }
-      "return the correct state string" in {
+      "return the correct state string of reading in the prediction" in {
         roundManager.players = List(Player("Name"), Player("P2"))
         roundManager.currentPlayer = 2
+        roundManager.updatePlayerPrediction(3)
+        roundManager.updatePlayerPrediction(2)
+        roundManager.updatePlayerPrediction(1)
         roundManager.getPlayerStateStrings should startWith(
-        """Round 1 - Player: Name
-Select one of the following cards:""".stripMargin)
+        """Round 2 - Player: Name
+Enter the amount of stitches you think you will get: """.stripMargin)
       }
       "increase the current round when it's player ones turn again" in {
         roundManager.currentPlayer = 2
-        roundManager.currentRound = 0
+        roundManager.currentRound = 1
         roundManager.getPlayerStateStrings
-        roundManager.currentRound should be(1)
+        roundManager.currentRound should be(2)
       }
       "not increase the current round when its not correct to do so" in {
         roundManager.currentPlayer = 0
-        roundManager.currentRound = 0
+        roundManager.currentRound = 1
         roundManager.getPlayerStateStrings
-        roundManager.currentRound should be(0)
+        roundManager.currentRound should be(1)
       }
       "trigger the next state and return game over when game is over" in {
         val oldState = controller.state
@@ -105,6 +108,11 @@ Select one of the following cards:""".stripMargin)
         roundManager.currentRound = 20
         roundManager.getPlayerStateStrings should be("\nGame Over! Press 'q' to quit.")
         controller.state should not equal oldState
+      }
+
+      "ask Player for his prediction" in {
+
+
       }
     }
   }

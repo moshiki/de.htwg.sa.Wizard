@@ -24,7 +24,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   def evaluate(selectedCard: Int): Unit = {
     // Put method that moves cards onto new stack here
     if(currentPlayer == numberOfPlayers -1) mod += 1
-    //if(currentRound != 1) nextRoundB = true
+
 
 
   }

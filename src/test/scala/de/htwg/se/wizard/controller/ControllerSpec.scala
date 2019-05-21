@@ -115,13 +115,13 @@ class ControllerSpec extends WordSpec with Matchers {
       state.eval("1")
       // TODO: extend once implemented
     }
-    "return the correct state string" in {
-      roundManager.currentRound = 1
+    "return the correct state string of reading in the prediction" in {
+      roundManager.currentRound = 2
       roundManager.currentPlayer = 2
       roundManager.players = List(Player("Name"))
       state.getCurrentStateAsString should startWith(
         """Round 2 - Player: Name
-Select one of the following cards:""".stripMargin)
+Enter the amount of stitches you think you will get: """.stripMargin)
     }
     "return the correct next state" in {
       state.nextState should be(gameOverState(roundManager))
