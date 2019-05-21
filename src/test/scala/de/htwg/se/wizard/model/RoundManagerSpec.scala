@@ -99,6 +99,18 @@ Enter the amount of stitches you think you will get: """.stripMargin)
         roundManager.predictionPerRound should be(List(1))
       }
 
+      "set NextRoundB false and mod to zero if all players gave told prediction" in {
+        roundManager.currentPlayer = 0
+        roundManager.updatePlayerPrediction(1)
+        roundManager.currentPlayer = 1
+        roundManager.updatePlayerPrediction(2)
+        roundManager.currentPlayer = 2
+        roundManager.updatePlayerPrediction(3)
+        roundManager.predictionPerRound should be(List(1,2,3))
+        roundManager.nextRoundB should be(false)
+        roundManager.mod should be(0)
+      }
+
 
 
 
@@ -106,7 +118,7 @@ Enter the amount of stitches you think you will get: """.stripMargin)
         roundManager.currentPlayer = 2
         roundManager.currentRound = 1
         roundManager.getPlayerStateStrings
-        roundManager.currentRound should be(1)
+        roundManager.currentRound should be(2)
       }
       "not increase the current round when its not correct to do so" in {
         roundManager.currentPlayer = 0
