@@ -3,8 +3,11 @@ package de.htwg.se.wizard.model
 import de.htwg.se.wizard.model.cards.{Card, CardStack}
 import de.htwg.se.wizard.util.ControllerUpdateStateObservable
 
+import scala.collection.mutable.ListBuffer
+
 case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) extends ControllerUpdateStateObservable {
   val initialCardStack: List[Card] = CardStack.initialize
+  var shuffledCardStack = initialCardStack
   var players: List[Player] = Nil
   var currentPlayer: Int = 0
   var currentRound: Int = 1
@@ -27,6 +30,16 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
 
 
+
+  }
+
+  def shuffleCardStack(cardStack: List[Card]): List[Card] = {
+    if(currentRound == 1) CardStack.shuffleCards(initialCardStack)
+    val newCardStack = ListBuffer()
+    for(card <- cardStack) {
+      if(!card.hasOwner) newCardStack.+(card.toString)
+    }
+    newCardStack.toList
   }
 
   /*def collectStitch(playedCard: List[Card]): Int = {
@@ -70,13 +83,14 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
       Player.playerPrediction(players(currentPlayer), currentRound)
     }
     else {
-      Player.playerTurn(players(currentPlayer), currentRound, initialCardStack, players)
+      Player.playerTurn(players(currentPlayer), currentRound, shuffledCardStack)
     }
   }
 
   def nextRound: Int = {
     if (currentPlayer == 0 && currentRound != roundsForThisGame && predictionPerRound.size == numberOfPlayers && mod != 1) {
       nextRoundB = true
+      shuffledCardStack = shuffleCardStack(initialCardStack)
       currentRound + 1}
     else currentRound
   }

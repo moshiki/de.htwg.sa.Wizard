@@ -12,14 +12,17 @@ object Player {
     true
   }
 
-  def playerTurn(player: Player, round: Int, cardStack: List[Card], playerList: List[Player] = Nil): String = {
+  def playerTurn(player: Player, round: Int, cardStack: List[Card]): String = {
     var cards = IndexedSeq[Card]();
-    if(player.playerCards.isEmpty) {
+    /*if(player.playerCards.isEmpty) {
       val indexGenerator = scala.util.Random
       cards = for {_ <- 1 to round} yield cardStack(indexGenerator.nextInt(cardStack.size - 1))
-    }
+    }*/
 
-    Player(player.name,None, Some(cards))
+
+
+    player.playerCards = Some(cards)
+
 
     val firstString = "Round " + round + " - Player: " + player.name
     val secondString = "Select one of the following cards:"
