@@ -1,5 +1,6 @@
 package de.htwg.se.wizard.model
 import de.htwg.se.wizard.model.cards.Card
+import de.htwg.se.wizard.model.RoundManager
 
 case class Player(name: String, playerPrediction: Option[List[Int]] = None, var playerCards: Option[IndexedSeq[Card]] = None) {
   override def toString: String = name
@@ -11,9 +12,13 @@ object Player {
     true
   }
 
-  def playerTurn(player: Player, round: Int, cardStack: List[Card]): String = {
-    val indexGenerator = scala.util.Random
-    val cards = for {_ <- 1 to round} yield cardStack(indexGenerator.nextInt(cardStack.size - 1))
+  def playerTurn(player: Player, round: Int, cardStack: List[Card], playerList: List[Player] = Nil): String = {
+    var cards = IndexedSeq[Card]();
+    if(player.playerCards.isEmpty) {
+      val indexGenerator = scala.util.Random
+      cards = for {_ <- 1 to round} yield cardStack(indexGenerator.nextInt(cardStack.size - 1))
+    }
+
     Player(player.name,None, Some(cards))
 
     val firstString = "Round " + round + " - Player: " + player.name

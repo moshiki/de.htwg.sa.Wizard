@@ -25,6 +25,8 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     // Put method that moves cards onto new stack here
     if(currentPlayer == numberOfPlayers -1) mod += 1
 
+
+
   }
 
   /*def collectStitch(playedCard: List[Card]): Int = {
@@ -68,7 +70,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
       Player.playerPrediction(players(currentPlayer), currentRound)
     }
     else {
-      Player.playerTurn(players(currentPlayer), currentRound, initialCardStack)
+      Player.playerTurn(players(currentPlayer), currentRound, initialCardStack, players)
     }
   }
 
