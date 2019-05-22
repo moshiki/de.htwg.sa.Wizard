@@ -27,4 +27,11 @@ object Card {
       case "jester" => JesterCard()
     }
   }
+
+  def getType(card:Card):Card = {
+    val typ = Card
+    if(card.isJester) card.asInstanceOf[JesterCard]
+    else if(card.isWizard) card.asInstanceOf[WizardCard]
+    else card.asInstanceOf[DefaultCard]
+  }
 }

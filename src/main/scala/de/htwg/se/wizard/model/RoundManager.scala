@@ -34,7 +34,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   }
 
   def shuffleCardStack(cardStack: List[Card]): List[Card] = {
-    if(currentRound == 1) CardStack.shuffleCards(initialCardStack)
+    if(currentRound == 1) return CardStack.shuffleCards(initialCardStack)
     val newCardStack = ListBuffer()
     for(card <- cardStack) {
       if(!card.hasOwner) newCardStack.+(card.toString)
