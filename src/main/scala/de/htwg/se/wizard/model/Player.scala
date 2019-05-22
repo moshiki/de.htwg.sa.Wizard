@@ -19,6 +19,7 @@ object Player {
     for(i <- 1 to round) {
       val random = Random.nextInt(cardStack.size)
       val card = cardStack(random)
+      val typ = Card.getType(card, player)
       list = list ::: List[Card](card)
     }
 
