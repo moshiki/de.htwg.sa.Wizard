@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.model
 
 import de.htwg.se.wizard.controller.Controller
+import de.htwg.se.wizard.model.cards.{Card, CardStack}
 import org.scalatest.{Matchers, WordSpec}
 
 class RoundManagerSpec extends WordSpec with Matchers {
@@ -79,7 +80,9 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
 
       "should ask player for his prediction if Prediction list is empty" in {
-        roundManager.currentPlayer = 0
+
+        roundManager.currentPlayer = 1
+        roundManager.initialCardStack
         roundManager.getPlayerStateStrings
         roundManager.predictionPerRound.size should be(0)
       }
@@ -110,7 +113,7 @@ Select one of the following cards:""".stripMargin)
         roundManager.getPlayerStateStrings
         roundManager.currentRound should be(1)
       }
-      "trigger the next state and return game over when game is over" in {
+      "trigger the next state and return game over when game is over and resultTable" in {
         val oldState = controller.state
         roundManager.currentPlayer = 2
         roundManager.currentRound = 20
