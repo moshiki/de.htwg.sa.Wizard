@@ -76,7 +76,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   }
 
   def nextRound: Int = {
-    if (currentPlayer == 0 && currentRound != roundsForThisGame) {
+    if (currentPlayer == 0 && currentRound != roundsForThisGame && players.last.playerCards.get.isEmpty) {
       shuffledCardStack = CardStack.shuffleCards(initialCardStack)
       predictionPerRound = Nil
       currentRound + 1
