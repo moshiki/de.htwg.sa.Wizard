@@ -1,8 +1,11 @@
 package de.htwg.se.wizard.controller
 
 import de.htwg.se.wizard.model.{Player, RoundManager}
+import de.htwg.se.wizard.model.cards.JesterCard
 import de.htwg.se.wizard.util.Observer
 import org.scalatest.{Matchers, WordSpec}
+
+import scala.collection.mutable.ListBuffer
 
 class ControllerSpec extends WordSpec with Matchers {
   "A Controller" when {
@@ -63,7 +66,6 @@ class ControllerSpec extends WordSpec with Matchers {
     }
     "does nothing when the number of PLayers is invalid" in {
       val roundManager1 = RoundManager(8)
-      //val old = RoundManager(8)
       state.eval("8")
       roundManager1 should be(roundManager1)
     }
@@ -117,12 +119,13 @@ class ControllerSpec extends WordSpec with Matchers {
     }
     "return the correct state string of reading in the prediction" in {
       roundManager.currentRound = 2
-      roundManager.currentPlayer = 2
-
-      roundManager.players = List(Player("Name"))
+      val player = Player("Name")
+      roundManager.players = List[Player](player)
+      player.playerCards = Some(ListBuffer(JesterCard(Some(player))))
       state.getCurrentStateAsString should startWith(
         """Round 2 - Player: Name
-Enter the amount of stitches you think you will get: """.stripMargin)
+          |Select one of the following cards:
+          |{ C:Jester }""".stripMargin)
     }
     "return the correct next state" in {
       state.nextState should be(gameOverState(roundManager))
