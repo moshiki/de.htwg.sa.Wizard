@@ -28,6 +28,19 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     playedCards = players(currentPlayer).playerCards.get.remove(selectedCard - 1) :: playedCards
   }
 
+  def calcPoints(playerPrediction: Int, stitches: Int): Int = {
+    var points = 0
+    for(i <- 1 to stitches) points += 10
+    if(playerPrediction == stitches) {
+      points = 20
+    }
+    if(playerPrediction < stitches) for(i <- playerPrediction to stitches) {points -= 10}
+    if(playerPrediction > stitches) for (i <- stitches to playerPrediction) {points -= 10}
+    points
+  }
+
+
+
   def cardDistribution(): List[Card] = {
     var list = List[Card]()
     for(_ <- 1 to currentRound) {
