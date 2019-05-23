@@ -22,6 +22,8 @@ object CardStack {
   }
 
   def getPlayerOfHighestCard(cardList: List[Card], color: Option[String]): Player = {
+    var actualColor = ""
+    if (color.isDefined) actualColor = color.get
     val wizardCards = cardList.filter(card => card.isWizard).map(card => card.asInstanceOf[WizardCard])
     val defaultCards = cardList.filterNot(card => card.isWizard || card.isJester)
       .map(card => card.asInstanceOf[DefaultCard]).sortWith(_ > _)
@@ -31,7 +33,7 @@ object CardStack {
     else if (defaultCards.nonEmpty) {
       val highestNumber = defaultCards.head.number
       val cardsWithHighestNumberInNormalCards = defaultCards.filter(_.number == highestNumber)
-      val highestCardMatchingTrumpColor = cardsWithHighestNumberInNormalCards.filter(_.color == color.get)
+      val highestCardMatchingTrumpColor = cardsWithHighestNumberInNormalCards.filter(_.color == actualColor)
       if (highestCardMatchingTrumpColor.nonEmpty) highestCardMatchingTrumpColor.head.owner.get
       else cardsWithHighestNumberInNormalCards.head.owner.get
     } else jesterCards.head.owner.get

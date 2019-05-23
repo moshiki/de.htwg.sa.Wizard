@@ -4,7 +4,7 @@ import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
 import scala.collection.mutable.ListBuffer
 
 
-case class Player(name: String, playerPrediction: Option[List[Int]] = None, var playerCards: Option[ListBuffer[Card]] = None) {
+case class Player(name: String, var playerCards: Option[ListBuffer[Card]] = None) {
   override def toString: String = name
 }
 
