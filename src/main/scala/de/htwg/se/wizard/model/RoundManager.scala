@@ -62,7 +62,6 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   }
 
   def updatePlayerPrediction(input: Int): Unit = {
-    if(currentPlayer == 0) predictionPerRound = Nil
     predictionPerRound = predictionPerRound ::: List(input)
   }
 
@@ -139,7 +138,8 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   }
 
   def stitchInThisCycle: Int = {
-    val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards, trumpColor)
+    val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
+    playedCards = Nil
     val mutMap = collection.mutable.Map() ++ stitchesPerRound
     mutMap.put(stitchPlayer.name, mutMap(stitchPlayer.name) + 1)
     stitchesPerRound = mutMap.toMap
