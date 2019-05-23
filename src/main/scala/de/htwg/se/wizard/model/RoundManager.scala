@@ -90,13 +90,14 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     if(predictionPerRound.size < numberOfPlayers) {
       predictionMode = true
       cardDistribution()
-      Player.playerPrediction(players(currentPlayer), currentRound)
-    } else {
       var out = "\n"
       if (currentPlayer == 0) out += resultTable.toString + "\n"
-      predictionMode = false
-      out += Player.playerTurn(players(currentPlayer), currentRound) + "\n"
+      out += Player.playerPrediction(players(currentPlayer), currentRound)
       out
+    } else {
+
+      predictionMode = false
+      Player.playerTurn(players(currentPlayer), currentRound)
     }
   }
 
@@ -140,7 +141,6 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   def stitchInThisCycle: Int = {
     val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards, trumpColor)
     val mutMap = collection.mutable.Map() ++ stitchesPerRound
-    println(stitchPlayer.getClass)
     mutMap.put(stitchPlayer.name, mutMap(stitchPlayer.name) + 1)
     stitchesPerRound = mutMap.toMap
     mutMap(stitchPlayer.name)
