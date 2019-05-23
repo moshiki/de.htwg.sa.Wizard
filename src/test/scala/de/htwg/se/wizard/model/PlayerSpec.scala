@@ -17,6 +17,7 @@ class PlayerSpec extends WordSpec with Matchers {
         player.toString should be("Name")
       }
       "get the correct String for its turn" in {
+        player.playerCards = Some(ListBuffer(JesterCard(Some(player))))
         Player.playerTurn(player, 1) should startWith(
           """Round 1 - Player: Name
 Select one of the following cards:""".stripMargin)
@@ -26,8 +27,8 @@ Select one of the following cards:""".stripMargin)
         player.playerCards = Some(ListBuffer(JesterCard(Some(player))))
         Player.playerPrediction(player, 3, Some("blue")) should be(
           """Round 3 - Player: Name
-            |"Trump Color: "blue"
-            |"Your Cards: "Jester"
+            |Trump Color: blue
+            |Your Cards: { C:Jester }
             |Enter the amount of stitches you think you will get: """.stripMargin)
       }
     }

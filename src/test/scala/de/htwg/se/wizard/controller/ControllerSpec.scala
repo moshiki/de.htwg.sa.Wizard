@@ -118,6 +118,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "return the correct state string of reading in the prediction" in {
       roundManager.currentRound = 2
       roundManager.currentPlayer = 2
+
       roundManager.players = List(Player("Name"))
       state.getCurrentStateAsString should startWith(
         """Round 2 - Player: Name
