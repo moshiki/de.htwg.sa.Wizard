@@ -3,8 +3,6 @@ package de.htwg.se.wizard.model
 import de.htwg.se.wizard.model.cards.{Card, CardStack}
 import de.htwg.se.wizard.util.ControllerUpdateStateObservable
 
-import scala.collection.mutable.ListBuffer
-
 case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) extends ControllerUpdateStateObservable {
   val initialCardStack: List[Card] = CardStack.initialize
   var shuffledCardStack = CardStack.shuffleCards(initialCardStack)
@@ -28,17 +26,25 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     // Put method that moves cards onto new stack here
     if(currentPlayer == numberOfPlayers -1) mod += 1
 
-
-
-
   }
+
+  def calcPoints(playerPrediction: Int, stitches: Int): Int = {
+    var points = 0
+    for(i <- 1 to stitches) points += 10
+    if(playerPrediction == stitches) {
+      points = 20
+    }
+    if(playerPrediction < stitches) for(i <- playerPrediction to stitches) {points -= 10}
+    if(playerPrediction > stitches) for (i <- stitches to playerPrediction) {points -= 10}
+    points
+  }
+
+
 
   def cardDistribution(): List[Card] = {
     var list = List[Card]()
     for(i <- 1 to currentRound) {
       val card = shuffledCardStack.remove(0)
-      //val random = Random.nextInt(cardStack.size)
-      //val card = cardStack(random)
       val typ = Card.setOwner(card, players(currentPlayer))
       list = list ::: List[Card](typ)
     }
