@@ -46,17 +46,6 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     list
   }
 
-
-  /*def collectStitch(playedCard: List[Card]): Int = {
-
-  }
-
-  def roundsResult(list: List[Int]): Unit = {
-    for(i <- 0 until numberOfPlayers) {
-      if(list(i) == )
-    }
-  }*/
-
   def updatePlayerPrediction(input: Int): Unit = {
     if(currentPlayer == 0) predictionPerRound = Nil
     predictionPerRound = predictionPerRound ::: List(input)
