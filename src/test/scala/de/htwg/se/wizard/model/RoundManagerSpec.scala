@@ -106,18 +106,6 @@ Enter the amount of stitches you think you will get: """.stripMargin)
         roundManager.predictionPerRound should be(List(1))
       }
 
-      "set NextRoundB false and mod to zero if all players gave told prediction" in {
-        roundManager.currentPlayer = 0
-        roundManager.updatePlayerPrediction(1)
-        roundManager.currentPlayer = 1
-        roundManager.updatePlayerPrediction(2)
-        roundManager.currentPlayer = 2
-        roundManager.updatePlayerPrediction(3)
-        roundManager.predictionPerRound should be(List(1,2,3))
-        roundManager.nextRoundB should be(false)
-        roundManager.mod should be(0)
-      }
-
       "return the correct state string once all players told their prediction" in {
         roundManager.currentPlayer = 0
         roundManager.players = List(Player("Name"), Player("P2"))
@@ -126,13 +114,6 @@ Enter the amount of stitches you think you will get: """.stripMargin)
 Select one of the following cards:""".stripMargin)
       }
 
-      "increase the current round when it's player ones turn again and set NextRoundB true" in {
-        roundManager.currentPlayer = 2
-        roundManager.currentRound = 1
-        roundManager.getPlayerStateStrings
-        roundManager.nextRoundB should be(true)
-        roundManager.currentRound should be(2)
-      }
       "not increase the current round when its not correct to do so" in {
         roundManager.currentPlayer = 0
         roundManager.currentRound = 1
@@ -145,11 +126,6 @@ Select one of the following cards:""".stripMargin)
         roundManager.currentRound = 20
         roundManager.getPlayerStateStrings should be("\nGame Over! Press 'q' to quit.")
         controller.state should not equal oldState
-      }
-
-      "ask Player for his prediction" in {
-
-
       }
     }
   }

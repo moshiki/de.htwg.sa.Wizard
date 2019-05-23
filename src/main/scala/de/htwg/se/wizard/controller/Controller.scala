@@ -76,10 +76,10 @@ case class setupState(roundManager: RoundManager) extends ControllerState(roundM
 
 case class inGameState(roundManager: RoundManager) extends ControllerState(roundManager) {
   override def eval(input: String): Unit = {
-    val selectedCard = Controller.toInt(input)
-    if (selectedCard.isEmpty) return
-    if(roundManager.nextRoundB)roundManager.updatePlayerPrediction(selectedCard.get)
-    roundManager.evaluate(selectedCard.get)
+    val in = Controller.toInt(input)
+    if (in.isEmpty) return
+    if (roundManager.predictionMode) roundManager.updatePlayerPrediction(in.get)
+    else roundManager.evaluate(in.get)
   }
 
   /*override def evalPlayerPrediction(input: String): Unit = {
