@@ -1,8 +1,10 @@
 package de.htwg.se.wizard.model
 
 import de.htwg.se.wizard.controller.Controller
-import de.htwg.se.wizard.model.cards.{Card, CardStack}
+import de.htwg.se.wizard.model.cards.{Card, CardStack, JesterCard}
 import org.scalatest.{Matchers, WordSpec}
+
+import scala.collection.mutable.ListBuffer
 
 class RoundManagerSpec extends WordSpec with Matchers {
   "A Round Manager" when {
@@ -80,8 +82,8 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
 
       "should ask player for his prediction if Prediction list is empty" in {
-
-        roundManager.currentPlayer = 1
+        roundManager.players = List(Player("Name"), Player("P2"))
+        roundManager.currentPlayer = 0
         roundManager.initialCardStack
         roundManager.getPlayerStateStrings
         roundManager.predictionPerRound.size should be(0)
@@ -100,20 +102,27 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
 
       "return the correct state string once all players told their prediction" in {
-        roundManager.currentPlayer = 0
-        roundManager.players = List(Player("Name"), Player("P2"))
+        roundManager.currentRound = 1
+        roundManager.predictionPerRound = List(2)
+        roundManager.predictionPerRound = roundManager.predictionPerRound ::: List(1)
+        roundManager.predictionPerRound = roundManager.predictionPerRound ::: List(1)
+        val player = Player("Name")
+        roundManager.players = List[Player](player)
+        player.playerCards = Some(ListBuffer(JesterCard(Some(player))))
         roundManager.getPlayerStateStrings should startWith(
-          """Round 1 - Player: P2
+          """Round 1 - Player: Name
 Select one of the following cards:""".stripMargin)
       }
 
       "not increase the current round when its not correct to do so" in {
+        roundManager.predictionPerRound = Nil
         roundManager.currentPlayer = 0
         roundManager.currentRound = 1
         roundManager.getPlayerStateStrings
         roundManager.currentRound should be(1)
       }
       "trigger the next state and return game over when game is over and resultTable" in {
+        roundManager.predictionPerRound = Nil
         val oldState = controller.state
         roundManager.currentPlayer = 2
         roundManager.currentRound = 20
