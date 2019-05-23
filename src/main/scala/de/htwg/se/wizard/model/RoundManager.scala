@@ -7,13 +7,14 @@ import scala.collection.mutable.ListBuffer
 
 case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) extends ControllerUpdateStateObservable {
   val initialCardStack: List[Card] = CardStack.initialize
-  var shuffledCardStack = CardStack.shuffleCards(initialCardStack)
+  var shuffledCardStack:ListBuffer[Card] = CardStack.shuffleCards(initialCardStack)
   var players: List[Player] = Nil
   var currentPlayer: Int = 0
   var currentRound: Int = 1
   var predictionPerRound: List[Int] = Nil
   var nextRoundB: Boolean = true
   var mod: Int = 0
+  var playedCards: List[Card] = Nil
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)
@@ -27,22 +28,19 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   def evaluate(selectedCard: Int): Unit = {
     // Put method that moves cards onto new stack here
     if(currentPlayer == numberOfPlayers -1) mod += 1
-
-
-
-
+    playedCards = players(currentPlayer).playerCards.get.remove(selectedCard) :: playedCards
   }
 
   def cardDistribution(): List[Card] = {
     var list = List[Card]()
-    for(i <- 1 to currentRound) {
+    for(_ <- 1 to currentRound) {
       val card = shuffledCardStack.remove(0)
       //val random = Random.nextInt(cardStack.size)
       //val card = cardStack(random)
       val typ = Card.setOwner(card, players(currentPlayer))
       list = list ::: List[Card](typ)
     }
-    players(currentPlayer).playerCards = Some(list)
+    players(currentPlayer).playerCards = Some(list.to[ListBuffer])
     list
   }
 
