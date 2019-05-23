@@ -64,7 +64,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     if (currentRound == roundsForThisGame && currentPlayer == 0) {
       triggerNextState()
       return "\nGame Over! Press 'q' to quit."
-    } // FIXME
+    }
     if(predictionPerRound.size < numberOfPlayers) {
       predictionMode = true
       cardDistribution()
