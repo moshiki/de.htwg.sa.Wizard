@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model
 
-import de.htwg.se.wizard.model.cards.{Card, CardStack}
+import de.htwg.se.wizard.model.cards.{Card, CardStack, DefaultCard}
 import de.htwg.se.wizard.util.ControllerUpdateStateObservable
 
 import scala.collection.mutable.ListBuffer
@@ -12,6 +12,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   var currentPlayer: Int = 0
   var currentRound: Int = 1
   var predictionPerRound: List[Int] = Nil
+  var stitchesPerRound: List[Int] = Nil
   var playedCards: List[Card] = Nil
   var predictionMode:Boolean = true
 
@@ -30,12 +31,12 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   def calcPoints(playerPrediction: Int, stitches: Int): Int = {
     var points = 0
-    for(i <- 1 to stitches) points += 10
+    for(_ <- 1 to stitches) points += 10
     if(playerPrediction == stitches) {
       points = 20
     }
-    if(playerPrediction < stitches) for(i <- playerPrediction to stitches) {points -= 10}
-    if(playerPrediction > stitches) for (i <- stitches to playerPrediction) {points -= 10}
+    if(playerPrediction < stitches) for(_ <- playerPrediction to stitches) {points -= 10}
+    if(playerPrediction > stitches) for (_ <- stitches to playerPrediction) {points -= 10}
     points
   }
 
@@ -92,6 +93,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     if (currentPlayer == 0 && currentRound != roundsForThisGame && players.last.playerCards.get.isEmpty) {
       shuffledCardStack = CardStack.shuffleCards(initialCardStack)
       predictionPerRound = Nil
+      stitchInThisCycle
       currentRound + 1
     }
     else currentRound
@@ -110,6 +112,18 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   def nextPlayer: Int = {
     if (currentPlayer < numberOfPlayers - 1) currentPlayer + 1
     else 0
+  }
+
+  def trumpColor: Option[String] = {
+    val topCard = shuffledCardStack.head
+    topCard match {
+      case card: DefaultCard => Some(card.color)
+      case _ => None
+    }
+  }
+
+  def stitchInThisCycle: Int = {
+    CardStack.getPlayerOfHighestCard(playedCards, trumpColor)
   }
 }
 
