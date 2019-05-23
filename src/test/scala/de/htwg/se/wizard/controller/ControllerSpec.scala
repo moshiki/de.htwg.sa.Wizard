@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.controller
 
 import de.htwg.se.wizard.model.{Player, RoundManager}
-import de.htwg.se.wizard.model.cards.JesterCard
+import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.util.Observer
 import org.scalatest.{Matchers, WordSpec}
 
@@ -113,9 +113,17 @@ class ControllerSpec extends WordSpec with Matchers {
       state.eval("AAA")
       roundManager should be(old)
     }
-    "put a card on the middle stack correctly" in {
+    "set playedCards correctly" in {
       state.eval("1")
-      // TODO: extend once implemented
+      val player = Player("Name")
+      roundManager.players = List[Player](player)
+      var list = List[Card]()
+      list = List[Card](DefaultCard("red",5))
+      list = list ::: List[Card](DefaultCard("blue",1))
+      player.playerCards = Some(list.to[ListBuffer])
+
+      roundManager.evaluate(1)
+      roundManager.playedCards should be(List(DefaultCard("red",5)))
     }
     "return the correct state string of reading in the prediction" in {
       roundManager.currentRound = 2
