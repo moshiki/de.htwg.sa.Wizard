@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.model
 import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
 
-import scala.util.Random
+import scala.collection.mutable.ListBuffer
 
 
 case class Player(name: String, playerPrediction: Option[List[Int]] = None, var playerCards: Option[List[Card]] = None) {
@@ -14,22 +14,16 @@ object Player {
     true
   }
 
-  def playerTurn(player: Player, round: Int, cardStack: List[Card]): String = {
-    var list = List[Card]()
-    for(i <- 1 to round) {
-      val random = Random.nextInt(cardStack.size)
-      val card = cardStack(random)
-      val typ = Card.getType(card, player)
-      list = list ::: List[Card](card)
-    }
 
-    player.playerCards = Some(list)
+  def playerTurn(player: Player, round: Int): String = {
+
+    val cards = player.playerCards
 
 
     val firstString = "Round " + round + " - Player: " + player.name
     val secondString = "Select one of the following cards:"
 
-    firstString + "\n" + secondString + "\n" + "{ " + list.mkString(", ") + " }"
+    firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
   }
 
   def playerPrediction(player: Player, round: Int): String = {
@@ -39,5 +33,3 @@ object Player {
 
   }
 }
-/*if(card.isWizard) WizardCard().copy(owner = Some(player)),  list = list ::: List[Card](card)
-      if(card.isJester) JesterCard().copy(owner = Some(player)),  list = list ::: List[Card](card)*/

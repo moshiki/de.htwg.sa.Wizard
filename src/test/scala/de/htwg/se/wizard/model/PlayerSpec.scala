@@ -15,7 +15,7 @@ class PlayerSpec extends WordSpec with Matchers {
         player.toString should be("Name")
       }
       "get the correct String for its turn" in {
-        Player.playerTurn(player, 1, CardStack.initialize) should startWith(
+        Player.playerTurn(player, 1) should startWith(
           """Round 1 - Player: Name
 Select one of the following cards:""".stripMargin)
       }

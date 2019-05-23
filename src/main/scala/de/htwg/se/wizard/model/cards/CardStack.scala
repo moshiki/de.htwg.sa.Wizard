@@ -2,6 +2,7 @@ package de.htwg.se.wizard.model.cards
 
 import de.htwg.se.wizard.model.Player
 
+import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 object CardStack {
@@ -16,8 +17,8 @@ object CardStack {
     wizards ::: jesters ::: normals
   }
 
-  def shuffleCards(a: List[Card]): List[Card] = {
-    Random.shuffle(a)
+  def shuffleCards(a: List[Card]): ListBuffer[Card] = {
+    Random.shuffle(a).to[ListBuffer]
   }
 
   def getPlayerOfHighestCard(cardList: List[Card], color: String): Player = {

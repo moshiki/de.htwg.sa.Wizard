@@ -28,7 +28,7 @@ object Card {
     }
   }
 
-  def getType(card:Card, player: Player):Card = {
+  def setOwner(card:Card, player: Player):Card = {
     if(card.isJester) card.asInstanceOf[JesterCard].copy(owner = Some(player))
     else if(card.isWizard) card.asInstanceOf[WizardCard].copy(owner = Some(player))
     else card.asInstanceOf[DefaultCard].copy(owner = Some(player))

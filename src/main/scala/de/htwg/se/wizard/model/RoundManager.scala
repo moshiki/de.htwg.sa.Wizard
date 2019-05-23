@@ -7,7 +7,7 @@ import scala.collection.mutable.ListBuffer
 
 case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) extends ControllerUpdateStateObservable {
   val initialCardStack: List[Card] = CardStack.initialize
-  var shuffledCardStack = initialCardStack
+  var shuffledCardStack = CardStack.shuffleCards(initialCardStack)
   var players: List[Player] = Nil
   var currentPlayer: Int = 0
   var currentRound: Int = 1
@@ -33,14 +33,19 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   }
 
-  def shuffleCardStack(cardStack: List[Card]): List[Card] = {
-    if(currentRound == 1) return CardStack.shuffleCards(initialCardStack)
-    var newCardStack = List.empty[Card]
-    for(card <- cardStack) {
-      if(!card.hasOwner) newCardStack = newCardStack ::: List(card)
+  def cardDistribution(): List[Card] = {
+    var list = List[Card]()
+    for(i <- 1 to currentRound) {
+      val card = shuffledCardStack.remove(0)
+      //val random = Random.nextInt(cardStack.size)
+      //val card = cardStack(random)
+      val typ = Card.setOwner(card, players(currentPlayer))
+      list = list ::: List[Card](typ)
     }
-    newCardStack
+    players(currentPlayer).playerCards = Some(list)
+    list
   }
+
 
   /*def collectStitch(playedCard: List[Card]): Int = {
 
@@ -80,17 +85,18 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
       return "\nGame Over! Press 'q' to quit."
     }
     if(predictionPerRound.size < numberOfPlayers || nextRoundB) {
+      cardDistribution()
       Player.playerPrediction(players(currentPlayer), currentRound)
     }
     else {
-      Player.playerTurn(players(currentPlayer), currentRound, shuffledCardStack)
+      Player.playerTurn(players(currentPlayer), currentRound)
     }
   }
 
   def nextRound: Int = {
     if (currentPlayer == 0 && currentRound != roundsForThisGame && predictionPerRound.size == numberOfPlayers && mod != 1) {
       nextRoundB = true
-      shuffledCardStack = shuffleCardStack(initialCardStack)
+      shuffledCardStack = CardStack.shuffleCards(initialCardStack)
       currentRound + 1}
     else currentRound
   }
