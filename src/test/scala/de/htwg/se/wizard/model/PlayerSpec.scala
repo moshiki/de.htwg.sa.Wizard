@@ -1,7 +1,9 @@
 package de.htwg.se.wizard.model
 
-import de.htwg.se.wizard.model.cards.CardStack
+import de.htwg.se.wizard.model.cards.JesterCard
 import org.scalatest.{Matchers, WordSpec}
+
+import scala.collection.mutable.ListBuffer
 
 class PlayerSpec extends WordSpec with Matchers {
 
@@ -21,8 +23,11 @@ Select one of the following cards:""".stripMargin)
       }
 
       "get the correct String for stitches" in {
-        Player.playerPrediction(player, 1, Some("blue")) should be(
-          """Round 1 - Player: Name
+        player.playerCards = Some(ListBuffer(JesterCard(Some(player))))
+        Player.playerPrediction(player, 3, Some("blue")) should be(
+          """Round 3 - Player: Name
+            |"Trump Color: "blue"
+            |"Your Cards: "Jester"
             |Enter the amount of stitches you think you will get: """.stripMargin)
       }
     }
