@@ -12,9 +12,10 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
   var currentPlayer: Int = 0
   var currentRound: Int = 1
   var predictionPerRound: List[Int] = Nil
-  var stitchesPerRound: List[Int] = Nil
+  var stitchesPerRound: Map[Player, Int] = Map.empty[Player, Int]
   var playedCards: List[Card] = Nil
   var predictionMode:Boolean = true
+  var cleanMap: Map[Player, Int]
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)
@@ -22,7 +23,10 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   def addPlayer(input: String): Unit = {
         updatePlayers(input)
-        if (players.size == numberOfPlayers) triggerNextState()
+        var mutMap = collection.mutable.Map() ++ stitchesPerRound
+        mutMap += Player(input) -> 0
+        stitchesPerRound = mutMap.toMap
+        if (players.size == numberOfPlayers) cleanMap = stitchesPerRound; triggerNextState()
   }
 
   def evaluate(selectedCard: Int): Unit = {
@@ -93,7 +97,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     if (currentPlayer == 0 && currentRound != roundsForThisGame && players.last.playerCards.get.isEmpty) {
       shuffledCardStack = CardStack.shuffleCards(initialCardStack)
       predictionPerRound = Nil
-      stitchInThisCycle
+      stitchInThisCycle()
       currentRound + 1
     }
     else currentRound
@@ -122,9 +126,11 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     }
   }
 
-  def stitchInThisCycle: Int = {
-    CardStack.getPlayerOfHighestCard(playedCards, trumpColor)
-    return 0 // FIXME
+  def stitchInThisCycle(): Unit = {
+    val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards, trumpColor)
+    val mutMap = collection.mutable.Map() ++ stitchesPerRound
+    mutMap.put(stitchPlayer, mutMap.get(stitchPlayer).map(_ + 1).get)
+    stitchesPerRound = mutMap.toMap
   }
 }
 
