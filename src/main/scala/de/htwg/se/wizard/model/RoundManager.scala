@@ -103,10 +103,10 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   def nextRound: Int = {
     if (currentPlayer == 0 && currentRound != roundsForThisGame && players.last.playerCards.get.isEmpty) {
+      pointsForRound()
       shuffledCardStack = CardStack.shuffleCards(initialCardStack)
       predictionPerRound = Nil
       stitchesPerRound = cleanMap
-      pointsForRound()
       currentRound + 1
     }
     else currentRound
@@ -148,7 +148,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   def pointsForRound():Unit = {
     for (i <- players.indices) {
-      resultTable.updatePoints(currentRound, i, calcPoints(i, stitchesPerRound(players(i).name)))
+      resultTable.updatePoints(currentRound, i, calcPoints(predictionPerRound(i), stitchesPerRound(players(i).name)))
     }
   }
 }
