@@ -17,7 +17,7 @@ object Player {
 
   def playerTurn(player: Player, round: Int): String = {
 
-    val cards = player.playerCards
+    val cards = player.playerCards.get
 
 
     val firstString = "Round " + round + " - Player: " + player.name
@@ -26,10 +26,12 @@ object Player {
     firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
   }
 
-  def playerPrediction(player: Player, round: Int): String = {
+  def playerPrediction(player: Player, round: Int, trump: Option[String]): String = {
     val firstString = "Round " + round + " - Player: " + player.name
+    val secondString = "Trump Color: " + trump.getOrElse("None")
+    val thirdString = "Your Cards: " + "{ " + player.playerCards.get.mkString(", ") + " }"
     val string = "Enter the amount of stitches you think you will get: "
-    firstString + "\n" + string
+    firstString + "\n" + secondString + "\n" + thirdString + "\n" + string
 
   }
 }

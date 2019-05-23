@@ -84,14 +84,14 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
     if (!predictionMode) currentRound = nextRound
     if (currentRound == roundsForThisGame && currentPlayer == 0) {
       triggerNextState()
-      return "\nGame Over! Press 'q' to quit."
+      return "\nGame Over! Press 'q' to quit.\n" + resultTable.toString
     }
     if(predictionPerRound.size < numberOfPlayers) {
       predictionMode = true
       cardDistribution()
       var out = "\n"
       if (currentPlayer == 0) out += resultTable.toString + "\n"
-      out += Player.playerPrediction(players(currentPlayer), currentRound)
+      out += Player.playerPrediction(players(currentPlayer), currentRound, trumpColor)
       out
     } else {
 

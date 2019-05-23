@@ -21,7 +21,7 @@ Select one of the following cards:""".stripMargin)
       }
 
       "get the correct String for stitches" in {
-        Player.playerPrediction(player, 1) should be(
+        Player.playerPrediction(player, 1, Some("blue")) should be(
           """Round 1 - Player: Name
             |Enter the amount of stitches you think you will get: """.stripMargin)
       }
