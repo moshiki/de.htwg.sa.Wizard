@@ -124,6 +124,7 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   def stitchInThisCycle: Int = {
     CardStack.getPlayerOfHighestCard(playedCards, trumpColor)
+    return 0 // FIXME
   }
 }
 
