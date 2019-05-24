@@ -34,8 +34,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
         roundManager3.roundsForThisGame should be(12)
       }
       "invalid amount of Players" in {
-        val roundManager4 = RoundManager(6)
-        an[IllegalArgumentException] shouldBe thrownBy(roundManager4.roundsForThisGame)
+        an[IllegalArgumentException] shouldBe thrownBy(RoundManager(6))
       }
     }
     "controller is in setup mode" should {
@@ -84,7 +83,6 @@ class RoundManagerSpec extends WordSpec with Matchers {
       "should ask player for his prediction if Prediction list is empty" in {
         roundManager.players = List(Player("Name"), Player("P2"))
         roundManager.currentPlayer = 0
-        roundManager.initialCardStack
         roundManager.getPlayerStateStrings
         roundManager.predictionPerRound.size should be(0)
       }
@@ -116,6 +114,7 @@ Select one of the following cards:""".stripMargin)
 
       "not increase the current round when its not correct to do so" in {
         roundManager.predictionPerRound = Nil
+        roundManager.predictionMode = true
         roundManager.currentPlayer = 0
         roundManager.currentRound = 1
         roundManager.getPlayerStateStrings
