@@ -1,6 +1,7 @@
-package de.htwg.se.wizard.model
+package de.htwg.se.wizard.controller
 
 import de.htwg.se.wizard.model.cards.{Card, CardStack, DefaultCard}
+import de.htwg.se.wizard.model.{Player, ResultTable}
 import de.htwg.se.wizard.util.ControllerUpdateStateObservable
 
 import scala.collection.mutable.ListBuffer

@@ -1,8 +1,7 @@
 package de.htwg.se.wizard
 
 import de.htwg.se.wizard.aview.TUI
-import de.htwg.se.wizard.controller.Controller
-import de.htwg.se.wizard.model.RoundManager
+import de.htwg.se.wizard.controller.{Controller, RoundManager}
 
 import scala.io.StdIn.readLine
 

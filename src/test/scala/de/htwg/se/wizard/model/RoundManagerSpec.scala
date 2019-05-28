@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model
 
-import de.htwg.se.wizard.controller.Controller
+import de.htwg.se.wizard.controller.{Controller, RoundManager}
 import de.htwg.se.wizard.model.cards.{Card, CardStack, JesterCard}
 import org.scalatest.{Matchers, WordSpec}
 

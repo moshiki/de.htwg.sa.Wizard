@@ -1,4 +1,4 @@
-package de.htwg.se.wizard.model
+package de.htwg.se.wizard.controller
 
 object RoundStrategy {
   trait RoundStrategy {
@@ -30,4 +30,3 @@ object RoundStrategy {
     RoundManager.Builder().withNumberOfPlayers(5).withNumberOfRounds(12).build()
   }
 }
-

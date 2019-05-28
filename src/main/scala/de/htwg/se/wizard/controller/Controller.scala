@@ -1,6 +1,5 @@
 package de.htwg.se.wizard.controller
 
-import de.htwg.se.wizard.model.{RoundManager, RoundStrategy}
 import de.htwg.se.wizard.util.{Observable, ControllerUpdateStateObserver}
 
 class Controller(var roundManager: RoundManager) extends Observable with ControllerUpdateStateObserver {

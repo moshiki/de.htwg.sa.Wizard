@@ -1,7 +1,6 @@
 package de.htwg.se.wizard.aview
 
-import de.htwg.se.wizard.controller.Controller
-import de.htwg.se.wizard.model.RoundManager
+import de.htwg.se.wizard.controller.{Controller, RoundManager}
 import org.scalatest.{Matchers, WordSpec}
 
 class TUISpec extends WordSpec with Matchers {

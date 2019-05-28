@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.controller
 
-import de.htwg.se.wizard.model.{Player, RoundManager}
+import de.htwg.se.wizard.model.Player
 import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.util.Observer
 import org.scalatest.{Matchers, WordSpec}
