@@ -7,7 +7,6 @@ class Controller(var roundManager: RoundManager) extends Observable {
   var state: ControllerState = preSetupState(this)
 
   def eval(input: String): Unit = {
-   /* if(inGameState == 0) state.evalPlayerPrediction(input)*/
     state.evaluate(input)
     notifyObservers()
   }
@@ -32,8 +31,6 @@ object Controller {
 trait ControllerState {
   def evaluate(input: String): Unit
 
- /* def evalPlayerPrediction(input: String): Unit*/
-
   def getCurrentStateAsString: String
 
   def nextState: ControllerState
@@ -49,8 +46,6 @@ case class preSetupState(controller: Controller) extends ControllerState {
     controller.nextState()
   }
 
-  /*override def evalPlayerPrediction(input: String): Unit = ()*/
-
   override def getCurrentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
 
   override def nextState: ControllerState = setupState(controller)
@@ -58,11 +53,18 @@ case class preSetupState(controller: Controller) extends ControllerState {
 
 
 case class setupState(controller: Controller) extends ControllerState {
-  override def evaluate(input: String): Unit = controller.roundManager = controller.roundManager.addPlayer(input)
+  override def evaluate(input: String): Unit = {
+    controller.roundManager = controller.roundManager.addPlayer(input)
+    if (controller.roundManager.players.size == controller.roundManager.numberOfPlayers) {
+      controller.roundManager = controller.roundManager.copy(cleanMap = controller.roundManager.stitchesPerRound)
+      controller.nextState()
+    }
+  }
 
-  /*override def evalPlayerPrediction(input: String): Unit = ()*/
-
-  override def getCurrentStateAsString: String = controller.roundManager.getSetupStrings
+  override def getCurrentStateAsString: String = {
+    controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
+    controller.roundManager.getSetupStrings
+  }
 
   override def nextState: ControllerState = inGameState(controller)
 }
@@ -76,13 +78,24 @@ case class inGameState(controller: Controller) extends ControllerState {
     else controller.roundManager = controller.roundManager.playCard(in.get)
   }
 
-  /*override def evalPlayerPrediction(input: String): Unit = {
-    val prediction = Controller.toInt(input)
-    if(prediction.isEmpty) return
-    roundManager.updatePlayerPrediction(prediction.get)
-  }*/
+  override def getCurrentStateAsString: String = {
+    controller.roundManager = controller.roundManager.nextPlayer
 
-  override def getCurrentStateAsString: String = controller.roundManager.getPlayerStateStrings
+    if (!controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.nextRound
+    if (controller.roundManager.currentRound == controller.roundManager.roundsForThisGame &&
+      controller.roundManager.currentPlayer == 0) {
+      controller.nextState()
+    }
+
+    if(controller.roundManager.predictionPerRound.size < controller.roundManager.numberOfPlayers) {
+      controller.roundManager = controller.roundManager.copy(predictionMode = true)
+      controller.roundManager = controller.roundManager.cardDistribution()
+    } else {
+      controller.roundManager = controller.roundManager.copy(predictionMode = false)
+    }
+
+    controller.roundManager.getPlayerStateStrings
+  }
 
   override def nextState: ControllerState = gameOverState(controller)
 }
@@ -90,8 +103,6 @@ case class inGameState(controller: Controller) extends ControllerState {
 
 case class gameOverState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = ()
-
-  /*override def evalPlayerPrediction(input: String): Unit = ()*/
 
   override def getCurrentStateAsString: String = "\nGame Over! Press 'q' to quit."
 

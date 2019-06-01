@@ -43,8 +43,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
     newStitchesPerRound += name -> 0
 
     this.copy(players = newPlayerList, stitchesPerRound = newStitchesPerRound.toMap)
-
-    // TODO: triggerNextState and assign cleanMap (do this in controller)
   }
 
   def playCard(selectedCard: Int): RoundManager = {
@@ -74,7 +72,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
     this.copy(shuffledCardStack = stack.toList, players = newPlayers.toList)
 
-    // FIXME: Probably need to do this for all players and not only the current one.
+    // Probably need to do this for all players and not only the current one.
     //  It's also possible that this method's call needs to move from getPlayerStateStrings to Controller.
   }
 
@@ -83,7 +81,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def getSetupStrings: String = {
-    // TODO: Move this call to Controller: currentPlayer = nextPlayerSetup
+    // Move this call to Controller: currentPlayer = nextPlayerSetup
     "Player " + currentPlayer + ", please enter your name:"
   }
 
@@ -93,22 +91,23 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def getPlayerStateStrings: String = {
-    // TODO: Move all marked calls to controller: currentPlayer = nextPlayer
-    // TODO: same as previous line: if (!predictionMode) currentRound = nextRound
+    // Move all marked calls to controller:
+    //  currentPlayer = nextPlayer
+    // if (!predictionMode) currentRound = nextRound
     if (currentRound == roundsForThisGame && currentPlayer == 0) {
-      // TODO: triggerNextState()
+      // triggerNextState()
       return "\nGame Over! Press 'q' to quit.\n" + resultTable.toString
     }
     if(predictionPerRound.size < numberOfPlayers) {
-      // TODO: predictionMode = true
-      // TODO: cardDistribution()
+      //predictionMode = true
+      //cardDistribution()
       var out = "\n"
       if (currentPlayer == 0) out += resultTable.toString + "\n"
       out += Player.playerPrediction(players(currentPlayer), currentRound, trumpColor)
       out
     } else {
 
-      // TODO: predictionMode = false
+      // predictionMode = false
       Player.playerTurn(players(currentPlayer), currentRound)
     }
   }
