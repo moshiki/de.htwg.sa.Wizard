@@ -43,15 +43,23 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0, shuff
   }
 
 
-  def cardDistribution(): List[Card] = {
+  def cardDistribution(): RoundManager = {
     var list = List[Card]()
+    val stack = shuffledCardStack.to[ListBuffer]
     for(_ <- 1 to currentRound) {
-      val card = shuffledCardStack.remove(0)
+      val card = stack.remove(0)
       val typ = Card.setOwner(card, players(currentPlayer))
       list = list ::: List[Card](typ)
     }
-    players(currentPlayer).playerCards = Some(list.to[ListBuffer])
-    list
+
+    val newPlayer = players(currentPlayer).copy(playerCards = Some(list))
+    val newPlayers = players.to[ListBuffer]
+    newPlayers.update(currentPlayer, newPlayer)
+
+    this.copy(shuffledCardStack = stack.toList, players = newPlayers.toList)
+
+    // FIXME: Probably need to do this for all players and not only the current one.
+    //  It's also possible that this method's call needs to move from getPlayerStateStrings to Controller.
   }
 
   def updatePlayerPrediction(input: Int): Unit = {
