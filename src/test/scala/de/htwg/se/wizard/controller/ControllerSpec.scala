@@ -61,24 +61,24 @@ class ControllerSpec extends WordSpec with Matchers {
     val state = preSetupState(roundManager, controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       val old = roundManager
-      state.eval("AAA")
+      state.evaluate("AAA")
       roundManager should be(old)
     }
     "does nothing when the number of PLayers is invalid" in {
-      state.eval("8")
+      state.evaluate("8")
       roundManager should be(roundManager)
     }
     "set the number of players correctly" in {
-      state.eval("3")
+      state.evaluate("3")
       roundManager.numberOfPlayers should be(3)
     }
     "register the controller in the new roundManager" in {
-      state.eval("3")
+      state.evaluate("3")
       state.roundManager.subscribers contains controller should be (true)
     }
     "trigger the controller to switch to the next state" in {
       val old = state
-      state.eval("3")
+      state.evaluate("3")
       controller.state should not be old
     }
     "return the correct state string" in {
@@ -93,7 +93,7 @@ class ControllerSpec extends WordSpec with Matchers {
     val roundManager = RoundManager(3)
     val state = setupState(roundManager)
     "adds a player correctly" in {
-      state.eval("Name")
+      state.evaluate("Name")
       roundManager.players.contains(Player("Name")) should be(true)
     }
     "return the correct state string" in {
@@ -109,11 +109,11 @@ class ControllerSpec extends WordSpec with Matchers {
     val state = inGameState(roundManager)
     "does nothing when trying to evaluate a string that's not a number" in {
       val old = RoundManager()
-      state.eval("AAA")
+      state.evaluate("AAA")
       roundManager should be(old)
     }
     "set playedCards correctly" in {
-      state.eval("1")
+      state.evaluate("1")
       val player = Player("Name")
       roundManager.players = List[Player](player)
       var list = List[Card]()
@@ -141,7 +141,7 @@ class ControllerSpec extends WordSpec with Matchers {
   "A gameOverState" should {
     val state = gameOverState(RoundManager())
     "do nothing when evaluating" in {
-      state.eval("5")
+      state.evaluate("5")
     }
     "return the correct state string" in {
       state.getCurrentStateAsString should be("\nGame Over! Press 'q' to quit.")
