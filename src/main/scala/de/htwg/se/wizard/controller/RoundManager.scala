@@ -31,21 +31,16 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0, shuff
     // TODO: triggerNextState and assign cleanMap (do this in controller)
   }
 
-  def playCard(selectedCard: Int): Unit = {
-    playedCards = players(currentPlayer).playerCards.get.remove(selectedCard - 1) :: playedCards
-  }
+  def playCard(selectedCard: Int): RoundManager = {
+    val player = players(currentPlayer)
+    val currentPlayersCards = player.playerCards.get.to[ListBuffer]
+    val playedCard = currentPlayersCards.remove(selectedCard - 1)
 
-  def calcPoints(playerPrediction: Int, stitches: Int): Int = {
-    var points = 0
-    for(_ <- 1 to stitches) points += 10
-    if(playerPrediction == stitches) {
-      points = 20
-    }
-    if(playerPrediction < stitches) for(_ <- playerPrediction to stitches) {points -= 10}
-    if(playerPrediction > stitches) for (_ <- stitches to playerPrediction) {points -= 10}
-    points
-  }
+    val newPlayers = players.to[ListBuffer]
+    newPlayers.update(currentPlayer, player.copy(playerCards = Some(currentPlayersCards.toList)))
 
+    this.copy(playedCards = playedCard :: playedCards, players = newPlayers.toList)
+  }
 
 
   def cardDistribution(): List[Card] = {
@@ -142,12 +137,24 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0, shuff
 
   def pointsForRound():Unit = {
     for (i <- players.indices) {
-      resultTable.updatePoints(currentRound, i, calcPoints(predictionPerRound(i), stitchesPerRound(players(i).name)))
+      resultTable.updatePoints(currentRound, i,
+        RoundManager.calcPoints(predictionPerRound(i), stitchesPerRound(players(i).name)))
     }
   }
 }
 
 object RoundManager {
+  def calcPoints(playerPrediction: Int, stitches: Int): Int = {
+    var points = 0
+    for(_ <- 1 to stitches) points += 10
+    if(playerPrediction == stitches) {
+      points = 20
+    }
+    if(playerPrediction < stitches) for(_ <- playerPrediction to stitches) {points -= 10}
+    if(playerPrediction > stitches) for (_ <- stitches to playerPrediction) {points -= 10}
+    points
+  }
+
   case class Builder() {
     var numberOfPlayers:Int = 0
     var numberOfRounds:Int = 0
