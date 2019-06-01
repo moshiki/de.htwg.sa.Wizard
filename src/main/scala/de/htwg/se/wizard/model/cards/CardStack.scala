@@ -17,8 +17,8 @@ object CardStack {
     wizards ::: jesters ::: normals
   }
 
-  def shuffleCards(a: List[Card]): ListBuffer[Card] = {
-    Random.shuffle(a).to[ListBuffer]
+  def shuffleCards(a: List[Card]): List[Card] = {
+    Random.shuffle(a)
   }
 
   def getPlayerOfHighestCard(cardList: List[Card], color: Option[String]): Player = {

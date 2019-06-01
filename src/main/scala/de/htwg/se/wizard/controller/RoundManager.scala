@@ -62,12 +62,12 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0, shuff
     //  It's also possible that this method's call needs to move from getPlayerStateStrings to Controller.
   }
 
-  def updatePlayerPrediction(input: Int): Unit = {
-    predictionPerRound = predictionPerRound ::: List(input)
+  def updatePlayerPrediction(input: Int): RoundManager = {
+    this.copy(predictionPerRound = predictionPerRound ::: List(input))
   }
 
   def getSetupStrings: String = {
-    currentPlayer = nextPlayerSetup
+    // TODO: Move this call to Controller: currentPlayer = nextPlayerSetup
     "Player " + currentPlayer + ", please enter your name:"
   }
 
@@ -77,30 +77,31 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0, shuff
   }
 
   def getPlayerStateStrings: String = {
-    currentPlayer = nextPlayer
-    if (!predictionMode) currentRound = nextRound
+    // TODO: Move all marked calls to controller: currentPlayer = nextPlayer
+    // TODO: same as previous line: if (!predictionMode) currentRound = nextRound
     if (currentRound == roundsForThisGame && currentPlayer == 0) {
-      triggerNextState()
+      // TODO: triggerNextState()
       return "\nGame Over! Press 'q' to quit.\n" + resultTable.toString
     }
     if(predictionPerRound.size < numberOfPlayers) {
-      predictionMode = true
-      cardDistribution()
+      // TODO: predictionMode = true
+      // TODO: cardDistribution()
       var out = "\n"
       if (currentPlayer == 0) out += resultTable.toString + "\n"
       out += Player.playerPrediction(players(currentPlayer), currentRound, trumpColor)
       out
     } else {
 
-      predictionMode = false
+      // TODO: predictionMode = false
       Player.playerTurn(players(currentPlayer), currentRound)
     }
   }
 
-  def nextRound: Int = {
+  def nextRound: RoundManager = {
     if (currentPlayer == 0 && currentRound != roundsForThisGame && players.last.playerCards.get.isEmpty) {
-      pointsForRound()
-      shuffledCardStack = CardStack.shuffleCards(initialCardStack)
+      this.copy(resultTable = pointsForRound(), shuffledCardStack = CardStack.shuffleCards(initialCardStack))
+      //pointsForRound()
+      //shuffledCardStack = CardStack.shuffleCards(initialCardStack)
       predictionPerRound = Nil
       stitchesPerRound = cleanMap
       currentRound + 1
