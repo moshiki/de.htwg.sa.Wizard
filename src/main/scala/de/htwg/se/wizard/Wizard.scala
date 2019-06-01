@@ -2,11 +2,12 @@ package de.htwg.se.wizard
 
 import de.htwg.se.wizard.aview.TUI
 import de.htwg.se.wizard.controller.{Controller, RoundManager}
+import de.htwg.se.wizard.model.ResultTable
 
 import scala.io.StdIn.readLine
 
 object Wizard {
-  val controller = new Controller(RoundManager())
+  val controller = new Controller(RoundManager(resultTable = new ResultTable(points = Vector.empty)))
   val tui = new TUI(controller)
   controller.notifyObservers()
 
