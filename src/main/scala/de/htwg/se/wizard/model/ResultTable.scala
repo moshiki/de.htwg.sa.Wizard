@@ -30,7 +30,7 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
 }
 
 object ResultTable {
-  def initialize(roundsToPlay: Int = 20, numberOfPlayers: Int = 6): Vector[Vector[Int]] = {
+  def initializeVector(roundsToPlay: Int = 20, numberOfPlayers: Int = 6): Vector[Vector[Int]] = {
     Vector.fill(roundsToPlay, numberOfPlayers)(0)
   }
 }

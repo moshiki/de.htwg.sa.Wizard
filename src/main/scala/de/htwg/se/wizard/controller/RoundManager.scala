@@ -5,13 +5,29 @@ import de.htwg.se.wizard.model.{Player, ResultTable}
 
 import scala.collection.mutable.ListBuffer
 
-case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0, shuffledCardStack: List[Card] = Nil,
-                        players: List[Player] = Nil, currentPlayer: Int = 0, currentRound: Int = 1,
-                        predictionPerRound: List[Int] = Nil, stitchesPerRound: Map[String, Int] = Map.empty[String, Int],
-                        playedCards: List[Card] = Nil, predictionMode:Boolean = true,
-                        cleanMap: Map[String, Int] = Map.empty[String, Int]) {
+case class RoundManager(numberOfPlayers: Int = 0,
+                        numberOfRounds: Int = 0,
+                        shuffledCardStack: List[Card] = Nil,
+                        players: List[Player] = Nil,
+                        currentPlayer: Int = 0,
+                        currentRound: Int = 1,
+                        predictionPerRound: List[Int] = Nil,
+                        stitchesPerRound: Map[String, Int] = Map.empty[String, Int],
+                        playedCards: List[Card] = Nil,
+                        predictionMode:Boolean = true,
+                        cleanMap: Map[String, Int] = Map.empty[String, Int],
+                        resultTable: ResultTable) {
   val initialCardStack: List[Card] = CardStack.initialize
-  val resultTable: ResultTable = ResultTable(roundsForThisGame, numberOfPlayers)
+
+  val roundsForThisGame: Int = {
+    numberOfPlayers match {
+      case 0 => 0
+      case 3 => 20
+      case 4 => 15
+      case 5 => 12
+      case _ => throw new IllegalArgumentException
+    }
+  }
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)
@@ -99,31 +115,24 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0, shuff
 
   def nextRound: RoundManager = {
     if (currentPlayer == 0 && currentRound != roundsForThisGame && players.last.playerCards.get.isEmpty) {
-      this.copy(resultTable = pointsForRound(), shuffledCardStack = CardStack.shuffleCards(initialCardStack))
-      //pointsForRound()
-      //shuffledCardStack = CardStack.shuffleCards(initialCardStack)
-      predictionPerRound = Nil
-      stitchesPerRound = cleanMap
-      currentRound + 1
+      this.copy(
+        resultTable = pointsForRound(),
+        shuffledCardStack = CardStack.shuffleCards(initialCardStack),
+        predictionPerRound = Nil,
+        stitchesPerRound = cleanMap,
+        currentRound = currentRound + 1
+      )
     }
-    else currentRound
+    else this
   }
 
-  def roundsForThisGame: Int = {
-    numberOfPlayers match {
-      case 0 => 0
-      case 3 => 20
-      case 4 => 15
-      case 5 => 12
-      case _ => throw new IllegalArgumentException
-    }
-  }
 
-  def nextPlayer: Int = {
-    if (currentPlayer < numberOfPlayers - 1) currentPlayer + 1
+  def nextPlayer: RoundManager = {
+    if (currentPlayer < numberOfPlayers - 1) this.copy(currentPlayer = currentPlayer + 1)
     else {
-      if (!predictionMode) stitchInThisCycle
-      0
+      var newRoundManager = this
+      if (!predictionMode) newRoundManager = stitchInThisCycle
+      newRoundManager.copy(currentPlayer = 0)
     }
   }
 
@@ -135,20 +144,21 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0, shuff
     }
   }
 
-  def stitchInThisCycle: Int = {
+  def stitchInThisCycle: RoundManager = {
     val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
-    playedCards = Nil
     val mutMap = collection.mutable.Map() ++ stitchesPerRound
     mutMap.put(stitchPlayer.name, mutMap(stitchPlayer.name) + 1)
-    stitchesPerRound = mutMap.toMap
-    mutMap(stitchPlayer.name)
+    this.copy(stitchesPerRound = mutMap.toMap, playedCards = Nil)
   }
 
-  def pointsForRound():Unit = {
+  def pointsForRound(): ResultTable = {
+    var table = resultTable
     for (i <- players.indices) {
-      resultTable.updatePoints(currentRound, i,
+      table = table.updatePoints(currentRound, i,
         RoundManager.calcPoints(predictionPerRound(i), stitchesPerRound(players(i).name)))
     }
+
+    table
   }
 }
 
@@ -179,7 +189,10 @@ object RoundManager {
     }
 
     def build(): RoundManager = {
-      RoundManager(numberOfPlayers, numberOfRounds)
+      RoundManager(
+        numberOfPlayers, numberOfRounds,
+        resultTable = ResultTable(numberOfRounds, numberOfPlayers, ResultTable.initializeVector(numberOfRounds, numberOfPlayers))
+      )
     }
   }
 }
