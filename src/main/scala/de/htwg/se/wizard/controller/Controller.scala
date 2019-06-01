@@ -1,9 +1,8 @@
 package de.htwg.se.wizard.controller
 
-import de.htwg.se.wizard.util.{Observable, ControllerUpdateStateObserver}
+import de.htwg.se.wizard.util.Observable
 
-class Controller(var roundManager: RoundManager) extends Observable with ControllerUpdateStateObserver {
-  roundManager.add(this)
+class Controller(var roundManager: RoundManager) extends Observable {
 
   var state: ControllerState = preSetupState(roundManager, this)
 
@@ -17,7 +16,6 @@ class Controller(var roundManager: RoundManager) extends Observable with Control
 
   def nextState(): Unit = state = state.nextState; roundManager = state.getRoundManager
 
-  override def switchToNextState(): Unit = nextState()
 }
 
 object Controller {
@@ -50,8 +48,8 @@ case class preSetupState(var roundManager: RoundManager, controller: Controller)
     if (number.isEmpty) return
     if (!roundManager.checkNumberOfPlayers(number.get)) return
     roundManager = RoundStrategy.execute(number.get, roundManager)
-    roundManager.add(controller)
-    controller.switchToNextState()
+    controller.roundManager = roundManager
+    controller.nextState()
   }
 
   /*override def evalPlayerPrediction(input: String): Unit = ()*/
@@ -78,7 +76,7 @@ case class inGameState(roundManager: RoundManager) extends ControllerState(round
     val in = Controller.toInt(input)
     if (in.isEmpty) return
     if (roundManager.predictionMode) roundManager.updatePlayerPrediction(in.get)
-    else roundManager.evaluate(in.get)
+    else roundManager.playCard(in.get)
   }
 
   /*override def evalPlayerPrediction(input: String): Unit = {

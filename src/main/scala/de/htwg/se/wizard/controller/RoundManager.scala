@@ -2,39 +2,36 @@ package de.htwg.se.wizard.controller
 
 import de.htwg.se.wizard.model.cards.{Card, CardStack, DefaultCard}
 import de.htwg.se.wizard.model.{Player, ResultTable}
-import de.htwg.se.wizard.util.ControllerUpdateStateObservable
 
 import scala.collection.mutable.ListBuffer
 
-case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) extends ControllerUpdateStateObservable {
+case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0, shuffledCardStack: List[Card] = Nil,
+                        players: List[Player] = Nil, currentPlayer: Int = 0, currentRound: Int = 1,
+                        predictionPerRound: List[Int] = Nil, stitchesPerRound: Map[String, Int] = Map.empty[String, Int],
+                        playedCards: List[Card] = Nil, predictionMode:Boolean = true,
+                        cleanMap: Map[String, Int] = Map.empty[String, Int]) {
   val initialCardStack: List[Card] = CardStack.initialize
-  var shuffledCardStack:ListBuffer[Card] = CardStack.shuffleCards(initialCardStack)
-  var players: List[Player] = Nil
-  var currentPlayer: Int = 0
-  var currentRound: Int = 1
-  var predictionPerRound: List[Int] = Nil
-  var stitchesPerRound: Map[String, Int] = Map.empty[String, Int]
-  var playedCards: List[Card] = Nil
-  var predictionMode:Boolean = true
-  var cleanMap: Map[String, Int] = Map.empty[String, Int]
   val resultTable: ResultTable = ResultTable(roundsForThisGame, numberOfPlayers)
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)
   }
 
-  def addPlayer(input: String): Unit = {
-        updatePlayers(input)
-        var mutMap = collection.mutable.Map() ++ stitchesPerRound
-        mutMap += input -> 0
-        stitchesPerRound = mutMap.toMap
-        if (players.size == numberOfPlayers) {
-          cleanMap = stitchesPerRound
-          triggerNextState()
-        }
+  def addPlayer(name: String): RoundManager = {
+    val newPlayer = Player(name)
+    val oldPlayerList = this.players
+    if (oldPlayerList contains newPlayer) return this
+    val newPlayerList = oldPlayerList ::: List(newPlayer)
+
+    var newStitchesPerRound = collection.mutable.Map() ++ stitchesPerRound
+    newStitchesPerRound += name -> 0
+
+    this.copy(players = newPlayerList, stitchesPerRound = newStitchesPerRound.toMap)
+
+    // TODO: triggerNextState and assign cleanMap (do this in controller)
   }
 
-  def evaluate(selectedCard: Int): Unit = {
+  def playCard(selectedCard: Int): Unit = {
     playedCards = players(currentPlayer).playerCards.get.remove(selectedCard - 1) :: playedCards
   }
 
@@ -64,10 +61,6 @@ case class RoundManager(numberOfPlayers: Int = 0, numberOfRounds: Int = 0) exten
 
   def updatePlayerPrediction(input: Int): Unit = {
     predictionPerRound = predictionPerRound ::: List(input)
-  }
-
-  def updatePlayers(input: String): Unit = {
-    players = players ::: List(Player(input))
   }
 
   def getSetupStrings: String = {

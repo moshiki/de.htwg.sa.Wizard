@@ -121,7 +121,7 @@ class ControllerSpec extends WordSpec with Matchers {
       list = list ::: List[Card](DefaultCard("blue",1))
       player.playerCards = Some(list.to[ListBuffer])
 
-      roundManager.evaluate(1)
+      roundManager.playCard(1)
       roundManager.playedCards should be(List(DefaultCard("red",5)))
     }
     "return the correct state string of reading in the prediction" in {
