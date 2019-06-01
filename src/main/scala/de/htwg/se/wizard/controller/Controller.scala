@@ -62,7 +62,7 @@ case class setupState(controller: Controller) extends ControllerState {
   }
 
   override def getCurrentStateAsString: String = {
-    controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
+    controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
     controller.roundManager.getSetupStrings
   }
 

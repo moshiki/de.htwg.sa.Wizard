@@ -7,7 +7,7 @@ import scala.collection.mutable.ListBuffer
 
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
-                        shuffledCardStack: List[Card] = Nil,
+                        shuffledCardStack: List[Card] = CardStack.shuffleCards(CardStack.initialize),
                         players: List[Player] = Nil,
                         currentPlayer: Int = 0,
                         currentRound: Int = 1,
