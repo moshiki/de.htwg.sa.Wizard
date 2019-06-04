@@ -25,11 +25,15 @@ class PlayerSpec extends WordSpec with Matchers {
         val player = Player("TestPlayer")
         val list = List[Card](JesterCard(Some(player)))
         val player1 = player.copy(playerCards = Some(list))
-        Player.playerTurn(player1, 2) should startWith(
-          """Round 2 - Player: TestPlayer
+        Player.playerTurn(player1, 1) should startWith(
+          """Round 1 - Player: TestPlayer
           |Select one of the following cards:
           |{ C:Jester }""".stripMargin
         )
+
+        /*"get correct string for stitches" in {
+
+        }*/
 
 
 
