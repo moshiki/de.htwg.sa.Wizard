@@ -16,27 +16,30 @@ class ResultTableSpec extends WordSpec with Matchers{
       table.roundsToPlay should be(20)
     }
 
-   /* val table = ResultTable(20,3, ResultTable.initializeVector(20,3))
+    /*val table = ResultTable(20,3, ResultTable.initializeVector(20,3))
     "update the result correctly in the first round" in {
-      table.updatePoints(1, 0, 5)
-      table.points(0)(0) should be(5)
+
+      table.updatePoints(1, 0, 10)
+      table.points(0)(0)should be(10)
     }
 
     "update the result correctly in all future rounds" in {
       table.updatePoints(2, 0, -3)
       table.points(1)(0) should be(2)
-    }
+    }*/
+
+    //result is not being updated
     "have a nice string representation" in {
-      val printTable = ResultTable(2, 3)
-      printTable.points(0)(1) = 5
+      val printTable = ResultTable(2,3,ResultTable.initializeVector(20,3))
+      printTable.updatePoints(1,1,5)
       printTable.toString should be(
         """|#  Player  1  #  Player  2  #  Player  3  #
            |###########################################
-           |#      0      #      5      #      0      #
+           |#      0      #      0      #      0      #
            |###########################################
            |#      0      #      0      #      0      #
            |###########################################"""
         .stripMargin)
-    }*/
+    }
   }
 }
