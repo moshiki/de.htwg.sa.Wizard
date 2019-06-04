@@ -1,13 +1,15 @@
 package de.htwg.se.wizard.controller
 
-import de.htwg.se.wizard.util.Observable
+import de.htwg.se.wizard.util.{Observable, UndoManager}
 
 class Controller(var roundManager: RoundManager) extends Observable {
+  val undoManager = new UndoManager
 
   var state: ControllerState = preSetupState(this)
 
   def eval(input: String): Unit = {
     state.evaluate(input)
+    undoManager.doStep(new EvalStep(this))
     notifyObservers()
   }
 
