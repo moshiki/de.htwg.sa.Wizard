@@ -56,6 +56,8 @@ case class preSetupState(controller: Controller) extends ControllerState {
     if (!controller.roundManager.checkNumberOfPlayers(number.get)) return
     controller.roundManager = RoundStrategy.execute(number.get)
     controller.nextState()
+
+    controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
   }
 
   override def getCurrentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
@@ -66,19 +68,27 @@ case class preSetupState(controller: Controller) extends ControllerState {
 
 case class setupState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
+    controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
+
     controller.roundManager = controller.roundManager.addPlayer(input)
     if (controller.roundManager.players.size == controller.roundManager.numberOfPlayers) {
       controller.roundManager = controller.roundManager.copy(cleanMap = controller.roundManager.stitchesPerRound)
+
+      controller.roundManager = controller.roundManager.copy(predictionMode = true)
+      controller.roundManager = controller.roundManager.cardDistribution()
       controller.nextState()
     }
   }
 
   override def getCurrentStateAsString: String = {
-    controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
     controller.roundManager.getSetupStrings
   }
 
-  override def nextState: ControllerState = inGameState(controller)
+  override def nextState: ControllerState = {
+
+
+    inGameState(controller)
+  }
 }
 
 
@@ -88,15 +98,13 @@ case class inGameState(controller: Controller) extends ControllerState {
     if (in.isEmpty) return
     if (controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.updatePlayerPrediction(in.get)
     else controller.roundManager = controller.roundManager.playCard(in.get)
-  }
 
-  override def getCurrentStateAsString: String = {
     controller.roundManager = controller.roundManager.nextPlayer
-
     if (!controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.nextRound
     if (controller.roundManager.currentRound == controller.roundManager.roundsForThisGame &&
       controller.roundManager.currentPlayer == 0) {
       controller.nextState()
+      return
     }
 
     if(controller.roundManager.predictionPerRound.size < controller.roundManager.numberOfPlayers) {
@@ -105,7 +113,9 @@ case class inGameState(controller: Controller) extends ControllerState {
     } else {
       controller.roundManager = controller.roundManager.copy(predictionMode = false)
     }
+  }
 
+  override def getCurrentStateAsString: String = {
     controller.roundManager.getPlayerStateStrings
   }
 
