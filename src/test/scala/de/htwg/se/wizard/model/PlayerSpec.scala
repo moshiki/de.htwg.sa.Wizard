@@ -27,13 +27,23 @@ class PlayerSpec extends WordSpec with Matchers {
         val player1 = player.copy(playerCards = Some(list))
         Player.playerTurn(player1, 1) should startWith(
           """Round 1 - Player: TestPlayer
-          |Select one of the following cards:
-          |{ C:Jester }""".stripMargin
+            |Select one of the following cards:
+            |{ C:Jester }""".stripMargin
         )
+      }
 
-        /*"get correct string for stitches" in {
+        "get correct string for stitches" in {
+          val player = Player("TestPlayer")
+          val list = List[Card](JesterCard(Some(player)))
+          val player1 = player.copy(playerCards = Some(list))
+          Player.playerPrediction(player1,1,Some("blue")) should startWith(
+            """Round 1 - Player: TestPlayer
+              |Trump Color: blue
+              |Your Cards: { C:Jester }
+              |Enter the amount of stitches you think you will get: """.stripMargin)
 
-        }*/
+
+        }
 
 
 
@@ -48,6 +58,5 @@ class PlayerSpec extends WordSpec with Matchers {
             |Enter the amount of stitches you think you will get: """.stripMargin)
       }*/
     }
-  }
 
 }
