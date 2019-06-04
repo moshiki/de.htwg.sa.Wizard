@@ -80,15 +80,9 @@ case class setupState(controller: Controller) extends ControllerState {
     }
   }
 
-  override def getCurrentStateAsString: String = {
-    controller.roundManager.getSetupStrings
-  }
+  override def getCurrentStateAsString: String = controller.roundManager.getSetupStrings
 
-  override def nextState: ControllerState = {
-
-
-    inGameState(controller)
-  }
+  override def nextState: ControllerState = inGameState(controller)
 }
 
 
@@ -115,9 +109,7 @@ case class inGameState(controller: Controller) extends ControllerState {
     }
   }
 
-  override def getCurrentStateAsString: String = {
-    controller.roundManager.getPlayerStateStrings
-  }
+  override def getCurrentStateAsString: String = controller.roundManager.getPlayerStateStrings
 
   override def nextState: ControllerState = gameOverState(controller)
 }
