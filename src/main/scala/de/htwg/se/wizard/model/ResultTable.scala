@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model
 
-case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) {
+case class  ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) {
 
   def updatePoints(round: Int, player: Int, result: Int): ResultTable = {
     if (round == 1) this.copy(points = points.updated(round - 1, points(round - 1).updated(player, result)))

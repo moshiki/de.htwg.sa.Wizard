@@ -36,6 +36,14 @@ class DefaultCardSpec extends WordSpec with Matchers {
       }
     }
 
+    "should set Owner correctly" in {
+      val defCardWithoutOwner = DefaultCard("blue", 2)
+      val testPlayer = new Player("TestPlayer")
+      val cardWithOwner = Card.setOwner(defCardWithoutOwner, testPlayer)
+      cardWithOwner.ownerName should be("TestPlayer")
+
+    }
+
     "is not a valid DefaultCard" should {
       "throws IllegalArgumentsException for number greater than 13" in {
         an[IllegalArgumentException] should be thrownBy DefaultCard("blue", 14)

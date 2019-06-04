@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model
 
-import de.htwg.se.wizard.model.cards.JesterCard
+import de.htwg.se.wizard.model.cards.{Card, JesterCard}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.collection.mutable.ListBuffer
@@ -16,13 +16,39 @@ class PlayerSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         player.toString should be("Name")
       }
-      /*"get the correct String for its turn" in {
-        player.playerCards = Some(ListBuffer(JesterCard(Some(player))))
-        Player.playerTurn(player, 1) should startWith(
-          """Round 1 - Player: Name
-Select one of the following cards:""".stripMargin)
+
+      "has no cards" in {
+        player.playerCards should be(None)
       }
 
+      "get the correct String for his turn" in {
+        val player = Player("TestPlayer")
+        val list = List[Card](JesterCard(Some(player)))
+        val player1 = player.copy(playerCards = Some(list))
+        Player.playerTurn(player1, 1) should startWith(
+          """Round 1 - Player: TestPlayer
+            |Select one of the following cards:
+            |{ C:Jester }""".stripMargin
+        )
+      }
+
+        "get correct string for stitches" in {
+          val player = Player("TestPlayer")
+          val list = List[Card](JesterCard(Some(player)))
+          val player1 = player.copy(playerCards = Some(list))
+          Player.playerPrediction(player1,1,Some("blue")) should startWith(
+            """Round 1 - Player: TestPlayer
+              |Trump Color: blue
+              |Your Cards: { C:Jester }
+              |Enter the amount of stitches you think you will get: """.stripMargin)
+
+
+        }
+
+
+
+      }
+      /*
       "get the correct String for stitches" in {
         player.playerCards = Some(ListBuffer(JesterCard(Some(player))))
         Player.playerPrediction(player, 3, Some("blue")) should be(
@@ -32,6 +58,5 @@ Select one of the following cards:""".stripMargin)
             |Enter the amount of stitches you think you will get: """.stripMargin)
       }*/
     }
-  }
 
 }
