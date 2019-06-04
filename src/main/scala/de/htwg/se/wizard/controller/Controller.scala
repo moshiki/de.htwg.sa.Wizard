@@ -8,8 +8,18 @@ class Controller(var roundManager: RoundManager) extends Observable {
   var state: ControllerState = preSetupState(this)
 
   def eval(input: String): Unit = {
-    state.evaluate(input)
     undoManager.doStep(new EvalStep(this))
+    state.evaluate(input)
+    notifyObservers()
+  }
+
+  def undo(): Unit = {
+    undoManager.undoStep()
+    notifyObservers()
+  }
+
+  def redo(): Unit = {
+    undoManager.redoStep()
     notifyObservers()
   }
 
