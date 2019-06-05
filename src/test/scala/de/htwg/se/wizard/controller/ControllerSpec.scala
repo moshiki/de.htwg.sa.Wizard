@@ -122,11 +122,13 @@ class ControllerSpec extends WordSpec with Matchers {
       val newRoundManager = roundManager.copy(currentPlayer = 1)
       state.getCurrentStateAsString should be("Player 1, please enter your name:")
     }
-    /*
+
     "return the correct next state" in {
-      state.nextState should be(inGameState(roundManager))
+      state.nextState should be(inGameState(controller))
     }
+    /*
   }
+
   "A inGameState" when {
     val roundManager = RoundManager()
     val state = inGameState(roundManager)
