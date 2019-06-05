@@ -14,6 +14,11 @@ class TUISpec extends WordSpec with Matchers {
     "do nothing on input 'q'" in {
       tui.processInput("q")
     }
+
+    "do undo on input 'z'" in {
+      tui.processInput("z")
+    }
+
     "should let the controller evaluate the input" in {
       tui.processInput("3")
       controller.getCurrentStateAsString should be("Player 1, please enter your name:")
