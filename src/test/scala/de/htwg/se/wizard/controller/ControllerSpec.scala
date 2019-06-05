@@ -9,7 +9,7 @@ import scala.collection.mutable.ListBuffer
 
 class ControllerSpec extends WordSpec with Matchers {
   "A Controller" when {
-    val resultTable = ResultTable(20,3,ResultTable.initializeVector(3,3))
+    val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
     val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager)
     val observer = new Observer { // wontfix
@@ -31,16 +31,12 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "switches to the next state correctly" in {
-      controller.state = preSetupState( controller)
+      controller.state = preSetupState(controller)
       controller.nextState()
       controller.state should be(setupState(controller))
     }
-    /*
-    "switches to the next state correctly when called by observer" in {
-      controller.state = preSetupState(roundManager, controller)
-      controller.switchToNextState()
-      controller.state should be(setupState(roundManager))
-    }
+
+
     "can convert a string to a number correctly" should {
       "return an Int packed in Some when there is a number" in {
         val number = Controller.toInt("5")
@@ -56,14 +52,16 @@ class ControllerSpec extends WordSpec with Matchers {
   }
 
   "A preSetupState" when {
-    var roundManager = RoundManager(3)
+    val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
+    val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager)
-    val state = preSetupState(roundManager, controller)
+    val state = preSetupState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       val old = roundManager
       state.evaluate("AAA")
       roundManager should be(old)
     }
+    /*
     "does nothing when the number of PLayers is invalid" in {
       state.evaluate("8")
       roundManager should be(roundManager)
@@ -149,5 +147,6 @@ class ControllerSpec extends WordSpec with Matchers {
     "return itself as the next state" in {
       state.nextState should be(state)
     }*/
+
   }
 }
