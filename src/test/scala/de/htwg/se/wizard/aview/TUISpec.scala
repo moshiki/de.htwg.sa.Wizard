@@ -16,7 +16,7 @@ class TUISpec extends WordSpec with Matchers {
     }
     "should let the controller evaluate the input" in {
       tui.processInput("3")
-      controller.getCurrentStateAsString should be("Player 2, please enter your name:")
+      controller.getCurrentStateAsString should be("Player 1, please enter your name:")
     }
   }
 }
