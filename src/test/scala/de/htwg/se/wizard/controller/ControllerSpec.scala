@@ -110,7 +110,7 @@ class ControllerSpec extends WordSpec with Matchers {
     state.evaluate("Name3")
     "reads in stitches per round" in {
       controller.roundManager.players.size should be(3)
-      controller.roundManager.stitchesPerRound should not be()
+      controller.roundManager.cleanMap should not be()
     }
 
     //Player is not being updated
