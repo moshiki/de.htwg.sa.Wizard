@@ -5,7 +5,7 @@ import de.htwg.se.wizard.util.{Observable, UndoManager}
 class Controller(var roundManager: RoundManager) extends Observable {
   val undoManager = new UndoManager
 
-  var state: ControllerState = preSetupState(this)
+  var state: ControllerState = PreSetupState(this)
 
   def eval(input: String): Unit = {
     undoManager.doStep(new EvalStep(this))
@@ -49,7 +49,7 @@ trait ControllerState {
 }
 
 
-case class preSetupState(controller: Controller) extends ControllerState {
+case class PreSetupState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     val number = Controller.toInt(input)
     if (number.isEmpty) return
@@ -62,11 +62,11 @@ case class preSetupState(controller: Controller) extends ControllerState {
 
   override def getCurrentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
 
-  override def nextState: ControllerState = setupState(controller)
+  override def nextState: ControllerState = SetupState(controller)
 }
 
 
-case class setupState(controller: Controller) extends ControllerState {
+case class SetupState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
 
@@ -82,11 +82,11 @@ case class setupState(controller: Controller) extends ControllerState {
 
   override def getCurrentStateAsString: String = controller.roundManager.getSetupStrings
 
-  override def nextState: ControllerState = inGameState(controller)
+  override def nextState: ControllerState = InGameState(controller)
 }
 
 
-case class inGameState(controller: Controller) extends ControllerState {
+case class InGameState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     val in = Controller.toInt(input)
     if (in.isEmpty) return
@@ -111,11 +111,11 @@ case class inGameState(controller: Controller) extends ControllerState {
 
   override def getCurrentStateAsString: String = controller.roundManager.getPlayerStateStrings
 
-  override def nextState: ControllerState = gameOverState(controller)
+  override def nextState: ControllerState = GameOverState(controller)
 }
 
 
-case class gameOverState(controller: Controller) extends ControllerState {
+case class GameOverState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = ()
 
   override def getCurrentStateAsString: String = "\nGame Over! Press 'q' to quit."
