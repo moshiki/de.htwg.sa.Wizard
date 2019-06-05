@@ -7,11 +7,12 @@ import javax.swing.ImageIcon
 
 import scala.swing._
 import Swing._
+import scala.collection.immutable
 import scala.collection.mutable.ListBuffer
 import scala.swing.event.{ButtonClicked, MouseClicked}
 
 class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
-  /*val roundManager:RoundManager = controller.roundManager
+  val roundManager:RoundManager = controller.roundManager
   contents += new BoxPanel(Orientation.Horizontal) {
     val currentPlayer:Player = roundManager.players(roundManager.currentPlayer)
     contents += new Label("Round " + roundManager.currentRound)
@@ -19,30 +20,21 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     contents += new Label("Player: " + currentPlayer)
   }
 
-  val playedCards: List[Card] = roundManager.playedCards*/
+  val playedCards: List[Card] = roundManager.playedCards
 
-  val card0:Label = new Label {
+  val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
+    val index:Int = i
     private val temp = new ImageIcon("src/main/resources/cards/test.png").getImage
     private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
     icon = new ImageIcon(resize)
     listenTo(mouse.clicks)
     reactions += {
-      case e: MouseClicked => println("Click 2")
+      case _: MouseClicked => println("Click 2 + " + index)
     }
   }
 
-  contents += card0
+  labelList.foreach(x => contents += x)
 
-  listenTo(card0)
-
-
-
-
-  /*contents += new Label{
-    private val temp = new ImageIcon("src/main/resources/cards/test.png").getImage
-    private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
-    icon = new ImageIcon(resize)
-  }*/
 }
 
 // TODO: Font: Herculanum
