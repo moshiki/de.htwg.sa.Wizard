@@ -94,14 +94,18 @@ class ControllerSpec extends WordSpec with Matchers {
       state.nextState should be(setupState(controller))
     }
   }
-  /*
+
   "A setupState" when {
-    val roundManager = RoundManager(3)
-    val state = setupState(roundManager)
+    val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
+    val state = setupState(controller)
+
     "adds a player correctly" in {
       state.evaluate("Name")
-      roundManager.players.contains(Player("Name")) should be(true)
+      controller.roundManager.players.contains(Player("Name")) should be(true)
     }
+    /*
     "return the correct state string" in {
       roundManager.players = Nil
       state.getCurrentStateAsString should be("Player 1, please enter your name:")
@@ -156,5 +160,5 @@ class ControllerSpec extends WordSpec with Matchers {
       state.nextState should be(state)
     }*/
 
-
+  }
 }
