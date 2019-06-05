@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.controller
 
-import de.htwg.se.wizard.model.Player
+import de.htwg.se.wizard.model.{Player, ResultTable}
 import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.util.Observer
 import org.scalatest.{Matchers, WordSpec}
@@ -9,7 +9,8 @@ import scala.collection.mutable.ListBuffer
 
 class ControllerSpec extends WordSpec with Matchers {
   "A Controller" when {
-   /* val roundManager = RoundManager()
+    val resultTable = ResultTable(20,3,ResultTable.initializeVector(3,3))
+    val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager)
     val observer = new Observer { // wontfix
       var updated: Boolean = false
@@ -23,6 +24,7 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.eval("4")
       observer.updated should be(true)
     }
+    /*
     "gets the correct string depending of the current state" in {
       controller.state = preSetupState(roundManager, controller)
       controller.getCurrentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
