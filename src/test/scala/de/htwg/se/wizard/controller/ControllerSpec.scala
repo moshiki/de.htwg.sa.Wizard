@@ -144,6 +144,13 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.roundManager.predictionPerRound should be(List(1))
     }
 
+    "set next state" in {
+      controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(Player("Name1"), Player("Name2"), Player("Name3")), numberOfRounds = 20, currentPlayer = 0, currentRound = 20)
+      controller.roundManager.cardDistribution()
+      state.evaluate("5")
+      state.nextState should be(gameOverState(controller))
+    }
+
     /*"play card correctly" in {
       controller.roundManager = controller.roundManager.copy(predictionMode = false, players = List(Player("Name1"), Player("Name2"), Player("Name3")), currentPlayer = 0)
       controller.roundManager = controller.roundManager.cardDistribution()
@@ -173,9 +180,8 @@ class ControllerSpec extends WordSpec with Matchers {
         state.evaluate("5")
       }
       "return the correct state string" in {
-        state.evaluate("5")
-        controller.roundManager = controller.roundManager.copy(numberOfRounds = 20, currentRound = 20, currentPlayer = 0)
         state.getCurrentStateAsString should be("\nGame Over! Press 'q' to quit.")
+
       }
       "return itself as the next state" in {
         state.nextState should be(state)
