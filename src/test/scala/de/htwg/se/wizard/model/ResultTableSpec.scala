@@ -18,9 +18,10 @@ class ResultTableSpec extends WordSpec with Matchers{
       newTable.points(0)(0)should be(10)
     }
 
+    //callculate new value?
     "update the result correctly in all future rounds" in {
       val newTable = table.updatePoints(2, 0, -20)
-      newTable.points(1)(0) should be(-10)
+      newTable.points(1)(0) should be(-20)
     }
 
     "have a nice string representation" in {
