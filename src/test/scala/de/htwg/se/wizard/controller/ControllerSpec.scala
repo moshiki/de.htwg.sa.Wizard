@@ -129,7 +129,7 @@ class ControllerSpec extends WordSpec with Matchers {
   }
 
   "A inGameState" when {
-    val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
+    val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
     val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager)
     val state = inGameState(controller)
@@ -137,8 +137,14 @@ class ControllerSpec extends WordSpec with Matchers {
       state.evaluate("AAA")
       roundManager should be(roundManager)
     }
-    /*
-    "set playedCards correctly" in {
+
+    "update player prediction" in {
+     controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(Player("Name1"), Player("Name2"), Player("Name3")))
+     state.evaluate("1")
+      controller.roundManager.predictionPerRound should be(List(1))
+    }
+
+    /*"set playedCards correctly" in {
       state.evaluate("1")
       val player = Player("Name")
       roundManager.players = List[Player](player)
@@ -149,7 +155,8 @@ class ControllerSpec extends WordSpec with Matchers {
 
       roundManager.playCard(1)
       roundManager.playedCards should be(List(DefaultCard("red",5)))
-    }
+    } */
+    /*
     "return the correct state string of reading in the prediction" in {
       roundManager.currentRound = 2
       val player = Player("Name")
