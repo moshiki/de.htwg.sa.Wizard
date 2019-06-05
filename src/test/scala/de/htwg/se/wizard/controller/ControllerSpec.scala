@@ -106,17 +106,21 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.roundManager.players.contains(Player("Name")) should be(true)
     }
 
-    state.evaluate("Name2")
-    state.evaluate("Name3")
     "reads in stitches per round" in {
+      controller.roundManager = roundManager.copy(3, players = List(Player("Name1"), Player("Name2")))
+      state.evaluate("Name3")
+      controller.roundManager.numberOfPlayers should be(3)
       controller.roundManager.players.size should be(3)
-      controller.roundManager.cleanMap should not be()
+      controller.roundManager.cleanMap should be(Map("Name3" -> 0))
     }
 
-    //Player is not being updated
+    "set predictionMode true" in {
+      controller.roundManager.predictionMode should be(true)
+    }
+
     "return the correct state string" in {
       val newRoundManager = roundManager.copy(currentPlayer = 1)
-      state.getCurrentStateAsString should be("Player 0, please enter your name:")
+      state.getCurrentStateAsString should be("Player 1, please enter your name:")
     }
     /*
     "return the correct next state" in {
