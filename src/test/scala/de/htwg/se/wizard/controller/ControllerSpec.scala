@@ -24,11 +24,12 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.eval("4")
       observer.updated should be(true)
     }
-    /*
+
     "gets the correct string depending of the current state" in {
-      controller.state = preSetupState(roundManager, controller)
+      controller.state = preSetupState(controller)
       controller.getCurrentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
     }
+    /*
     "switches to the next state correctly" in {
       controller.state = preSetupState(roundManager, controller)
       controller.nextState()
