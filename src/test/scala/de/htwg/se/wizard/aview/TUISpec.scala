@@ -19,6 +19,10 @@ class TUISpec extends WordSpec with Matchers {
       tui.processInput("z")
     }
 
+    "do redo on input 'y'" in {
+      tui.processInput("y")
+    }
+
     "should let the controller evaluate the input" in {
       tui.processInput("3")
       controller.getCurrentStateAsString should be("Player 1, please enter your name:")
