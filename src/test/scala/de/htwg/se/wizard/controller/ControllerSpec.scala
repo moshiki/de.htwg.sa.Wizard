@@ -61,19 +61,23 @@ class ControllerSpec extends WordSpec with Matchers {
       state.evaluate("AAA")
       roundManager should be(old)
     }
-    /*
+
     "does nothing when the number of PLayers is invalid" in {
       state.evaluate("8")
       roundManager should be(roundManager)
     }
+
     "set the number of players correctly" in {
       state.evaluate("3")
-      roundManager.numberOfPlayers should be(3)
+      val newRoundManager = RoundManager(3, resultTable = resultTable)
+      newRoundManager.numberOfPlayers should be(3)
     }
+    /*
     "register the controller in the new roundManager" in {
       state.evaluate("3")
       state.roundManager.subscribers contains controller should be (true)
     }
+
     "trigger the controller to switch to the next state" in {
       val old = state
       state.evaluate("3")
