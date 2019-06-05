@@ -139,10 +139,18 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "update player prediction" in {
-     controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(Player("Name1"), Player("Name2"), Player("Name3")))
-     state.evaluate("1")
+      controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(Player("Name1"), Player("Name2"), Player("Name3")))
+      state.evaluate("1")
       controller.roundManager.predictionPerRound should be(List(1))
     }
+
+    /*"play card correctly" in {
+      controller.roundManager = controller.roundManager.copy(predictionMode = false, players = List(Player("Name1"), Player("Name2"), Player("Name3")), currentPlayer = 0)
+      controller.roundManager = controller.roundManager.cardDistribution()
+      state.evaluate("1")
+
+      controller.roundManager.playedCards should not be()
+    }*/
 
     /*"set playedCards correctly" in {
       state.evaluate("1")
@@ -156,32 +164,23 @@ class ControllerSpec extends WordSpec with Matchers {
       roundManager.playCard(1)
       roundManager.playedCards should be(List(DefaultCard("red",5)))
     } */
-    /*
-    "return the correct state string of reading in the prediction" in {
-      roundManager.currentRound = 2
-      val player = Player("Name")
-      roundManager.players = List[Player](player)
-      player.playerCards = Some(ListBuffer(JesterCard(Some(player))))
-      state.getCurrentStateAsString should startWith(
-        """Round 2 - Player: Name
-          |Select one of the following cards:
-          |{ C:Jester }""".stripMargin)
-    }
-    "return the correct next state" in {
-      state.nextState should be(gameOverState(roundManager))
-    }
-  }
-  "A gameOverState" should {
-    val state = gameOverState(RoundManager())
-    "do nothing when evaluating" in {
-      state.evaluate("5")
-    }
-    "return the correct state string" in {
-      state.getCurrentStateAsString should be("\nGame Over! Press 'q' to quit.")
-    }
-    "return itself as the next state" in {
-      state.nextState should be(state)
-    }*/
 
+    "A gameOverState" should {
+      val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
+      val roundManager = RoundManager(resultTable = resultTable)
+      val state = gameOverState(controller)
+      "do nothing when evaluating" in {
+        state.evaluate("5")
+      }
+      "return the correct state string" in {
+        state.evaluate("5")
+        controller.roundManager = controller.roundManager.copy(numberOfRounds = 20, currentRound = 20, currentPlayer = 0)
+        state.getCurrentStateAsString should be("\nGame Over! Press 'q' to quit.")
+      }
+      "return itself as the next state" in {
+        state.nextState should be(state)
+      }
+
+    }
   }
 }
