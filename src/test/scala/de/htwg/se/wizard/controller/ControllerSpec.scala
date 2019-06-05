@@ -126,17 +126,18 @@ class ControllerSpec extends WordSpec with Matchers {
     "return the correct next state" in {
       state.nextState should be(inGameState(controller))
     }
-    /*
   }
 
   "A inGameState" when {
-    val roundManager = RoundManager()
-    val state = inGameState(roundManager)
+    val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
+    val state = inGameState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
-      val old = RoundManager()
       state.evaluate("AAA")
-      roundManager should be(old)
+      roundManager should be(roundManager)
     }
+    /*
     "set playedCards correctly" in {
       state.evaluate("1")
       val player = Player("Name")
