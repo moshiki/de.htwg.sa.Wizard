@@ -75,7 +75,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
     /*"register the controller in the new roundManager" in {
       state.evaluate("3")
-      val newRoundManager = RoundManager(3, resultTable = resultTable)
+      controller.roundManager
       state.controller
     }*/
 
@@ -105,11 +105,20 @@ class ControllerSpec extends WordSpec with Matchers {
       state.evaluate("Name")
       controller.roundManager.players.contains(Player("Name")) should be(true)
     }
-    /*
-    "return the correct state string" in {
-      roundManager.players = Nil
-      state.getCurrentStateAsString should be("Player 1, please enter your name:")
+
+    state.evaluate("Name2")
+    state.evaluate("Name3")
+    "reads in stitches per round" in {
+      controller.roundManager.players.size should be(3)
+      controller.roundManager.stitchesPerRound should not be()
     }
+
+    //Player is not being updated
+    "return the correct state string" in {
+      val newRoundManager = roundManager.copy(currentPlayer = 1)
+      state.getCurrentStateAsString should be("Player 0, please enter your name:")
+    }
+    /*
     "return the correct next state" in {
       state.nextState should be(inGameState(roundManager))
     }
