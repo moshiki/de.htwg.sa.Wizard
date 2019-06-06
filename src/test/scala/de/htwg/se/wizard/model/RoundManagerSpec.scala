@@ -94,12 +94,12 @@ class RoundManagerSpec extends WordSpec with Matchers {
         controller.roundManager.getPlayerStateStrings
         controller.roundManager.predictionPerRound.size should be(0)
       }
-      /*
-      "update predictionPerRound correctly" in {
-        roundManager.updatePlayerPrediction(3)
-        roundManager.predictionPerRound should be(List(3))
-      }
 
+      "update predictionPerRound correctly" in {
+        controller.roundManager = controller.roundManager.updatePlayerPrediction(3)
+        controller.roundManager.predictionPerRound should be(List(3))
+      }
+      /*
       "empty predictionPerRound once a new round starts " in {
         roundManager.currentPlayer = 0
         roundManager.predictionPerRound = Nil
