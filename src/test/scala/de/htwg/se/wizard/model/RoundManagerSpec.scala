@@ -89,7 +89,8 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }*/
 
       "should ask player for his prediction if Prediction list is empty" in {
-        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3 ,currentPlayer = 1,currentRound = 1,  players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
+        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3 ,currentPlayer = 1,currentRound = 1,
+          players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
         controller.roundManager = controller.roundManager.cardDistribution()
         controller.roundManager.getPlayerStateStrings
         controller.roundManager.predictionPerRound.size should be(0)
@@ -99,13 +100,20 @@ class RoundManagerSpec extends WordSpec with Matchers {
         controller.roundManager = controller.roundManager.updatePlayerPrediction(3)
         controller.roundManager.predictionPerRound should be(List(3))
       }
-      /*
-      "empty predictionPerRound once a new round starts " in {
-        roundManager.currentPlayer = 0
-        roundManager.predictionPerRound = Nil
-        roundManager.updatePlayerPrediction(1)
-        roundManager.predictionPerRound should be(List(1))
-      }
+
+     /* "empty predictionPerRound once a new round starts " in {
+        val player = Player("Name1")
+       /* controller.roundManager =  controller.roundManager.cardDistribution()
+        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3 ,currentPlayer = 0,currentRound = 2,
+          players = List(player, Player("Name2"), Player("Name3")), predictionMode = true)*/
+
+        controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(player, Player("Name2"), Player("Name3")), currentPlayer = 0)
+        controller.roundManager = controller.roundManager.cardDistribution()
+        controller.roundManager = controller.roundManager.nextRound
+        controller.roundManager =controller.roundManager.updatePlayerPrediction(1)
+        controller.roundManager.predictionPerRound should be(List(1))
+      }*/
+        /*
 
       "return the correct state string once all players told their prediction" in {
         roundManager.currentRound = 1
@@ -118,16 +126,15 @@ class RoundManagerSpec extends WordSpec with Matchers {
         roundManager.getPlayerStateStrings should startWith(
           """Round 1 - Player: Name
 Select one of the following cards:""".stripMargin)
-      }
+      } */
 
       "not increase the current round when its not correct to do so" in {
-        roundManager.predictionPerRound = Nil
-        roundManager.predictionMode = true
-        roundManager.currentPlayer = 0
-        roundManager.currentRound = 1
-        roundManager.getPlayerStateStrings
-        roundManager.currentRound should be(1)
+        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3 ,currentPlayer = 1,currentRound = 1,
+          players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
+        controller.roundManager.nextRound
+        controller.roundManager.currentRound should be(1)
       }
+        /*
       "trigger the next state and return game over when game is over and resultTable" in {
         roundManager.predictionPerRound = Nil
         val oldState = controller.state
