@@ -18,7 +18,7 @@ abstract class Card(owner: Option[Player]) {
 
   def getStringRep: String
 
-  override def toString: String = "C:" + getStringRep
+  override def toString: String = "cards/" + getStringRep
 }
 object Card {
   def apply(card: String):Card = {

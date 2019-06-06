@@ -97,7 +97,7 @@ class DefaultCardSpec extends WordSpec with Matchers {
     "has the right String representation" should {
       val defCard = DefaultCard("blue", 2)
       "Have a nice String representation" in {
-        defCard.toString should be("C:blue 2")
+        defCard.toString should be("cards/blue 2")
       }
     }
   }

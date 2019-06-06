@@ -8,23 +8,75 @@ import javax.swing.ImageIcon
 import scala.swing._
 import Swing._
 import scala.collection.immutable
-import scala.collection.mutable.ListBuffer
-import scala.swing.event.{ButtonClicked, MouseClicked}
+import scala.swing.event.MouseClicked
 
 class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
-  val roundManager:RoundManager = controller.roundManager
+  val roundManager: RoundManager = controller.roundManager
+  val currentPlayer: Player = roundManager.players(roundManager.currentPlayer)
+
   contents += new BoxPanel(Orientation.Horizontal) {
-    val currentPlayer:Player = roundManager.players(roundManager.currentPlayer)
-    contents += new Label("Round " + roundManager.currentRound)
-    contents += HGlue
     contents += new Label("Player: " + currentPlayer)
+    contents += HGlue
+    contents += new Label("Round " + roundManager.currentRound)
   }
 
-  val playedCards: List[Card] = roundManager.playedCards
+  contents += new GridPanel(2, 2) {
 
-  val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
+    if (!roundManager.predictionMode) {
+      contents += new Label("Already played cards:")
+    } else {
+      contents += new Label("Your cards:")
+    }
+
+    contents += new Label("Trump Color:")
+
+    if (!roundManager.predictionMode) {
+      contents += new ScrollPane() {
+        // This pane shows all played cards
+        contents = new FlowPanel() {
+          val playedCards: List[Card] = roundManager.playedCards
+
+          val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
+            private val temp = new ImageIcon("src/main/resources/" + playedCards(i) + ".png").getImage
+            private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+            icon = new ImageIcon(resize)
+          }
+
+          labelList.foreach(x => contents += x)
+        }
+      }
+    } else {
+      contents += new ScrollPane() {
+        // This pane shows all cards of the current player
+        contents = new FlowPanel() {
+          val playerCards: List[Card] = currentPlayer.playerCards.get
+          val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
+            val index:Int = i
+            private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
+            private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+            icon = new ImageIcon(resize)
+            listenTo(mouse.clicks)
+            reactions += {
+              case _: MouseClicked => println(playerCards(index))
+            }
+          }
+
+          labelList.foreach(x => contents += x)
+        }
+      }
+    }
+
+    contents += new Label {
+      private val temp = new ImageIcon("src/main/resources/" + controller.roundManager.shuffledCardStack.head + ".png").getImage
+      private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+      icon = new ImageIcon(resize)
+    }
+  }
+
+
+  /*val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
     val index:Int = i
-    private val temp = new ImageIcon("src/main/resources/cards/test.png").getImage
+    private val temp = new ImageIcon("src/main/resources/cards/blue/blue 13.png").getImage
     private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
     icon = new ImageIcon(resize)
     listenTo(mouse.clicks)
@@ -33,7 +85,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     }
   }
 
-  labelList.foreach(x => contents += x)
+  labelList.foreach(x => contents += x)*/
 
 }
 
