@@ -153,15 +153,6 @@ class ControllerSpec extends WordSpec with Matchers {
 
     }
 
-    /*"read in prediction per round" in {
-      val player = Player("Name", Some(List[Card](JesterCard(player))))
-      controller.roundManager = controller.roundManager.copy(predictionPerRound = List(), numberOfPlayers = 3,players = List(player, Player("Name2"), Player("Name3")), currentPlayer = 0)
-      controller.roundManager.cardDistribution()
-      state.evaluate("4")
-      controller.roundManager.predictionMode should be(true)
-
-    }*/
-
     "play card correctly" in {
       controller.roundManager = controller.roundManager.copy(predictionMode = false, players = List(Player("Name1"), Player("Name2"), Player("Name3")), currentPlayer = 0)
       controller.roundManager = controller.roundManager.cardDistribution()
