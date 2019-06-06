@@ -88,6 +88,25 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
         case ButtonClicked(`nextButton`) => controller.eval(predictionTextBox.text)
       }
     }
+  } else {
+    contents += new ScrollPane() {
+      // This pane shows all cards of the current player
+      contents = new FlowPanel() {
+        val playerCards: List[Card] = currentPlayer.playerCards.get
+        val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
+          val index:Int = i
+          private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
+          private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+          icon = new ImageIcon(resize)
+          listenTo(mouse.clicks)
+          reactions += {
+            case _: MouseClicked => println(playerCards(index))
+          }
+        }
+
+        labelList.foreach(x => contents += x)
+      }
+    }
   }
 
 }
