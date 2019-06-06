@@ -14,11 +14,11 @@ class WelcomePanel(controller: Controller) extends BoxPanel(Orientation.Vertical
     font = myFont
   }
 
-  val fourPlayerButton: Button = new Button("4 Players"){
+  val fourPlayerButton: Button = new Button("4 Players") {
     font = myFont
   }
 
-  val fivePlayerButton: Button = new Button("5 Players"){
+  val fivePlayerButton: Button = new Button("5 Players") {
     font = myFont
   }
 

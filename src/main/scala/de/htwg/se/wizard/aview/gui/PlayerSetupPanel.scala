@@ -8,11 +8,10 @@ import scala.swing.event.{ButtonClicked, Key, KeyPressed}
 import Swing._
 
 class PlayerSetupPanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
-  //background = new Color(0, 100, 0)
   border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)
 
-  val currentPlayer:Int = controller.roundManager.currentPlayer
+  val currentPlayer: Int = controller.roundManager.currentPlayer
   val nameTextBox: TextField = new TextField() {
     listenTo(keys)
     reactions += {
