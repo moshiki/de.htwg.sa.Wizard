@@ -128,6 +128,18 @@ class RoundManagerSpec extends WordSpec with Matchers {
 Select one of the following cards:""".stripMargin)
       } */
 
+       /* //no card distribution?
+        "move to next round" in {
+          val player1 = Player("name1")
+          val player2 = Player("name2")
+          val player3 = Player("name3")
+          controller.roundManager = controller.roundManager.copy(currentPlayer = 0, numberOfPlayers = 3,
+            currentRound = 1, numberOfRounds = 20, players = List(player1, player2, player3))
+          controller.roundManager = controller.roundManager.cardDistribution()
+          controller.roundManager = controller.roundManager.nextRound
+          controller.roundManager.currentRound should be(2)
+        }*/
+
       "not increase the current round when its not correct to do so" in {
         controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3 ,currentPlayer = 1,currentRound = 1,
           players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
@@ -147,6 +159,7 @@ Select one of the following cards:""".stripMargin)
           RoundManager.calcPoints(3,1) should be(-20)
         }
 
+        // "" printed out?
         /*"get points for this round" in {
           val resultTable = new ResultTable(3,3, ResultTable.initializeVector(3, 3))
           val player1 = Player("name1")
@@ -204,7 +217,6 @@ Select one of the following cards:""".stripMargin)
 
       "trigger the next state and return game over when game is over and resultTable" in {
         controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3 ,currentPlayer = 0,currentRound = 20, numberOfRounds = 20)
-        val oldState = controller.state
         controller.roundManager.getPlayerStateStrings should be(
           "\nGame Over! Press 'q' to quit.\n" +
             """#  Player  1  #  Player  2  #  Player  3  #
