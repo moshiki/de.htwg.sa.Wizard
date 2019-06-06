@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.controller
 
 import de.htwg.se.wizard.model.{Player, ResultTable}
-import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
+import de.htwg.se.wizard.model.cards.{Card, CardStack, DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.util.Observer
 import org.scalatest.{Matchers, WordSpec}
 
@@ -161,9 +161,26 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.roundManager.playedCards should not be()
     }
 
+    "get current state" in {
+      val player = Player("Name2", Some(List(JesterCard())))
+      val cardStack = List[Card](JesterCard(), WizardCard())
+      controller.roundManager = controller.roundManager.copy(shuffledCardStack = cardStack ,predictionMode = false, players = List(Player("Name1"), player, Player("Name3")), currentPlayer = 1)
+      val trumpColor = controller.roundManager.trumpColor
+      controller.roundManager = controller.roundManager.cardDistribution()
+      val card = player.playerCards.get
+      state.getCurrentStateAsString should be(
+       "\n" + "Round 1 - Player: Name2" + "\n" +
+          "Trump Color: None" + "\n" +
+          "Your Cards: " + "{ " + card.mkString + " }" + "\n" +
+          "Enter the amount of stitches you think you will get: "
+      )
+    }
+  }
+
     "A gameOverState" should {
       val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
       val roundManager = RoundManager(resultTable = resultTable)
+      val controller = new Controller(roundManager)
       val state = gameOverState(controller)
       "do nothing when evaluating" in {
         state.evaluate("5")
@@ -177,5 +194,4 @@ class ControllerSpec extends WordSpec with Matchers {
       }
 
     }
-  }
 }
