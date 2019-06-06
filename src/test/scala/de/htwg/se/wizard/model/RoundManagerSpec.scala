@@ -147,14 +147,65 @@ Select one of the following cards:""".stripMargin)
           RoundManager.calcPoints(3,1) should be(-20)
         }
 
+        /*"get points for this round" in {
+          val resultTable = new ResultTable(3,3, ResultTable.initializeVector(3, 3))
+          val player1 = Player("name1")
+          val player2 = Player("name2")
+          val player3 = Player("name3")
+          controller.roundManager = controller.roundManager.copy(currentRound = 1,numberOfRounds = 3
+            ,predictionPerRound = List(1,1,1), numberOfPlayers = 3,
+            stitchesPerRound = Map(player1.name -> 3, player2.name ->1, player3.name -> 1), players = List(player1, player2, player3))
+          val newTable = controller.roundManager.pointsForRound()
+          newTable should be("\n" +
+            """|#  Player  1  #  Player  2  #  Player  3  #
+              |###########################################
+              |#      0      #      20      #      20      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################""".stripMargin)
+        }*/
 
-        /*
+
       "trigger the next state and return game over when game is over and resultTable" in {
-        roundManager.predictionPerRound = Nil
+        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3 ,currentPlayer = 0,currentRound = 20, numberOfRounds = 20)
         val oldState = controller.state
-        roundManager.currentPlayer = 2
-        roundManager.currentRound = 20
-        roundManager.getPlayerStateStrings should be(
+        controller.roundManager.getPlayerStateStrings should be(
           "\nGame Over! Press 'q' to quit.\n" +
             """#  Player  1  #  Player  2  #  Player  3  #
 ###########################################
@@ -198,17 +249,15 @@ Select one of the following cards:""".stripMargin)
 ###########################################
 #      0      #      0      #      0      #
 ###########################################""")
-
-
-        controller.state should not equal oldState
       }
     }
   }
+  /*
   "A RoundManager Builder" when {
     "builds a correct RoundManager" in {
       val roundManager = RoundManager.Builder().withNumberOfPlayers(3).withNumberOfRounds(20).build()
       roundManager should be(RoundManager(3, 20))
-    }*/
-      }
     }
+      }
+    }*/
 }
