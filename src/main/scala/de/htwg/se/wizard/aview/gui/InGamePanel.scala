@@ -8,7 +8,7 @@ import javax.swing.{BorderFactory, ImageIcon}
 import scala.swing._
 import Swing._
 import scala.collection.immutable
-import scala.swing.event.{ButtonClicked, MouseClicked}
+import scala.swing.event.{ButtonClicked, Key, KeyPressed, MouseClicked}
 
 class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
   val roundManager: RoundManager = controller.roundManager
@@ -108,7 +108,12 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     })
 
     contents += new BoxPanel(Orientation.Horizontal) {
-      val predictionTextBox = new TextField()
+      val predictionTextBox: TextField = new TextField() {
+        listenTo(keys)
+        reactions += {
+          case KeyPressed(_, Key.Enter, _, _) => controller.eval(text)
+        }
+      }
       val nextButton: Button = new Button("Save prediction") {
         font = myFont
       }
