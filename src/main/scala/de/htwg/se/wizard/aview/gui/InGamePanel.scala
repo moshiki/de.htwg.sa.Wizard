@@ -3,7 +3,7 @@ package de.htwg.se.wizard.aview.gui
 import de.htwg.se.wizard.controller.{Controller, RoundManager}
 import de.htwg.se.wizard.model.Player
 import de.htwg.se.wizard.model.cards.Card
-import javax.swing.ImageIcon
+import javax.swing.{BorderFactory, ImageIcon}
 
 import scala.swing._
 import Swing._
@@ -11,25 +11,47 @@ import scala.collection.immutable
 import scala.swing.event.{ButtonClicked, MouseClicked}
 
 class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
+  border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+  val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)
+
   val roundManager: RoundManager = controller.roundManager
   val currentPlayer: Player = roundManager.players(roundManager.currentPlayer)
 
   contents += new BoxPanel(Orientation.Horizontal) {
-    contents += new Label("Player: " + currentPlayer)
+    if (!roundManager.predictionMode) {
+      contents += new Label("Player: " + currentPlayer + " - Stitches: " +
+        roundManager.stitchesPerRound(currentPlayer.toString) + " (Prediction: " +
+        roundManager.predictionPerRound(roundManager.currentPlayer) + ")") {
+        font = myFont
+      }
+    } else {
+      contents += new Label("Player: " + currentPlayer) {
+        font = myFont
+      }
+    }
+
     contents += HGlue
-    contents += new Label("Round " + roundManager.currentRound)
+    contents += new Label("Round " + roundManager.currentRound) {
+      font = myFont
+    }
   }
 
   contents += new BoxPanel(Orientation.Horizontal) {
     contents += new GridPanel(2, 2) {
 
       if (!roundManager.predictionMode) {
-        contents += new Label("Already played cards:")
+        contents += new Label("Already played cards") {
+          font = myFont
+        }
       } else {
-        contents += new Label("Your cards:")
+        contents += new Label("Your cards") {
+          font = myFont
+        }
       }
 
-      contents += new Label("Trump Color:")
+      contents += new Label("Trump Color") {
+        font = myFont
+      }
 
       if (!roundManager.predictionMode) {
         contents += new ScrollPane() {
@@ -39,7 +61,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
 
             val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
               private val temp = new ImageIcon("src/main/resources/" + playedCards(i) + ".png").getImage
-              private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+              private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
               icon = new ImageIcon(resize)
             }
 
@@ -54,7 +76,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
             val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
               val index: Int = i
               private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
-              private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+              private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
               icon = new ImageIcon(resize)
             }
 
@@ -65,7 +87,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
 
       contents += new Label {
         private val temp = new ImageIcon("src/main/resources/" + controller.roundManager.shuffledCardStack.head + ".png").getImage
-        private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+        private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
         icon = new ImageIcon(resize)
       }
     }
@@ -76,10 +98,14 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
   }
 
   if (roundManager.predictionMode) {
-    contents += new Label("Enter the amount of stitches you think you will get:")
+    contents += new Label("Your prediction:") {
+      font = myFont
+    }
     contents += new BoxPanel(Orientation.Horizontal) {
       val predictionTextBox = new TextField()
-      val nextButton = new Button("->")
+      val nextButton = new Button("Save prediction") {
+        font = myFont
+      }
 
       contents += predictionTextBox
       contents += nextButton
@@ -96,9 +122,9 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
       contents = new FlowPanel() {
         val playerCards: List[Card] = currentPlayer.playerCards.get
         val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
-          val index:Int = i
+          val index: Int = i
           private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
-          private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+          private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
           icon = new ImageIcon(resize)
           listenTo(mouse.clicks)
           reactions += {
