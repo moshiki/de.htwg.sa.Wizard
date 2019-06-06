@@ -8,7 +8,7 @@ import javax.swing.ImageIcon
 import scala.swing._
 import Swing._
 import scala.collection.immutable
-import scala.swing.event.MouseClicked
+import scala.swing.event.{ButtonClicked, MouseClicked}
 
 class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
   val roundManager: RoundManager = controller.roundManager
@@ -55,10 +55,10 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
             private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
             private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
             icon = new ImageIcon(resize)
-            listenTo(mouse.clicks)
+            /*listenTo(mouse.clicks)
             reactions += {
               case _: MouseClicked => println(playerCards(index))
-            }
+            }*/
           }
 
           labelList.foreach(x => contents += x)
@@ -73,19 +73,22 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     }
   }
 
+  if (roundManager.predictionMode) {
+    contents += new Label("Enter the amount of stitches you think you will get:")
+    contents += new BoxPanel(Orientation.Horizontal) {
+      val predictionTextBox = new TextField()
+      val nextButton = new Button("->")
 
-  /*val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
-    val index:Int = i
-    private val temp = new ImageIcon("src/main/resources/cards/blue/blue 13.png").getImage
-    private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
-    icon = new ImageIcon(resize)
-    listenTo(mouse.clicks)
-    reactions += {
-      case _: MouseClicked => println("Click 2 + " + index)
+      contents += predictionTextBox
+      contents += nextButton
+
+      listenTo(nextButton)
+
+      reactions += {
+        case ButtonClicked(`nextButton`) => controller.eval(predictionTextBox.text)
+      }
     }
   }
-
-  labelList.foreach(x => contents += x)*/
 
 }
 
