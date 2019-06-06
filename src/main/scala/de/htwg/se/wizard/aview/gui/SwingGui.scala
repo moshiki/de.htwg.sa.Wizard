@@ -20,6 +20,7 @@ class SwingGui(controller: Controller) extends Frame with Observer {
       case _:PreSetupState => new WelcomePanel(controller)
       case _:SetupState => new PlayerSetupPanel(controller)
       case _:InGameState => new InGamePanel(controller)
+        // TODO: Panel for GameOver state
     }
 
     repaint()

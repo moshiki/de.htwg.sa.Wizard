@@ -4,6 +4,7 @@ import de.htwg.se.wizard.controller.{Controller, RoundManager}
 import de.htwg.se.wizard.model.Player
 import de.htwg.se.wizard.model.cards.Card
 import javax.swing.ImageIcon
+import javax.swing.table.AbstractTableModel
 
 import scala.swing._
 import Swing._
@@ -74,7 +75,9 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
       }
     }
 
-    contents += new Table(roundManager.resultTable.toAnyArray, roundManager.players map(player => player.toString))
+    contents += new ScrollPane {
+      contents = new Table(roundManager.resultTable.toAnyArray, roundManager.players)
+    }
   }
 
   if (roundManager.predictionMode) {
