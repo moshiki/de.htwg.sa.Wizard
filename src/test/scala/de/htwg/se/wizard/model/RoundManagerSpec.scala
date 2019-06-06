@@ -39,15 +39,17 @@ class RoundManagerSpec extends WordSpec with Matchers {
         controller.roundManager.roundsForThisGame should be(12)
       }
 
+      "invalid amount of Players" in {
+        an[IllegalArgumentException] shouldBe thrownBy(controller.roundManager.copy(6))
+      }
+
     }
 
       /*
 
 
 
-      "invalid amount of Players" in {
-        an[IllegalArgumentException] shouldBe thrownBy(RoundManager(6))
-      }
+
     }
     "controller is in setup mode" should {
       val roundManager = RoundManager(3)
