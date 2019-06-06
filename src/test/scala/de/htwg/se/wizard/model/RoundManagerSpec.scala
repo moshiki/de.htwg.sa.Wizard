@@ -54,11 +54,12 @@ class RoundManagerSpec extends WordSpec with Matchers {
         controller.roundManager = controller.roundManager.copy(currentPlayer = 1)
         controller.roundManager.getSetupStrings should be("Player 1, please enter your name:")
       }
-      /*
+
       "get the next player correctly" in {
-        roundManager.currentPlayer = 0
-        roundManager.nextPlayerSetup should be(1)
+        controller.roundManager = controller.roundManager.copy(currentPlayer = 1,numberOfPlayers = 3)
+        controller.roundManager.nextPlayerSetup should be(2)
       }
+      /*
       "increment the player count up to the number provided by the user" in {
         roundManager.currentPlayer = 2
         roundManager.nextPlayerSetup should be(3)
