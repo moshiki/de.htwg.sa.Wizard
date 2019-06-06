@@ -6,7 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 class EvalStepSpec extends WordSpec with Matchers {
   "An EvalStep" when {
-   /* val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
+    /* val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
     val roundManager = RoundManager(resultTable = resultTable, currentPlayer = 2)
     val controller = new Controller(roundManager)
     var memento: (RoundManager, ControllerState) = (controller.roundManager.copy(), controller.state)
@@ -19,4 +19,5 @@ class EvalStepSpec extends WordSpec with Matchers {
     }
   }*/
 
+  }
 }
