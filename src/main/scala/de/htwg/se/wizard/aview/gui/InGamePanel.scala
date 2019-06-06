@@ -4,7 +4,6 @@ import de.htwg.se.wizard.controller.{Controller, RoundManager}
 import de.htwg.se.wizard.model.Player
 import de.htwg.se.wizard.model.cards.Card
 import javax.swing.ImageIcon
-import javax.swing.table.AbstractTableModel
 
 import scala.swing._
 import Swing._
@@ -57,10 +56,6 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
               private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
               private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
               icon = new ImageIcon(resize)
-              /*listenTo(mouse.clicks)
-            reactions += {
-              case _: MouseClicked => println(playerCards(index))
-            }*/
             }
 
             labelList.foreach(x => contents += x)
