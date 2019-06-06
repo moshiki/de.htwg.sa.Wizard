@@ -29,14 +29,15 @@ class RoundManagerSpec extends WordSpec with Matchers {
         controller.roundManager.roundsForThisGame should be(20)
       }
 
+      "with four Players" in {
+        controller.roundManager = controller.roundManager.copy(4)
+        controller.roundManager.roundsForThisGame should be(15)
+      }
 
     }
 
       /*
-      val roundManager2 = RoundManager(4)
-      "with four Players" in {
-        roundManager2.roundsForThisGame should be(15)
-      }
+
 
         val roundManager3 = RoundManager(5)
       "with five Players" in {
