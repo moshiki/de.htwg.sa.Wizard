@@ -18,12 +18,21 @@ class RoundManagerSpec extends WordSpec with Matchers {
         controller.roundManager.numberOfPlayers should be(3)
       }
     }
-   /*
+
     "has the number of players initialized" should {
-      val roundManager1 = RoundManager(3)
+      val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
+      val roundManager = RoundManager(resultTable = resultTable)
+      val controller = new Controller(roundManager)
+
       "with three Players" in {
-        roundManager1.roundsForThisGame should be(20)
+        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3)
+        controller.roundManager.roundsForThisGame should be(20)
       }
+
+
+    }
+
+      /*
       val roundManager2 = RoundManager(4)
       "with four Players" in {
         roundManager2.roundsForThisGame should be(15)
