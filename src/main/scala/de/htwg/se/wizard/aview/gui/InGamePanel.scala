@@ -100,7 +100,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
           icon = new ImageIcon(resize)
           listenTo(mouse.clicks)
           reactions += {
-            case _: MouseClicked => println(playerCards(index))
+            case _: MouseClicked => controller.eval((index + 1).toString)
           }
         }
 
