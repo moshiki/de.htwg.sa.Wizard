@@ -135,6 +135,18 @@ Select one of the following cards:""".stripMargin)
         controller.roundManager.currentRound should be(1)
       }
 
+        "calculate points when player prediction was correct" in {
+          RoundManager.calcPoints(2,2) should be(20)
+        }
+        /*
+        "calculate points when player prediction was less than stitches" in {
+          RoundManager.calcPoints(1,2) should be(0)
+        }
+
+        "calculate points where player prediction was higher than stitches" in {
+          RoundManager.calcPoints(3,1) should be(-20)
+        }*/
+
 
         /*
       "trigger the next state and return game over when game is over and resultTable" in {
