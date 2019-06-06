@@ -4,14 +4,34 @@ import de.htwg.se.wizard.controller.{Controller, RoundManager}
 import de.htwg.se.wizard.model.ResultTable
 import org.scalatest.{Matchers, WordSpec}
 
-class UndoManagerSpec extends WordSpec with Matchers{
-    "An UndoManager" when {
-      val resultTable = ResultTable(20,3, ResultTable.initializeVector(3, 3))
-      val roundManager = RoundManager(resultTable = resultTable)
-     val controller = new Controller(roundManager)
+class UndoManagerSpec extends WordSpec with Matchers {
+      "An UndoManager" should {
+        val undoManager = new UndoManager
 
-      "do undoStep" in {
+        "have a do, undo and redo" in {
+          val command = new incrCommand
+          command.state should be(0)
+          undoManager.doStep(command)
+          command.state should be(1)
+          undoManager.undoStep
+          command.state should be(0)
+          undoManager.redoStep
+          command.state should be(1)
+        }
 
+        "handle multiple undo steps correctly" in {
+          val command = new incrCommand
+          command.state should be(0)
+          undoManager.doStep(command)
+          command.state should be(1)
+          undoManager.doStep(command)
+          command.state should be(2)
+          undoManager.undoStep
+          command.state should be(1)
+          undoManager.undoStep
+          command.state should be(0)
+          undoManager.redoStep
+          command.state should be(1)
+        }
       }
-    }
 }
