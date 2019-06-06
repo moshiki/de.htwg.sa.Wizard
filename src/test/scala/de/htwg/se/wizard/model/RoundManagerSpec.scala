@@ -134,6 +134,8 @@ Select one of the following cards:""".stripMargin)
         controller.roundManager.nextRound
         controller.roundManager.currentRound should be(1)
       }
+
+
         /*
       "trigger the next state and return game over when game is over and resultTable" in {
         roundManager.predictionPerRound = Nil
