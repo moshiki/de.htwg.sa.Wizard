@@ -12,7 +12,10 @@ class SwingGui(controller: Controller) extends Frame with Observer {
 
   contents = new WelcomePanel(controller)
 
+  peer.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE)
   visible = true
+  centerOnScreen()
+  resizable = false
   pack()
 
   override def update(): Unit = {

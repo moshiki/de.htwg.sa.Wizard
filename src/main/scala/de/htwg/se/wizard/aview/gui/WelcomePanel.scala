@@ -6,20 +6,37 @@ import javax.swing.BorderFactory
 import scala.swing._
 import scala.swing.event.ButtonClicked
 
-class WelcomePanel(controller: Controller) extends BoxPanel(Orientation.Vertical){
-  border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-  val threePlayerButton = new Button("3 Player")
-  val fourPlayerButton = new Button("4 Player")
-  val fivePlayerButton = new Button("5 Player")
+class WelcomePanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
+  border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+  val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)
+  val threePlayerButton: Button = new Button("3 Players") {
+    font = myFont
+  }
 
-  contents += new Label("How many Players?")
-  contents += threePlayerButton
-  contents += fourPlayerButton
-  contents += fivePlayerButton
+  val fourPlayerButton: Button = new Button("4 Players"){
+    font = myFont
+  }
+
+  val fivePlayerButton: Button = new Button("5 Players"){
+    font = myFont
+  }
+
+  contents += new FlowPanel() {
+    contents += new Label("How many Players?") {
+      font = myFont
+    }
+  }
+
+  contents += new FlowPanel() {
+    contents += threePlayerButton
+    contents += fourPlayerButton
+    contents += fivePlayerButton
+  }
 
   listenTo(threePlayerButton)
   listenTo(fourPlayerButton)
   listenTo(fivePlayerButton)
+
 
   reactions += {
     case ButtonClicked(`threePlayerButton`) => controller.eval("3")
