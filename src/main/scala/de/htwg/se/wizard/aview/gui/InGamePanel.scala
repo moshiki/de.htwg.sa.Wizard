@@ -20,57 +20,61 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     contents += new Label("Round " + roundManager.currentRound)
   }
 
-  contents += new GridPanel(2, 2) {
+  contents += new BoxPanel(Orientation.Horizontal) {
+    contents += new GridPanel(2, 2) {
 
-    if (!roundManager.predictionMode) {
-      contents += new Label("Already played cards:")
-    } else {
-      contents += new Label("Your cards:")
-    }
-
-    contents += new Label("Trump Color:")
-
-    if (!roundManager.predictionMode) {
-      contents += new ScrollPane() {
-        // This pane shows all played cards
-        contents = new FlowPanel() {
-          val playedCards: List[Card] = roundManager.playedCards
-
-          val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
-            private val temp = new ImageIcon("src/main/resources/" + playedCards(i) + ".png").getImage
-            private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
-            icon = new ImageIcon(resize)
-          }
-
-          labelList.foreach(x => contents += x)
-        }
+      if (!roundManager.predictionMode) {
+        contents += new Label("Already played cards:")
+      } else {
+        contents += new Label("Your cards:")
       }
-    } else {
-      contents += new ScrollPane() {
-        // This pane shows all cards of the current player
-        contents = new FlowPanel() {
-          val playerCards: List[Card] = currentPlayer.playerCards.get
-          val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
-            val index:Int = i
-            private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
-            private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
-            icon = new ImageIcon(resize)
-            /*listenTo(mouse.clicks)
+
+      contents += new Label("Trump Color:")
+
+      if (!roundManager.predictionMode) {
+        contents += new ScrollPane() {
+          // This pane shows all played cards
+          contents = new FlowPanel() {
+            val playedCards: List[Card] = roundManager.playedCards
+
+            val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
+              private val temp = new ImageIcon("src/main/resources/" + playedCards(i) + ".png").getImage
+              private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+              icon = new ImageIcon(resize)
+            }
+
+            labelList.foreach(x => contents += x)
+          }
+        }
+      } else {
+        contents += new ScrollPane() {
+          // This pane shows all cards of the current player
+          contents = new FlowPanel() {
+            val playerCards: List[Card] = currentPlayer.playerCards.get
+            val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
+              val index: Int = i
+              private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
+              private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+              icon = new ImageIcon(resize)
+              /*listenTo(mouse.clicks)
             reactions += {
               case _: MouseClicked => println(playerCards(index))
             }*/
-          }
+            }
 
-          labelList.foreach(x => contents += x)
+            labelList.foreach(x => contents += x)
+          }
         }
+      }
+
+      contents += new Label {
+        private val temp = new ImageIcon("src/main/resources/" + controller.roundManager.shuffledCardStack.head + ".png").getImage
+        private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
+        icon = new ImageIcon(resize)
       }
     }
 
-    contents += new Label {
-      private val temp = new ImageIcon("src/main/resources/" + controller.roundManager.shuffledCardStack.head + ".png").getImage
-      private val resize = temp.getScaledInstance(150, 200, java.awt.Image.SCALE_SMOOTH)
-      icon = new ImageIcon(resize)
-    }
+    contents += new Table(roundManager.resultTable.toAnyArray, roundManager.players map(player => player.toString))
   }
 
   if (roundManager.predictionMode) {
