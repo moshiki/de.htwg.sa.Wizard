@@ -36,74 +36,69 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     }
   }
 
-  contents += new BoxPanel(Orientation.Horizontal) {
-    contents += new GridPanel(2, 2) {
+  contents += new GridPanel(2, 2) {
 
-      if (!roundManager.predictionMode) {
-        contents += new Label("Already played cards") {
-          font = myFont
-        }
-      } else {
-        contents += new Label("Your cards") {
-          font = myFont
-        }
-      }
-
-      contents += new Label("Trump Color") {
+    if (!roundManager.predictionMode) {
+      contents += new Label("Already played cards") {
         font = myFont
       }
-
-      if (!roundManager.predictionMode) {
-        contents += new ScrollPane() {
-          // This pane shows all played cards
-          contents = new FlowPanel() {
-            val playedCards: List[Card] = roundManager.playedCards
-
-            val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
-              private val temp = new ImageIcon("src/main/resources/" + playedCards(i) + ".png").getImage
-              private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
-              icon = new ImageIcon(resize)
-            }
-
-            labelList.foreach(x => contents += x)
-          }
-        }
-      } else {
-        contents += new ScrollPane() {
-          // This pane shows all cards of the current player
-          contents = new FlowPanel() {
-            val playerCards: List[Card] = currentPlayer.playerCards.get
-            val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
-              val index: Int = i
-              private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
-              private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
-              icon = new ImageIcon(resize)
-            }
-
-            labelList.foreach(x => contents += x)
-          }
-        }
-      }
-
-      contents += new Label {
-        private val temp = new ImageIcon("src/main/resources/" + controller.roundManager.shuffledCardStack.head + ".png").getImage
-        private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
-        icon = new ImageIcon(resize)
+    } else {
+      contents += new Label("Your cards") {
+        font = myFont
       }
     }
 
-    contents += new ScrollPane {
-      contents = new Table(roundManager.resultTable.toAnyArray, roundManager.players)
+    contents += new Label("Trump Color") {
+      font = myFont
+    }
+
+    if (!roundManager.predictionMode) {
+      contents += new ScrollPane() {
+        // This pane shows all played cards
+        contents = new FlowPanel() {
+          val playedCards: List[Card] = roundManager.playedCards
+
+          val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
+            private val temp = new ImageIcon("src/main/resources/" + playedCards(i) + ".png").getImage
+            private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
+            icon = new ImageIcon(resize)
+          }
+
+          labelList.foreach(x => contents += x)
+        }
+      }
+    } else {
+      contents += new ScrollPane() {
+        // This pane shows all cards of the current player
+        contents = new FlowPanel() {
+          val playerCards: List[Card] = currentPlayer.playerCards.get
+          val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
+            val index: Int = i
+            private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
+            private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
+            icon = new ImageIcon(resize)
+          }
+
+          labelList.foreach(x => contents += x)
+        }
+      }
+    }
+
+    contents += new Label {
+      private val temp = new ImageIcon("src/main/resources/" + controller.roundManager.shuffledCardStack.head + ".png").getImage
+      private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
+      icon = new ImageIcon(resize)
     }
   }
 
   if (roundManager.predictionMode) {
-    contents += new Label("Your prediction:") {
+    contents += new FlowPanel(FlowPanel.Alignment.Left)(new Label("Your prediction:") {
       font = myFont
-    }
+    })
+
     contents += new BoxPanel(Orientation.Horizontal) {
       val predictionTextBox = new TextField()
-      val nextButton = new Button("Save prediction") {
+      val nextButton: Button = new Button("Save prediction") {
         font = myFont
       }
 
@@ -137,6 +132,12 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     }
   }
 
+
+  contents += new FlowPanel() {
+    contents += new ScrollPane {
+      contents = new Table(roundManager.resultTable.toAnyArray, roundManager.players)
+    }
+  }
 }
 
 // TODO: Font: Herculanum
