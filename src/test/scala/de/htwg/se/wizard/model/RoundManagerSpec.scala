@@ -8,17 +8,17 @@ import scala.collection.mutable.ListBuffer
 
 class RoundManagerSpec extends WordSpec with Matchers {
   "A Round Manager" when {
-    /*"new" should {
-      val roundManager = RoundManager()
-      "set the number of rounds to play to 0" in {
-        roundManager.roundsForThisGame should be(0)
-      }
+    "new" should {
+      val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
+      val roundManager = RoundManager(resultTable = resultTable)
+      val controller = new Controller(roundManager)
       "set the number of players correctly" in {
-        val roundManager = RoundManager(3)
-        roundManager.checkNumberOfPlayers(3)
-        roundManager.numberOfPlayers should be(3)
+        controller.roundManager =  controller.roundManager.copy(numberOfPlayers = 3)
+        controller.roundManager.checkNumberOfPlayers(3)
+        controller.roundManager.numberOfPlayers should be(3)
       }
     }
+   /*
     "has the number of players initialized" should {
       val roundManager1 = RoundManager(3)
       "with three Players" in {
