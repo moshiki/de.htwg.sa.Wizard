@@ -45,19 +45,16 @@ class RoundManagerSpec extends WordSpec with Matchers {
 
     }
 
-      /*
-
-
-
-
     }
     "controller is in setup mode" should {
-      val roundManager = RoundManager(3)
+      val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
+      val roundManager = RoundManager(resultTable = resultTable)
       val controller = new Controller(roundManager)
-      "ask for the next player's name correctly" in {
-        roundManager.currentPlayer = 0
-        roundManager.getSetupStrings should be("Player 1, please enter your name:")
+      "ask for next player's name correctly" in {
+        controller.roundManager = controller.roundManager.copy(currentPlayer = 1)
+        controller.roundManager.getSetupStrings should be("Player 1, please enter your name:")
       }
+      /*
       "get the next player correctly" in {
         roundManager.currentPlayer = 0
         roundManager.nextPlayerSetup should be(1)
