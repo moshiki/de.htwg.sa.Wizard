@@ -175,6 +175,10 @@ class ControllerSpec extends WordSpec with Matchers {
           "Enter the amount of stitches you think you will get: "
       )
     }
+
+    "return next state" in {
+      state.nextState should be(gameOverState(controller))
+    }
   }
 
     "A gameOverState" should {
