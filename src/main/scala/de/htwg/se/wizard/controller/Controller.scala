@@ -68,6 +68,8 @@ case class PreSetupState(controller: Controller) extends ControllerState {
 
 case class SetupState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
+    if (input.isEmpty) return
+
     controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
 
     controller.roundManager = controller.roundManager.addPlayer(input)
