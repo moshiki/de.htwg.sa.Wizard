@@ -13,7 +13,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
       val roundManager = RoundManager(resultTable = resultTable)
       val controller = new Controller(roundManager)
       "set the number of players correctly" in {
-        controller.roundManager =  controller.roundManager.copy(numberOfPlayers = 3)
+        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3)
         controller.roundManager.checkNumberOfPlayers(3)
         controller.roundManager.numberOfPlayers should be(3)
       }
@@ -44,8 +44,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
 
     }
-
-    }
+  }
     "controller is in setup mode" should {
       val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
       val roundManager = RoundManager(resultTable = resultTable)
@@ -56,16 +55,16 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
 
       "get the next player correctly" in {
-        controller.roundManager = controller.roundManager.copy(currentPlayer = 1,numberOfPlayers = 3)
+        controller.roundManager = controller.roundManager.copy(currentPlayer = 1, numberOfPlayers = 3)
         controller.roundManager.nextPlayerSetup should be(2)
       }
 
       "increment the player count up to the number provided by the user" in {
-        controller.roundManager = controller.roundManager.copy(currentPlayer = 2,numberOfPlayers = 3)
+        controller.roundManager = controller.roundManager.copy(currentPlayer = 2, numberOfPlayers = 3)
         controller.roundManager.nextPlayerSetup should be(3)
       }
       "reset the player count when there's no next player" in {
-        controller.roundManager = controller.roundManager.copy(currentPlayer = 3,numberOfPlayers = 3)
+        controller.roundManager = controller.roundManager.copy(currentPlayer = 3, numberOfPlayers = 3)
         controller.roundManager.nextPlayerSetup should be(0)
       }
 
@@ -73,34 +72,29 @@ class RoundManagerSpec extends WordSpec with Matchers {
         controller.roundManager = controller.roundManager.addPlayer("Name")
         controller.roundManager.players should be(List(Player("Name")))
       }
-      /*
-      "trigger the next state when enough players entered their names" in {
-        val oldState = controller.state
-        roundManager.addPlayer("Player 2")
-        roundManager.addPlayer("Player 3")
-        controller.state should not equal oldState
-      }
-    }
-    "controller is in game mode" should {
-      val roundManager = RoundManager(3)
-      val controller = new Controller(roundManager)
 
-      "get the next player correctly" in {
-        roundManager.currentPlayer = 0
-        roundManager.nextPlayer should be(1)
-      }
+      "controller is in game mode" should {
+        val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20,3))
+        val roundManager = RoundManager(resultTable = resultTable)
+        val controller = new Controller(roundManager)
+
+       /* "get the next player correctly" in {
+          controller.roundManager = controller.roundManager.copy(currentPlayer = 2, numberOfPlayers = 3)
+          controller.roundManager.nextPlayer should be(2)
+        }*/
+        /*
       "reset the player counter once all players played a card" in {
         roundManager.currentPlayer = 2
         roundManager.nextPlayer should be(0)
-      }
+      }*/
 
       "should ask player for his prediction if Prediction list is empty" in {
-        roundManager.players = List(Player("Name"), Player("P2"))
-        roundManager.currentPlayer = 0
-        roundManager.getPlayerStateStrings
-        roundManager.predictionPerRound.size should be(0)
+        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3 ,currentPlayer = 1,currentRound = 1,  players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
+        controller.roundManager = controller.roundManager.cardDistribution()
+        controller.roundManager.getPlayerStateStrings
+        controller.roundManager.predictionPerRound.size should be(0)
       }
-
+      /*
       "update predictionPerRound correctly" in {
         roundManager.updatePlayerPrediction(3)
         roundManager.predictionPerRound should be(List(3))
@@ -194,5 +188,6 @@ Select one of the following cards:""".stripMargin)
       val roundManager = RoundManager.Builder().withNumberOfPlayers(3).withNumberOfRounds(20).build()
       roundManager should be(RoundManager(3, 20))
     }*/
-  }
+      }
+    }
 }
