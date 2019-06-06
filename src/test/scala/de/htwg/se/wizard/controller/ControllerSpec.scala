@@ -148,8 +148,9 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(Player("Name1"), Player("Name2"), Player("Name3")), numberOfRounds = 20, currentPlayer = 0, currentRound = 20)
       controller.roundManager.cardDistribution()
       val originState = state
-      state.evaluate("5")
-      state.nextState should not be()
+      controller.eval("5")
+      originState should not be controller.state
+
     }
 
     /*"read in prediction per round" in {
@@ -161,26 +162,13 @@ class ControllerSpec extends WordSpec with Matchers {
 
     }*/
 
-    /*"play card correctly" in {
+    "play card correctly" in {
       controller.roundManager = controller.roundManager.copy(predictionMode = false, players = List(Player("Name1"), Player("Name2"), Player("Name3")), currentPlayer = 0)
       controller.roundManager = controller.roundManager.cardDistribution()
       state.evaluate("1")
 
       controller.roundManager.playedCards should not be()
-    }*/
-
-    /*"set playedCards correctly" in {
-      state.evaluate("1")
-      val player = Player("Name")
-      roundManager.players = List[Player](player)
-      var list = List[Card]()
-      list = List[Card](DefaultCard("red",5))
-      list = list ::: List[Card](DefaultCard("blue",1))
-      player.playerCards = Some(list.to[ListBuffer])
-
-      roundManager.playCard(1)
-      roundManager.playedCards should be(List(DefaultCard("red",5)))
-    } */
+    }
 
     "A gameOverState" should {
       val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
