@@ -11,11 +11,14 @@ import scala.collection.immutable
 import scala.swing.event.{ButtonClicked, MouseClicked}
 
 class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
+  val roundManager: RoundManager = controller.roundManager
+  val currentPlayer: Player = roundManager.players(roundManager.currentPlayer)
+
+  if (roundManager.predictionMode) preferredSize = new Dimension(1000, 720)
+  else preferredSize = new Dimension(1000, 840)
   border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)
 
-  val roundManager: RoundManager = controller.roundManager
-  val currentPlayer: Player = roundManager.players(roundManager.currentPlayer)
 
   contents += new BoxPanel(Orientation.Horizontal) {
     if (!roundManager.predictionMode) {
@@ -36,8 +39,9 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     }
   }
 
-  contents += new GridPanel(2, 2) {
+  contents += RigidBox(new Dimension(0, 20))
 
+  contents += new BoxPanel(Orientation.Horizontal) {
     if (!roundManager.predictionMode) {
       contents += new Label("Already played cards") {
         font = myFont
@@ -48,9 +52,14 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
       }
     }
 
+    contents += HGlue
+
     contents += new Label("Trump Color") {
       font = myFont
     }
+  }
+
+  contents += new BoxPanel(Orientation.Horizontal) {
 
     if (!roundManager.predictionMode) {
       contents += new ScrollPane() {
@@ -84,6 +93,8 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
       }
     }
 
+    contents += HGlue
+
     contents += new Label {
       private val temp = new ImageIcon("src/main/resources/" + controller.roundManager.shuffledCardStack.head + ".png").getImage
       private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
@@ -92,7 +103,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
   }
 
   if (roundManager.predictionMode) {
-    contents += new FlowPanel(FlowPanel.Alignment.Left)(new Label("Your prediction:") {
+    contents += new FlowPanel(FlowPanel.Alignment.Left)(new Label("Enter your prediction:") {
       font = myFont
     })
 
@@ -112,6 +123,9 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
       }
     }
   } else {
+    contents += new FlowPanel(FlowPanel.Alignment.Left)(new Label("Play one card:") {
+      font = myFont
+    })
     contents += new ScrollPane() {
       // This pane shows all cards of the current player
       contents = new FlowPanel() {
@@ -139,5 +153,3 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     }
   }
 }
-
-// TODO: Font: Herculanum
