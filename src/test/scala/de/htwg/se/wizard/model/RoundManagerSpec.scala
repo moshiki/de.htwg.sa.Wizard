@@ -68,11 +68,12 @@ class RoundManagerSpec extends WordSpec with Matchers {
         controller.roundManager = controller.roundManager.copy(currentPlayer = 3,numberOfPlayers = 3)
         controller.roundManager.nextPlayerSetup should be(0)
       }
-      /*
+
       "add a player correctly to a list of all players" in {
-        roundManager.addPlayer("Name")
-        roundManager.players should be(List(Player("Name")))
+        controller.roundManager = controller.roundManager.addPlayer("Name")
+        controller.roundManager.players should be(List(Player("Name")))
       }
+      /*
       "trigger the next state when enough players entered their names" in {
         val oldState = controller.state
         roundManager.addPlayer("Player 2")
