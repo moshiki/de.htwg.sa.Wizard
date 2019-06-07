@@ -1,11 +1,9 @@
 package de.htwg.se.wizard.controller
 
+import de.htwg.se.wizard.model.cards.{Card, JesterCard, WizardCard}
 import de.htwg.se.wizard.model.{Player, ResultTable}
-import de.htwg.se.wizard.model.cards.{Card, CardStack, DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.util.Observer
 import org.scalatest.{Matchers, WordSpec}
-
-import scala.collection.mutable.ListBuffer
 
 class ControllerSpec extends WordSpec with Matchers {
   "A Controller" when {
@@ -177,8 +175,8 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "trigger the next state in controller" in {
-      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3,
-        currentRound = 2, currentPlayer = 1, players = List(Player("test")))
+      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 2, numberOfRounds = 1,
+        currentRound = 1, currentPlayer = 1, players = List(Player("1"), Player("2")))
       val oldState = controller.state
       controller.eval("1")
       controller.state should be(oldState.nextState)

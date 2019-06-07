@@ -1,6 +1,5 @@
 package de.htwg.se.wizard.controller
 
-import de.htwg.se.wizard.controller.EvalStep
 import de.htwg.se.wizard.model.ResultTable
 import org.scalatest.{Matchers, WordSpec}
 
