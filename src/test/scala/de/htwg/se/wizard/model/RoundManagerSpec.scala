@@ -172,8 +172,11 @@ Select one of the following cards:""".stripMargin)
           val card3 = Card.setOwner(DefaultCard("blue",3), player3)
           controller.roundManager = controller.roundManager.copy(playedCards = List[Card](card1,card2,card3),
             stitchesPerRound =Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
+          val trumpColor = controller.roundManager.shuffledCardStack.head
           controller.roundManager = controller.roundManager.stitchInThisCycle
           controller.roundManager.playedCards should be(Nil)
+          controller.roundManager.stitchesPerRound should be(Map("name2" -> 2, "name1" -> 0, "name3"-> 0))
+
         }
 
 
