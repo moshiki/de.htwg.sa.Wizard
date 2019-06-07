@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.model
 
 import de.htwg.se.wizard.controller.{Controller, RoundManager}
-import de.htwg.se.wizard.model.cards.{Card, CardStack, JesterCard}
+import de.htwg.se.wizard.model.cards.{Card, CardStack, DefaultCard, JesterCard, WizardCard}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.collection.mutable.ListBuffer
@@ -163,8 +163,17 @@ Select one of the following cards:""".stripMargin)
           RoundManager.calcPoints(3,1) should be(-20)
         }
 
-        "get right amount of stitches" in {
-          controller.roundManager = controller.roundManager.copy()
+        "get right stitch in one cycle and delete played cards" in {
+          val player1 = Player("name1")
+          val player2 = Player("name2")
+          val player3 = Player("name3")
+          val card1 = Card.setOwner(JesterCard(), player1)
+          val card2 = Card.setOwner(WizardCard(), player2)
+          val card3 = Card.setOwner(DefaultCard("blue",3), player3)
+          controller.roundManager = controller.roundManager.copy(playedCards = List[Card](card1,card2,card3),
+            stitchesPerRound =Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
+          controller.roundManager = controller.roundManager.stitchInThisCycle
+          controller.roundManager.playedCards should be(Nil)
         }
 
 
