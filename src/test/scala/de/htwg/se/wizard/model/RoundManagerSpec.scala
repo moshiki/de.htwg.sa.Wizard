@@ -172,13 +172,27 @@ Select one of the following cards:""".stripMargin)
           val card3 = Card.setOwner(DefaultCard("blue",3), player3)
           controller.roundManager = controller.roundManager.copy(playedCards = List[Card](card1,card2,card3),
             stitchesPerRound =Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
-          val trumpColor = controller.roundManager.shuffledCardStack.head
           controller.roundManager = controller.roundManager.stitchInThisCycle
           controller.roundManager.playedCards should be(Nil)
           controller.roundManager.stitchesPerRound should be(Map("name2" -> 2, "name1" -> 0, "name3"-> 0))
 
         }
 
+        "get correct string representation when it's players turn" in {
+          val player1 = Player("name1", Some(List(JesterCard())))
+          val player2 = Player("name2", Some(List(WizardCard())))
+          val player3 = Player("name3", Some(List(DefaultCard("blue",3))))
+          val trumpColor = controller.roundManager.shuffledCardStack.head
+          controller.roundManager = controller.roundManager.copy(currentPlayer = 1, currentRound = 2, numberOfPlayers = 3,
+            players = List(player1, player2, player3), predictionPerRound = List(1,2,0))
+          controller.roundManager.getPlayerStateStrings should be(
+           "Round 2 - Player: name2" + "\n" +
+           "Select one of the following cards:" + "\n" +
+             "{ " + player2.playerCards.get.mkString + " }"
+
+
+          )
+        }
 
 
 
