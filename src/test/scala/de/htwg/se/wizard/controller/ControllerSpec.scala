@@ -132,70 +132,74 @@ class ControllerSpec extends WordSpec with Matchers {
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
     val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager)
-    val state = InGameState(controller)
+    controller.state = InGameState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
-      state.evaluate("AAA")
+      controller.eval("AAA")
       roundManager should be(roundManager)
     }
 
     "update player prediction" in {
       controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(Player("Name1"), Player("Name2"), Player("Name3")))
-      state.evaluate("1")
+      controller.eval("1")
       controller.roundManager.predictionPerRound should be(List(1))
     }
 
-    "set next state" in {
+    /*"set next state" in {
       controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(Player("Name1"), Player("Name2"), Player("Name3")), numberOfRounds = 20, currentPlayer = 0, currentRound = 20)
       controller.roundManager.cardDistribution()
       val originState = state
       controller.eval("5")
       originState should not be controller.state
 
-    }
+    }*/
+
 
     "play card correctly" in {
+      //controller.roundManager = roundManager()
       controller.roundManager = controller.roundManager.copy(predictionMode = false, players = List(Player("Name1"), Player("Name2"), Player("Name3")), currentPlayer = 0)
       controller.roundManager = controller.roundManager.cardDistribution()
-      state.evaluate("1")
+      controller.eval("1")
 
       controller.roundManager.playedCards should not be()
     }
 
-    "get current state" in {
+    "gets current state as string" in {
       val player = Player("Name2", Some(List(JesterCard())))
       val cardStack = List[Card](JesterCard(), WizardCard())
-      controller.roundManager = controller.roundManager.copy(shuffledCardStack = cardStack ,predictionMode = false, players = List(Player("Name1"), player, Player("Name3")), currentPlayer = 1)
-      val trumpColor = controller.roundManager.trumpColor
-      controller.roundManager = controller.roundManager.cardDistribution()
+      controller.roundManager = controller.roundManager.copy(shuffledCardStack = cardStack, predictionMode = true,
+        players = List(Player("Name1"), player, Player("Name3")), currentPlayer = 1, numberOfPlayers = 3)
       val card = player.playerCards.get
-      state.getCurrentStateAsString should be(
-       "\n" + "Round 1 - Player: Name2" + "\n" +
+      controller.getCurrentStateAsString should startWith(
+        "\n" + "Round 1 - Player: Name2" + "\n" +
           "Trump Color: None" + "\n" +
           "Your Cards: " + "{ " + card.mkString + " }" + "\n" +
           "Enter the amount of stitches you think you will get: "
       )
     }
 
-    "return next state" in {
-      state.nextState should be(GameOverState(controller))
+    "set next state in controller" in {
+      controller.roundManager = controller.roundManager.copy(numberOfRounds = 2, currentRound = 2, currentPlayer = 0)
+      val oldState = controller.state
+      controller.nextState()
+      controller.state should be(oldState.nextState)
     }
   }
 
-    "A GameOverState" should {
-      val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
-      val roundManager = RoundManager(resultTable = resultTable)
-      val controller = new Controller(roundManager)
-      val state = GameOverState(controller)
-      "do nothing when evaluating" in {
-        state.evaluate("5")
-      }
-      "return the correct state string" in {
-        state.getCurrentStateAsString should be("\nGame Over! Press 'q' to quit.")
-
-      }
-      "return itself as the next state" in {
-        state.nextState should be(state)
-      }
+  "A GameOverState" should {
+    val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
+    val state = GameOverState(controller)
+    "do nothing when evaluating" in {
+      state.evaluate("5")
+    }
+    "return the correct state string" in {
+      state.getCurrentStateAsString should be("\nGame Over! Press 'q' to quit.")
 
     }
+    "return itself as the next state" in {
+      state.nextState should be(state)
+    }
+
+  }
 }
