@@ -152,9 +152,13 @@ class ControllerSpec extends WordSpec with Matchers {
 
 
     "play card correctly" in {
-      controller.roundManager = controller.roundManager.copy(predictionMode = false,
-        players = List(Player("Name1"), Player("Name2"), Player("Name3")), currentPlayer = 0)
-      controller.roundManager = controller.roundManager.cardDistribution()
+      controller.roundManager = controller.roundManager.copy(predictionMode = false, numberOfPlayers = 2,
+        players = Nil, currentPlayer = 0, currentRound = 1, predictionPerRound = List(0, 0))
+      controller.roundManager = controller.roundManager.addPlayer("1")
+      controller.roundManager = controller.roundManager.addPlayer("2")
+      controller.roundManager = controller.roundManager.copy(
+        players = List(Player("1", playerCards = Some(List(WizardCard(owner = Some(Player("1")))))),
+          Player("2", playerCards = Some(Nil))))
       controller.eval("1")
 
       controller.roundManager.playedCards should not be Nil
@@ -164,7 +168,7 @@ class ControllerSpec extends WordSpec with Matchers {
       val player = Player("Name2", Some(List(JesterCard())))
       val cardStack = List[Card](JesterCard(), WizardCard())
       controller.roundManager = controller.roundManager.copy(shuffledCardStack = cardStack, predictionMode = true,
-        players = List(Player("Name1"), player, Player("Name3")), currentPlayer = 1, numberOfPlayers = 3)
+        players = List(Player("Name1"), player, Player("Name3")), currentPlayer = 1, numberOfPlayers = 3, currentRound = 1)
       val card = player.playerCards.get
       controller.getCurrentStateAsString should startWith(
         "\n" + "Round 1 - Player: Name2" + "\n" +
