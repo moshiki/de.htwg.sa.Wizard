@@ -97,7 +97,7 @@ case class InGameState(controller: Controller) extends ControllerState {
 
     controller.roundManager = controller.roundManager.nextPlayer
     if (!controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.nextRound
-    if (controller.roundManager.currentRound == controller.roundManager.roundsForThisGame &&
+    if (controller.roundManager.currentRound == controller.roundManager.numberOfRounds &&
       controller.roundManager.currentPlayer == 0) {
       controller.nextState()
       return

@@ -159,7 +159,7 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.roundManager = controller.roundManager.cardDistribution()
       controller.eval("1")
 
-      controller.roundManager.playedCards should not be()
+      controller.roundManager.playedCards should not be Nil
     }
 
     "gets current state as string" in {
@@ -176,10 +176,11 @@ class ControllerSpec extends WordSpec with Matchers {
       )
     }
 
-    "set next state in controller" in {
-      controller.roundManager = controller.roundManager.copy(numberOfRounds = 2, currentRound = 2, currentPlayer = 0)
+    "trigger the next state in controller" in {
+      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3,
+        currentRound = 2, currentPlayer = 1, players = List(Player("test")))
       val oldState = controller.state
-      controller.nextState()
+      controller.eval("1")
       controller.state should be(oldState.nextState)
     }
   }

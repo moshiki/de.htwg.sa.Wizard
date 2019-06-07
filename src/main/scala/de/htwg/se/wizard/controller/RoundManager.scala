@@ -19,16 +19,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         resultTable: ResultTable) {
   val initialCardStack: List[Card] = CardStack.initialize
 
-  val roundsForThisGame: Int = {
-    numberOfPlayers match {
-      case 0 => 0
-      case 3 => 20
-      case 4 => 15
-      case 5 => 12
-      case _ => throw new IllegalArgumentException
-    }
-  }
-
   def checkNumberOfPlayers(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)
   }
@@ -89,7 +79,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def getPlayerStateStrings: String = {
-    if (currentRound == roundsForThisGame && currentPlayer == 0) {
+    if (currentRound == numberOfRounds && currentPlayer == 0) {
       return "\nGame Over! Press 'q' to quit.\n" + resultTable.toString
     }
     if(predictionPerRound.size < numberOfPlayers) {
@@ -103,7 +93,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def nextRound: RoundManager = {
-    if (currentPlayer == 0 && currentRound != roundsForThisGame && players.last.playerCards.get.isEmpty) {
+    if (currentPlayer == 0 && currentRound != numberOfRounds && players.last.playerCards.get.isEmpty) {
       this.copy(
         resultTable = pointsForRound(),
         shuffledCardStack = CardStack.shuffleCards(initialCardStack),
