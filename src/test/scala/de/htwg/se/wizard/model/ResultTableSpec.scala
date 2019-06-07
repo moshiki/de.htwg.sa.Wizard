@@ -4,9 +4,8 @@ import org.scalatest.{Matchers, WordSpec}
 
 class ResultTableSpec extends WordSpec with Matchers{
   "A ResultTable" should {
-
+    val table = ResultTable(20, 3, ResultTable.initializeVector(20,3))
     "set ResultTable correctly" in {
-      val table = ResultTable(20, 3, ResultTable.initializeVector(20,3))
       table.numberOfPlayers should be(3)
       table.roundsToPlay should be(20)
     }
@@ -35,6 +34,15 @@ class ResultTableSpec extends WordSpec with Matchers{
            |#      0      #      0      #      0      #
            |###########################################"""
         .stripMargin)
+    }
+
+    "convert its data into an AnyArray" in {
+      val arr = table.toAnyArray
+      for (i <- arr.indices) {
+        for (j <- arr(i).indices) {
+          arr(i)(j) should equal(table.points(i)(j))
+        }
+      }
     }
   }
 }
