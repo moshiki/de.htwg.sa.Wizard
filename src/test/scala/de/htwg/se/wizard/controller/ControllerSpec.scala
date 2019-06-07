@@ -119,7 +119,6 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "return the correct state string" in {
-      val newRoundManager = roundManager.copy(currentPlayer = 1)
       state.getCurrentStateAsString should be("Player 1, please enter your name:")
     }
 
@@ -155,8 +154,8 @@ class ControllerSpec extends WordSpec with Matchers {
 
 
     "play card correctly" in {
-      //controller.roundManager = roundManager()
-      controller.roundManager = controller.roundManager.copy(predictionMode = false, players = List(Player("Name1"), Player("Name2"), Player("Name3")), currentPlayer = 0)
+      controller.roundManager = controller.roundManager.copy(predictionMode = false,
+        players = List(Player("Name1"), Player("Name2"), Player("Name3")), currentPlayer = 0)
       controller.roundManager = controller.roundManager.cardDistribution()
       controller.eval("1")
 
