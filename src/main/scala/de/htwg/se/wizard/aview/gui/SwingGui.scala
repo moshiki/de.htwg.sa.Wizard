@@ -19,13 +19,19 @@ class SwingGui(controller: Controller) extends Frame with Observer {
   pack()
 
   override def update(): Unit = {
-    contents = controller.state match {
+    contents = SwingGui.getPanel(controller)
+
+    repaint()
+  }
+}
+
+object SwingGui {
+  def getPanel(controller: Controller): Panel = {
+    controller.state match {
       case _: PreSetupState => new WelcomePanel(controller)
       case _: SetupState => new PlayerSetupPanel(controller)
       case _: InGameState => new InGamePanel(controller)
       case _: GameOverState => new GameOverPanel(controller)
     }
-
-    repaint()
   }
 }
