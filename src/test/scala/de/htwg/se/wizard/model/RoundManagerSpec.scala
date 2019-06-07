@@ -128,17 +128,21 @@ class RoundManagerSpec extends WordSpec with Matchers {
 Select one of the following cards:""".stripMargin)
       } */
 
-       /* //no card distribution?
         "move to next round" in {
           val player1 = Player("name1")
           val player2 = Player("name2")
-          val player3 = Player("name3")
+          val player3 = Player("name3", playerCards = Some(Nil))
           controller.roundManager = controller.roundManager.copy(currentPlayer = 0, numberOfPlayers = 3,
-            currentRound = 1, numberOfRounds = 20, players = List(player1, player2, player3))
-          controller.roundManager = controller.roundManager.cardDistribution()
+            currentRound = 1, numberOfRounds = 20)
+          controller.roundManager = controller.roundManager.addPlayer("name1")
+          controller.roundManager = controller.roundManager.addPlayer("name2")
+          controller.roundManager = controller.roundManager.addPlayer("name3")
+          controller.roundManager = controller.roundManager.copy(players = List(player1, player2, player3),
+            predictionPerRound = List(0, 0, 0))
+
           controller.roundManager = controller.roundManager.nextRound
           controller.roundManager.currentRound should be(2)
-        }*/
+        }
 
       "not increase the current round when its not correct to do so" in {
         controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3 ,currentPlayer = 1,currentRound = 1,
@@ -159,60 +163,11 @@ Select one of the following cards:""".stripMargin)
           RoundManager.calcPoints(3,1) should be(-20)
         }
 
-        // "" printed out?
-        /*"get points for this round" in {
-          val resultTable = new ResultTable(3,3, ResultTable.initializeVector(3, 3))
-          val player1 = Player("name1")
-          val player2 = Player("name2")
-          val player3 = Player("name3")
-          controller.roundManager = controller.roundManager.copy(currentRound = 1,numberOfRounds = 3
-            ,predictionPerRound = List(1,1,1), numberOfPlayers = 3,
-            stitchesPerRound = Map(player1.name -> 3, player2.name ->1, player3.name -> 1), players = List(player1, player2, player3))
-          val newTable = controller.roundManager.pointsForRound()
-          newTable should be("\n" +
-            """|#  Player  1  #  Player  2  #  Player  3  #
-              |###########################################
-              |#      0      #      20      #      20      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################
-              |#      0      #      0      #      0      #
-              |###########################################""".stripMargin)
-        }*/
+        "get right amount of stitches" in {
+          controller.roundManager = controller.roundManager.copy()
+        }
+
+
 
 
       "trigger the next state and return game over when game is over and resultTable" in {
@@ -221,7 +176,7 @@ Select one of the following cards:""".stripMargin)
           "\nGame Over! Press 'q' to quit.\n" +
             """#  Player  1  #  Player  2  #  Player  3  #
 ###########################################
-#      0      #      0      #      0      #
+#      20      #      20      #      20      #
 ###########################################
 #      0      #      0      #      0      #
 ###########################################
