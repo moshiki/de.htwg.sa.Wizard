@@ -72,8 +72,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
     this.copy(shuffledCardStack = stack.toList, players = newPlayers.toList)
 
-    // Probably need to do this for all players and not only the current one.
-    //  It's also possible that this method's call needs to move from getPlayerStateStrings to Controller.
+    //todo: Probably need to do this for all players and not only the current one.
   }
 
   def updatePlayerPrediction(input: Int): RoundManager = {
@@ -81,7 +80,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def getSetupStrings: String = {
-    // Move this call to Controller: currentPlayer = nextPlayerSetup
     "Player " + currentPlayer + ", please enter your name:"
   }
 
@@ -91,23 +89,15 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def getPlayerStateStrings: String = {
-    // Move all marked calls to controller:
-    //  currentPlayer = nextPlayer
-    // if (!predictionMode) currentRound = nextRound
     if (currentRound == roundsForThisGame && currentPlayer == 0) {
-      // triggerNextState()
       return "\nGame Over! Press 'q' to quit.\n" + resultTable.toString
     }
     if(predictionPerRound.size < numberOfPlayers) {
-      //predictionMode = true
-      //cardDistribution()
       var out = "\n"
       if (currentPlayer == 0) out += resultTable.toString + "\n"
       out += Player.playerPrediction(players(currentPlayer), currentRound, trumpColor)
       out
     } else {
-
-      // predictionMode = false
       Player.playerTurn(players(currentPlayer), currentRound)
     }
   }

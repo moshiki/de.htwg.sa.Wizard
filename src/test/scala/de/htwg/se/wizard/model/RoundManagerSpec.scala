@@ -182,16 +182,71 @@ Select one of the following cards:""".stripMargin)
           val player1 = Player("name1", Some(List(JesterCard())))
           val player2 = Player("name2", Some(List(WizardCard())))
           val player3 = Player("name3", Some(List(DefaultCard("blue",3))))
-          val trumpColor = controller.roundManager.shuffledCardStack.head
           controller.roundManager = controller.roundManager.copy(currentPlayer = 1, currentRound = 2, numberOfPlayers = 3,
             players = List(player1, player2, player3), predictionPerRound = List(1,2,0))
           controller.roundManager.getPlayerStateStrings should be(
            "Round 2 - Player: name2" + "\n" +
            "Select one of the following cards:" + "\n" +
              "{ " + player2.playerCards.get.mkString + " }"
-
-
           )
+        }
+
+        "print result table when player 1 is on turn" in {
+          val player1 = Player("name1", Some(List(JesterCard())))
+          val player2 = Player("name2", Some(List(WizardCard())))
+          val player3 = Player("name3", Some(List(DefaultCard("blue",3))))
+          controller.roundManager = controller.roundManager.copy(currentPlayer = 0, currentRound = 1, numberOfPlayers = 3,
+            players = List(player1, player2, player3), predictionPerRound = List(), shuffledCardStack = List(DefaultCard("blue",3)))
+          controller.roundManager.getPlayerStateStrings should be(
+            """
+              |#  Player  1  #  Player  2  #  Player  3  #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################
+              |#      0      #      0      #      0      #
+              |###########################################""".stripMargin
+            + "\n" + "Round 1 - Player: name1" + "\n" +
+            "Trump Color: blue" + "\n" +
+              "Your Cards: " + "{ " + player1.playerCards.get.mkString + " }" + "\n" +
+            "Enter the amount of stitches you think you will get: "
+          )
+
         }
 
 
