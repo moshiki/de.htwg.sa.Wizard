@@ -10,7 +10,7 @@ class ResultTableSpec extends WordSpec with Matchers{
       table.roundsToPlay should be(20)
     }
 
-    val table = ResultTable(20,3, ResultTable.initializeVector(3,3))
+    //val table = ResultTable(20,3, ResultTable.initializeVector(3,3))
     "update the result correctly in the first round" in {
 
      val newTable = table.updatePoints(1, 0, 10)

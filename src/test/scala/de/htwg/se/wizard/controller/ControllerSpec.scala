@@ -26,14 +26,14 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "gets the correct string depending of the current state" in {
-      controller.state = preSetupState(controller)
+      controller.state = PreSetupState(controller)
       controller.getCurrentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
     }
 
     "switches to the next state correctly" in {
-      controller.state = preSetupState(controller)
+      controller.state = PreSetupState(controller)
       controller.nextState()
-      controller.state should be(setupState(controller))
+      controller.state should be(SetupState(controller))
     }
 
 
@@ -55,7 +55,7 @@ class ControllerSpec extends WordSpec with Matchers {
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
     val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager)
-    val state = preSetupState(controller)
+    val state = PreSetupState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       val old = roundManager
       state.evaluate("AAA")
@@ -91,15 +91,15 @@ class ControllerSpec extends WordSpec with Matchers {
 
 
     "return the correct next state" in {
-      state.nextState should be(setupState(controller))
+      state.nextState should be(SetupState(controller))
     }
   }
 
-  "A setupState" when {
+  "A SetupState" when {
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
     val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager)
-    val state = setupState(controller)
+    val state = SetupState(controller)
 
     "adds a player correctly" in {
       state.evaluate("Name")
@@ -124,15 +124,15 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "return the correct next state" in {
-      state.nextState should be(inGameState(controller))
+      state.nextState should be(InGameState(controller))
     }
   }
 
-  "A inGameState" when {
+  "A InGameState" when {
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
     val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager)
-    val state = inGameState(controller)
+    val state = InGameState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       state.evaluate("AAA")
       roundManager should be(roundManager)
@@ -177,15 +177,15 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "return next state" in {
-      state.nextState should be(gameOverState(controller))
+      state.nextState should be(GameOverState(controller))
     }
   }
 
-    "A gameOverState" should {
+    "A GameOverState" should {
       val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
       val roundManager = RoundManager(resultTable = resultTable)
       val controller = new Controller(roundManager)
-      val state = gameOverState(controller)
+      val state = GameOverState(controller)
       "do nothing when evaluating" in {
         state.evaluate("5")
       }

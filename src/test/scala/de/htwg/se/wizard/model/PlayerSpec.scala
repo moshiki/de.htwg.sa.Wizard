@@ -28,7 +28,7 @@ class PlayerSpec extends WordSpec with Matchers {
         Player.playerTurn(player1, 1) should startWith(
           """Round 1 - Player: TestPlayer
             |Select one of the following cards:
-            |{ C:Jester }""".stripMargin
+            |{ cards/Jester }""".stripMargin
         )
       }
 
@@ -39,7 +39,7 @@ class PlayerSpec extends WordSpec with Matchers {
           Player.playerPrediction(player1,1,Some("blue")) should startWith(
             """Round 1 - Player: TestPlayer
               |Trump Color: blue
-              |Your Cards: { C:Jester }
+              |Your Cards: { cards/Jester }
               |Enter the amount of stitches you think you will get: """.stripMargin)
 
 
