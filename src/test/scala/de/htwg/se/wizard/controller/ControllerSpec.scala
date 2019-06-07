@@ -71,12 +71,6 @@ class ControllerSpec extends WordSpec with Matchers {
       newRoundManager.numberOfPlayers should be(3)
     }
 
-    /*"register the controller in the new roundManager" in {
-      state.evaluate("3")
-      controller.roundManager
-      state.controller
-    }*/
-
     "trigger the controller to switch to the next state" in {
       val old = state
       state.evaluate("3")
@@ -141,15 +135,15 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.roundManager.predictionPerRound should be(List(1))
     }
 
-    /*"set next state" in {
-      controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(Player("Name1"), Player("Name2"), Player("Name3")), numberOfRounds = 20, currentPlayer = 0, currentRound = 20)
-      controller.roundManager.cardDistribution()
-      val originState = state
-      controller.eval("5")
-      originState should not be controller.state
+    "stay to prediction mode" in {
+      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, numberOfRounds = 20, predictionMode = true)
+      controller.roundManager = controller.roundManager.addPlayer("1")
+      controller.roundManager = controller.roundManager.addPlayer("2")
+      controller.roundManager = controller.roundManager.addPlayer("3")
+      controller.eval("0")
 
-    }*/
-
+      controller.roundManager.predictionMode should be(true)
+    }
 
     "play card correctly" in {
       controller.roundManager = controller.roundManager.copy(predictionMode = false, numberOfPlayers = 2,
