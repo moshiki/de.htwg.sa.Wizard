@@ -44,143 +44,117 @@ class RoundManagerSpec extends WordSpec with Matchers {
       controller.roundManager = controller.roundManager.addPlayer("Name")
       controller.roundManager.players should be(List(Player("Name")))
     }
+  }
 
-    "controller is in game mode" should {
-      val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
-      val roundManager = RoundManager(resultTable = resultTable)
-      val controller = new Controller(roundManager)
+  "controller is in game mode" should {
+    val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
 
-      /* "get the next player correctly" in {
-         controller.roundManager = controller.roundManager.copy(currentPlayer = 2, numberOfPlayers = 3)
-         controller.roundManager.nextPlayer should be(2)
-       }*/
-      /*
-    "reset the player counter once all players played a card" in {
-      roundManager.currentPlayer = 2
-      roundManager.nextPlayer should be(0)
-    }*/
+    "should ask player for his prediction if Prediction list is empty" in {
+      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,
+        players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
+      controller.roundManager = controller.roundManager.cardDistribution()
+      controller.roundManager.getPlayerStateStrings
+      controller.roundManager.predictionPerRound.size should be(0)
+    }
 
-      "should ask player for his prediction if Prediction list is empty" in {
-        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,
-          players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
-        controller.roundManager = controller.roundManager.cardDistribution()
-        controller.roundManager.getPlayerStateStrings
-        controller.roundManager.predictionPerRound.size should be(0)
-      }
+    "update predictionPerRound correctly" in {
+      controller.roundManager = controller.roundManager.updatePlayerPrediction(3)
+      controller.roundManager.predictionPerRound should be(List(3))
+    }
 
-      "update predictionPerRound correctly" in {
-        controller.roundManager = controller.roundManager.updatePlayerPrediction(3)
-        controller.roundManager.predictionPerRound should be(List(3))
-      }
+    "store who played the highest card in the current cycle" in {
+      var roundManager = controller.roundManager.copy(players = Nil, numberOfPlayers = 1, predictionMode = false,
+        playedCards = List(WizardCard(Some(Player("1")))))
+      roundManager = roundManager.addPlayer("1")
 
-      /* "empty predictionPerRound once a new round starts " in {
-         val player = Player("Name1")
-        /* controller.roundManager =  controller.roundManager.cardDistribution()
-         controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3 ,currentPlayer = 0,currentRound = 2,
-           players = List(player, Player("Name2"), Player("Name3")), predictionMode = true)*/
+      roundManager = roundManager.nextPlayer
+      roundManager.stitchesPerRound("1") should be(1)
+    }
 
-         controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(player, Player("Name2"), Player("Name3")), currentPlayer = 0)
-         controller.roundManager = controller.roundManager.cardDistribution()
-         controller.roundManager = controller.roundManager.nextRound
-         controller.roundManager =controller.roundManager.updatePlayerPrediction(1)
-         controller.roundManager.predictionPerRound should be(List(1))
-       }*/
-      /*
+    "move to next round" in {
+      val player1 = Player("name1")
+      val player2 = Player("name2")
+      val player3 = Player("name3", playerCards = Some(Nil))
+      controller.roundManager = controller.roundManager.copy(currentPlayer = 0, numberOfPlayers = 3,
+        currentRound = 1, numberOfRounds = 20)
+      controller.roundManager = controller.roundManager.addPlayer("name1")
+      controller.roundManager = controller.roundManager.addPlayer("name2")
+      controller.roundManager = controller.roundManager.addPlayer("name3")
+      controller.roundManager = controller.roundManager.copy(players = List(player1, player2, player3),
+        predictionPerRound = List(0, 0, 0))
 
-    "return the correct state string once all players told their prediction" in {
-      roundManager.currentRound = 1
-      roundManager.predictionPerRound = List(2)
-      roundManager.predictionPerRound = roundManager.predictionPerRound ::: List(1)
-      roundManager.predictionPerRound = roundManager.predictionPerRound ::: List(1)
-      val player = Player("Name")
-      roundManager.players = List[Player](player)
-      player.playerCards = Some(ListBuffer(JesterCard(Some(player))))
-      roundManager.getPlayerStateStrings should startWith(
-        """Round 1 - Player: Name
-Select one of the following cards:""".stripMargin)
-    } */
+      controller.roundManager = controller.roundManager.nextRound
+      controller.roundManager.currentRound should be(2)
+    }
 
-      "move to next round" in {
-        val player1 = Player("name1")
-        val player2 = Player("name2")
-        val player3 = Player("name3", playerCards = Some(Nil))
-        controller.roundManager = controller.roundManager.copy(currentPlayer = 0, numberOfPlayers = 3,
-          currentRound = 1, numberOfRounds = 20)
-        controller.roundManager = controller.roundManager.addPlayer("name1")
-        controller.roundManager = controller.roundManager.addPlayer("name2")
-        controller.roundManager = controller.roundManager.addPlayer("name3")
-        controller.roundManager = controller.roundManager.copy(players = List(player1, player2, player3),
-          predictionPerRound = List(0, 0, 0))
+    "not increase the current round when its not correct to do so" in {
+      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,
+        players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
+      controller.roundManager.nextRound
+      controller.roundManager.currentRound should be(1)
+    }
 
-        controller.roundManager = controller.roundManager.nextRound
-        controller.roundManager.currentRound should be(2)
-      }
+    "calculate points when player prediction was correct" in {
+      RoundManager.calcPoints(2, 2) should be(20)
+    }
 
-      "not increase the current round when its not correct to do so" in {
-        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,
-          players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
-        controller.roundManager.nextRound
-        controller.roundManager.currentRound should be(1)
-      }
+    "calculate points when player prediction was less than stitches" in {
+      RoundManager.calcPoints(1, 2) should be(0)
+    }
 
-      "calculate points when player prediction was correct" in {
-        RoundManager.calcPoints(2, 2) should be(20)
-      }
+    "calculate points where player prediction was higher than stitches" in {
+      RoundManager.calcPoints(3, 1) should be(-20)
+    }
 
-      "calculate points when player prediction was less than stitches" in {
-        RoundManager.calcPoints(1, 2) should be(0)
-      }
+    "get right stitch in one cycle and delete played cards" in {
+      val player1 = Player("name1")
+      val player2 = Player("name2")
+      val player3 = Player("name3")
+      val card1 = Card.setOwner(JesterCard(), player1)
+      val card2 = Card.setOwner(WizardCard(), player2)
+      val card3 = Card.setOwner(DefaultCard("blue", 3), player3)
+      controller.roundManager = controller.roundManager.copy(playedCards = List[Card](card1, card2, card3),
+        stitchesPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
+      controller.roundManager = controller.roundManager.stitchInThisCycle
+      controller.roundManager.playedCards should be(Nil)
+      controller.roundManager.stitchesPerRound should be(Map("name2" -> 2, "name1" -> 0, "name3" -> 0))
 
-      "calculate points where player prediction was higher than stitches" in {
-        RoundManager.calcPoints(3, 1) should be(-20)
-      }
+    }
 
-      "get right stitch in one cycle and delete played cards" in {
-        val player1 = Player("name1")
-        val player2 = Player("name2")
-        val player3 = Player("name3")
-        val card1 = Card.setOwner(JesterCard(), player1)
-        val card2 = Card.setOwner(WizardCard(), player2)
-        val card3 = Card.setOwner(DefaultCard("blue", 3), player3)
-        controller.roundManager = controller.roundManager.copy(playedCards = List[Card](card1, card2, card3),
-          stitchesPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
-        controller.roundManager = controller.roundManager.stitchInThisCycle
-        controller.roundManager.playedCards should be(Nil)
-        controller.roundManager.stitchesPerRound should be(Map("name2" -> 2, "name1" -> 0, "name3" -> 0))
+    "get correct string representation when it's players turn" in {
+      val player1 = Player("name1", Some(List(JesterCard())))
+      val player2 = Player("name2", Some(List(WizardCard())))
+      val player3 = Player("name3", Some(List(DefaultCard("blue", 3))))
+      controller.roundManager = controller.roundManager.copy(currentPlayer = 1, currentRound = 2, numberOfPlayers = 3,
+        players = List(player1, player2, player3), predictionPerRound = List(1, 2, 0))
+      controller.roundManager.getPlayerStateStrings should be(
+        "Round 2 - Player: name2" + "\n" +
+          "Select one of the following cards:" + "\n" +
+          "{ " + player2.playerCards.get.mkString + " }"
+      )
+    }
 
-      }
-
-      "get correct string representation when it's players turn" in {
-        val player1 = Player("name1", Some(List(JesterCard())))
-        val player2 = Player("name2", Some(List(WizardCard())))
-        val player3 = Player("name3", Some(List(DefaultCard("blue", 3))))
-        controller.roundManager = controller.roundManager.copy(currentPlayer = 1, currentRound = 2, numberOfPlayers = 3,
-          players = List(player1, player2, player3), predictionPerRound = List(1, 2, 0))
-        controller.roundManager.getPlayerStateStrings should be(
-          "Round 2 - Player: name2" + "\n" +
-            "Select one of the following cards:" + "\n" +
-            "{ " + player2.playerCards.get.mkString + " }"
-        )
-      }
-
-      "print result table when player 1 is on turn" in {
-        val player1 = Player("name1", Some(List(JesterCard())))
-        val player2 = Player("name2", Some(List(WizardCard())))
-        val player3 = Player("name3", Some(List(DefaultCard("blue", 3))))
-        controller.roundManager = controller.roundManager.copy(currentPlayer = 0, currentRound = 1, numberOfPlayers = 3,
-          players = List(player1, player2, player3), predictionPerRound = List(), shuffledCardStack = List(DefaultCard("blue", 3)))
-        controller.roundManager.getPlayerStateStrings startsWith """
+    "print result table when player 1 is on turn" in {
+      val player1 = Player("name1", Some(List(JesterCard())))
+      val player2 = Player("name2", Some(List(WizardCard())))
+      val player3 = Player("name3", Some(List(DefaultCard("blue", 3))))
+      controller.roundManager = controller.roundManager.copy(currentPlayer = 0, currentRound = 1, numberOfPlayers = 3,
+        players = List(player1, player2, player3), predictionPerRound = List(), shuffledCardStack = List(DefaultCard("blue", 3)))
+      controller.roundManager.getPlayerStateStrings startsWith
+        """
           |#  Player  1  #  Player  2  #  Player  3  #
           |###########################################""".stripMargin
 
-      }
+    }
 
 
-      "trigger the next state and return game over when game is over and resultTable" in {
-        controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, currentPlayer = 0, currentRound = 20, numberOfRounds = 20)
-        controller.roundManager.getPlayerStateStrings should be(
-          "\nGame Over! Press 'q' to quit.\n" +
-            """#  Player  1  #  Player  2  #  Player  3  #
+    "trigger the next state and return game over when game is over and resultTable" in {
+      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, currentPlayer = 0, currentRound = 20, numberOfRounds = 20)
+      controller.roundManager.getPlayerStateStrings should be(
+        "\nGame Over! Press 'q' to quit.\n" +
+          """#  Player  1  #  Player  2  #  Player  3  #
 ###########################################
 #      20      #      20      #      20      #
 ###########################################
@@ -222,15 +196,6 @@ Select one of the following cards:""".stripMargin)
 ###########################################
 #      0      #      0      #      0      #
 ###########################################""")
-      }
     }
   }
-  /*
-  "A RoundManager Builder" when {
-    "builds a correct RoundManager" in {
-      val roundManager = RoundManager.Builder().withNumberOfPlayers(3).withNumberOfRounds(20).build()
-      roundManager should be(RoundManager(3, 20))
-    }
-      }
-    }*/
 }
