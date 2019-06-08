@@ -1,16 +1,21 @@
 package de.htwg.se.wizard.model
 
-case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6) {
-  val points: Array[Array[Int]] = Array.fill(roundsToPlay, numberOfPlayers)(0)
+case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) {
 
-  def updatePoints(round: Int, player: Int, result: Int):Unit = {
-    if (round == 1) points(round - 1)(player) = result
-    else points(round - 1)(player) = result + points(round - 2)(player)
+  def updatePoints(round: Int, player: Int, result: Int): ResultTable = {
+    if (round == 1) this.copy(points = points.updated(round - 1, points(round - 1).updated(player, result)))
+    else this.copy(points = points.updated(round - 1, points(round - 1).updated(player, result + points(round - 2)(player))))
+  }
+
+  def toAnyArray: Array[Array[Any]] = {
+    points.toArray map(innerVector => innerVector.toArray[Any])
   }
 
   override def toString: String = {
     val horizontalBar = "#" + ("##############" * numberOfPlayers)
+
     def oneLine(line: Int) = points(line).mkString("#      ", "      #      ", "      #")
+
     var returnString = "#"
     for (i <- 1 to numberOfPlayers) {
       returnString += "  Player  " + i + "  #"
@@ -25,5 +30,11 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6) {
 
     returnString += horizontalBar
     returnString
+  }
+}
+
+object ResultTable {
+  def initializeVector(roundsToPlay: Int = 20, numberOfPlayers: Int = 6): Vector[Vector[Int]] = {
+    Vector.fill(roundsToPlay, numberOfPlayers)(0)
   }
 }

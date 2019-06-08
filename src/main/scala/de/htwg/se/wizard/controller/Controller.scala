@@ -1,24 +1,32 @@
 package de.htwg.se.wizard.controller
 
-import de.htwg.se.wizard.model.{RoundManager, RoundStrategy}
-import de.htwg.se.wizard.util.{Observable, ControllerUpdateStateObserver}
+import de.htwg.se.wizard.util.{Observable, UndoManager}
 
-class Controller(var roundManager: RoundManager) extends Observable with ControllerUpdateStateObserver {
-  roundManager.add(this)
+class Controller(var roundManager: RoundManager) extends Observable {
+  val undoManager = new UndoManager
 
-  var state: ControllerState = preSetupState(roundManager, this)
+  var state: ControllerState = PreSetupState(this)
 
   def eval(input: String): Unit = {
-   /* if(inGameState == 0) state.evalPlayerPrediction(input)*/
-    state.eval(input)
+    undoManager.doStep(new EvalStep(this))
+    state.evaluate(input)
+    notifyObservers()
+  }
+
+  def undo(): Unit = {
+    undoManager.undoStep()
+    notifyObservers()
+  }
+
+  def redo(): Unit = {
+    undoManager.redoStep()
     notifyObservers()
   }
 
   def getCurrentStateAsString: String = state.getCurrentStateAsString
 
-  def nextState(): Unit = state = state.nextState; roundManager = state.getRoundManager
+  def nextState(): Unit = state = state.nextState
 
-  override def switchToNextState(): Unit = nextState()
 }
 
 object Controller {
@@ -32,72 +40,85 @@ object Controller {
 }
 
 
-abstract class ControllerState(roundManager: RoundManager) {
-  def eval(input: String): Unit
-
- /* def evalPlayerPrediction(input: String): Unit*/
+trait ControllerState {
+  def evaluate(input: String): Unit
 
   def getCurrentStateAsString: String
 
   def nextState: ControllerState
-
-  def getRoundManager: RoundManager = roundManager
 }
 
 
-case class preSetupState(var roundManager: RoundManager, controller: Controller) extends ControllerState(roundManager) {
-  override def eval(input: String): Unit = {
+case class PreSetupState(controller: Controller) extends ControllerState {
+  override def evaluate(input: String): Unit = {
     val number = Controller.toInt(input)
     if (number.isEmpty) return
-    if (!roundManager.checkNumberOfPlayers(number.get)) return
-    roundManager = RoundStrategy.execute(number.get, roundManager)
-    roundManager.add(controller)
-    controller.switchToNextState()
-  }
+    if (!controller.roundManager.checkNumberOfPlayers(number.get)) return
+    controller.roundManager = RoundStrategy.execute(number.get)
+    controller.nextState()
 
-  /*override def evalPlayerPrediction(input: String): Unit = ()*/
+    controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
+  }
 
   override def getCurrentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
 
-  override def nextState: ControllerState = setupState(roundManager)
+  override def nextState: ControllerState = SetupState(controller)
 }
 
 
-case class setupState(roundManager: RoundManager) extends ControllerState(roundManager) {
-  override def eval(input: String): Unit = roundManager.addPlayer(input)
+case class SetupState(controller: Controller) extends ControllerState {
+  override def evaluate(input: String): Unit = {
+    if (input.isEmpty) return
 
-  /*override def evalPlayerPrediction(input: String): Unit = ()*/
+    controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
 
-  override def getCurrentStateAsString: String = roundManager.getSetupStrings
+    controller.roundManager = controller.roundManager.addPlayer(input)
+    if (controller.roundManager.players.size == controller.roundManager.numberOfPlayers) {
+      controller.roundManager = controller.roundManager.copy(cleanMap = controller.roundManager.stitchesPerRound)
 
-  override def nextState: ControllerState = inGameState(roundManager)
-}
-
-
-case class inGameState(roundManager: RoundManager) extends ControllerState(roundManager) {
-  override def eval(input: String): Unit = {
-    val selectedCard = Controller.toInt(input)
-    if (selectedCard.isEmpty) return
-    if(roundManager.nextRoundB)roundManager.updatePlayerPrediction(selectedCard.get)
-    roundManager.evaluate(selectedCard.get)
+      controller.roundManager = controller.roundManager.copy(predictionMode = true)
+      controller.roundManager = controller.roundManager.cardDistribution()
+      controller.nextState()
+    }
   }
 
-  /*override def evalPlayerPrediction(input: String): Unit = {
-    val prediction = Controller.toInt(input)
-    if(prediction.isEmpty) return
-    roundManager.updatePlayerPrediction(prediction.get)
-  }*/
+  override def getCurrentStateAsString: String = controller.roundManager.getSetupStrings
 
-  override def getCurrentStateAsString: String = roundManager.getPlayerStateStrings
-
-  override def nextState: ControllerState = gameOverState(roundManager)
+  override def nextState: ControllerState = InGameState(controller)
 }
 
 
-case class gameOverState(roundManager: RoundManager) extends ControllerState(roundManager) {
-  override def eval(input: String): Unit = ()
+case class InGameState(controller: Controller) extends ControllerState {
+  override def evaluate(input: String): Unit = {
+    val in = Controller.toInt(input)
+    if (in.isEmpty) return
+    if (controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.updatePlayerPrediction(in.get)
+    else controller.roundManager = controller.roundManager.playCard(in.get)
 
-  /*override def evalPlayerPrediction(input: String): Unit = ()*/
+    controller.roundManager = controller.roundManager.nextPlayer
+    if (!controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.nextRound
+    if (controller.roundManager.currentRound == controller.roundManager.numberOfRounds &&
+      controller.roundManager.currentPlayer == 0) {
+      controller.nextState()
+      return
+    }
+
+    if(controller.roundManager.predictionPerRound.size < controller.roundManager.numberOfPlayers) {
+      controller.roundManager = controller.roundManager.copy(predictionMode = true)
+      controller.roundManager = controller.roundManager.cardDistribution()
+    } else {
+      controller.roundManager = controller.roundManager.copy(predictionMode = false)
+    }
+  }
+
+  override def getCurrentStateAsString: String = controller.roundManager.getPlayerStateStrings
+
+  override def nextState: ControllerState = GameOverState(controller)
+}
+
+
+case class GameOverState(controller: Controller) extends ControllerState {
+  override def evaluate(input: String): Unit = ()
 
   override def getCurrentStateAsString: String = "\nGame Over! Press 'q' to quit."
 

@@ -1,7 +1,10 @@
 package de.htwg.se.wizard.model
-import de.htwg.se.wizard.model.cards.Card
+import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
 
-case class Player(name: String, playerPrediction: Option[List[Int]] = None) {
+import scala.collection.mutable.ListBuffer
+
+
+case class Player(name: String, playerCards: Option[List[Card]] = None) {
   override def toString: String = name
 }
 
@@ -11,9 +14,11 @@ object Player {
     true
   }
 
-  def playerTurn(player: Player, round: Int, cardStack: List[Card]): String = {
-    val indexGenerator = scala.util.Random
-    val cards = for {_ <- 1 to round} yield cardStack(indexGenerator.nextInt(cardStack.size - 1))
+
+  def playerTurn(player: Player, round: Int): String = {
+
+    val cards = player.playerCards.get
+
 
     val firstString = "Round " + round + " - Player: " + player.name
     val secondString = "Select one of the following cards:"
@@ -21,10 +26,12 @@ object Player {
     firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
   }
 
-  def playerPrediction(player: Player, round: Int): String = {
+  def playerPrediction(player: Player, round: Int, trump: Option[String]): String = {
     val firstString = "Round " + round + " - Player: " + player.name
+    val secondString = "Trump Color: " + trump.getOrElse("None")
+    val thirdString = "Your Cards: " + "{ " + player.playerCards.get.mkString(", ") + " }"
     val string = "Enter the amount of stitches you think you will get: "
-    firstString + "\n" + string
+    firstString + "\n" + secondString + "\n" + thirdString + "\n" + string
 
   }
 }

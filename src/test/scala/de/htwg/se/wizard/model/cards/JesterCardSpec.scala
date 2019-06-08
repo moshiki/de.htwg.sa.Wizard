@@ -32,10 +32,17 @@ class JesterCardSpec extends WordSpec with Matchers {
       }
     }
 
+    "should set Owner correctly" in {
+      val jesterCardWithoutOwner = JesterCard()
+      val testPlayer = new Player("TestPlayer")
+      val cardWithOwner = Card.setOwner(jesterCardWithoutOwner, testPlayer)
+      cardWithOwner.ownerName should be("TestPlayer")
+    }
+
     "has the right String representation" should {
       val jesterCard = JesterCard()
       "Have a nice String representation" in {
-        jesterCard.toString should be("C:Jester")
+        jesterCard.toString should be("cards/Jester")
       }
     }
   }

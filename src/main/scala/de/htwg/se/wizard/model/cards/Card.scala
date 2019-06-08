@@ -18,7 +18,7 @@ abstract class Card(owner: Option[Player]) {
 
   def getStringRep: String
 
-  override def toString: String = "C:" + getStringRep
+  override def toString: String = "cards/" + getStringRep
 }
 object Card {
   def apply(card: String):Card = {
@@ -26,5 +26,11 @@ object Card {
       case "wizard" => WizardCard()
       case "jester" => JesterCard()
     }
+  }
+
+  def setOwner(card:Card, player: Player):Card = {
+    if(card.isJester) card.asInstanceOf[JesterCard].copy(owner = Some(player))
+    else if(card.isWizard) card.asInstanceOf[WizardCard].copy(owner = Some(player))
+    else card.asInstanceOf[DefaultCard].copy(owner = Some(player))
   }
 }
