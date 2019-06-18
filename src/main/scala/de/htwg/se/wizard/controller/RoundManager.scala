@@ -7,7 +7,8 @@ import scala.collection.mutable.ListBuffer
 
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
-                        shuffledCardStack: List[Card] = CardStack.shuffleCards(CardStack.initialize),
+                        shuffledCardStack: List[Card] = Card.shuffleCards(Card.initializeCardStack()),
+                          //CardStack.shuffleCards(CardStack.initialize),
                         players: List[Player] = Nil,
                         currentPlayer: Int = 0,
                         currentRound: Int = 1,
@@ -17,7 +18,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         predictionMode:Boolean = true,
                         cleanMap: Map[String, Int] = Map.empty[String, Int],
                         resultTable: ResultTable) {
-  val initialCardStack: List[Card] = CardStack.initialize
+  val initialCardStack: List[Card] = Card.initializeCardStack()
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)

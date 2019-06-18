@@ -48,4 +48,8 @@ object Card {
   def getPlayerOfHighestCard(cardList: List[Card], color: Option[String]): Player = {
     CardStack.getPlayerOfHighestCard(cardList, color)
   }
+
+  def initializeCardStack(): List[Card] = {
+    CardStack.initialize
+  }
 }
