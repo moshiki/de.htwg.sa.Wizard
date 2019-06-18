@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.model.cards
 
 import de.htwg.se.wizard.model.Player
+import de.htwg.se.wizard.model.cards.CardStack
 
 abstract class Card(owner: Option[Player]) {
   def hasColor: Boolean
@@ -39,5 +40,9 @@ object Card {
       case card: DefaultCard => Some(card.color)
       case _ => None
     }
+  }
+
+  def shuffleCards(cardStack: List[Card]): List[Card] = {
+    CardStack.shuffleCards(cardStack)
   }
 }

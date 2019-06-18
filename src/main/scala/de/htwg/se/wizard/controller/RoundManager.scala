@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.controller
 
-import de.htwg.se.wizard.model.cards.{Card, CardStack, DefaultCard}
+import de.htwg.se.wizard.model.cards.{Card, CardStack}
 import de.htwg.se.wizard.model.{Player, ResultTable}
 
 import scala.collection.mutable.ListBuffer
@@ -96,7 +96,8 @@ case class RoundManager(numberOfPlayers: Int = 0,
     if (currentPlayer == 0 && currentRound != numberOfRounds && players.last.playerCards.get.isEmpty) {
       this.copy(
         resultTable = pointsForRound(),
-        shuffledCardStack = CardStack.shuffleCards(initialCardStack),
+        shuffledCardStack = Card.shuffleCards(initialCardStack),
+        //shuffledCardStack = CardStack.shuffleCards(initialCardStack),
         predictionPerRound = Nil,
         stitchesPerRound = cleanMap,
         currentRound = currentRound + 1
