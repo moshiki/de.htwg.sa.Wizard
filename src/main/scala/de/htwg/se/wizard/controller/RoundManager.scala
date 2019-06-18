@@ -117,10 +117,11 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   def trumpColor: Option[String] = {
     val topCard = shuffledCardStack.head
-    topCard match {
+    /*topCard match {
       case card: DefaultCard => Some(card.color)
       case _ => None
-    }
+    }*/
+    Card.getType(topCard)
   }
 
   def stitchInThisCycle: RoundManager = {

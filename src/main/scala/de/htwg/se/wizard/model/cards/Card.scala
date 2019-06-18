@@ -33,4 +33,11 @@ object Card {
     else if(card.isWizard) card.asInstanceOf[WizardCard].copy(owner = Some(player))
     else card.asInstanceOf[DefaultCard].copy(owner = Some(player))
   }
+
+  def getType(card: Card):Option[String] = {
+    card match {
+      case card: DefaultCard => Some(card.color)
+      case _ => None
+    }
+  }
 }
