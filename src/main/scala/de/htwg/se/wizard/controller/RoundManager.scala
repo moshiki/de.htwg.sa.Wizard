@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.controller
 
-import de.htwg.se.wizard.model.cards.{Card, CardStack}
+import de.htwg.se.wizard.model.cards.Card
 import de.htwg.se.wizard.model.{Player, ResultTable}
 
 import scala.collection.mutable.ListBuffer
