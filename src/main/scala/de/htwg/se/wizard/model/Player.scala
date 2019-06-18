@@ -1,7 +1,5 @@
 package de.htwg.se.wizard.model
-import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
-
-import scala.collection.mutable.ListBuffer
+import de.htwg.se.wizard.model.cards.Card
 
 
 case class Player(name: String, playerCards: Option[List[Card]] = None) {
