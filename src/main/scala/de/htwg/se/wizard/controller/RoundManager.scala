@@ -126,7 +126,8 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def stitchInThisCycle: RoundManager = {
-    val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
+    val stitchPlayer = Card.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
+    //val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
     val mutMap = collection.mutable.Map() ++ stitchesPerRound
     mutMap.put(stitchPlayer.name, mutMap(stitchPlayer.name) + 1)
     this.copy(stitchesPerRound = mutMap.toMap, playedCards = Nil)

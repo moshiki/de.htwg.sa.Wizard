@@ -1,7 +1,6 @@
 package de.htwg.se.wizard.model.cards
 
 import de.htwg.se.wizard.model.Player
-import de.htwg.se.wizard.model.cards.CardStack
 
 abstract class Card(owner: Option[Player]) {
   def hasColor: Boolean
@@ -44,5 +43,9 @@ object Card {
 
   def shuffleCards(cardStack: List[Card]): List[Card] = {
     CardStack.shuffleCards(cardStack)
+  }
+
+  def getPlayerOfHighestCard(cardList: List[Card], color: Option[String]): Player = {
+    CardStack.getPlayerOfHighestCard(cardList, color)
   }
 }
