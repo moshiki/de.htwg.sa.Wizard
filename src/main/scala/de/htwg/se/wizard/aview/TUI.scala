@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.aview
 
-import de.htwg.se.wizard.controller.Controller
+import de.htwg.se.wizard.controller.maincontroller.Controller
 import de.htwg.se.wizard.util.Observer
 
 class TUI(controller: Controller) extends Observer{

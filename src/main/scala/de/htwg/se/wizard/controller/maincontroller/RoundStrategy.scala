@@ -1,4 +1,4 @@
-package de.htwg.se.wizard.controller
+package de.htwg.se.wizard.controller.maincontroller
 
 object RoundStrategy {
 

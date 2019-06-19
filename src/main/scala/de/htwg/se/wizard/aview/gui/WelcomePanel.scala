@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.Controller
+import de.htwg.se.wizard.controller.maincontroller.Controller
 import javax.swing.{BorderFactory, ImageIcon}
 
 import scala.swing._

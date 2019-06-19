@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.{Controller, RoundManager}
+import de.htwg.se.wizard.controller.maincontroller.{Controller, RoundManager}
 import de.htwg.se.wizard.model.Player
 import de.htwg.se.wizard.model.cards.Card
 import javax.swing.{BorderFactory, ImageIcon}

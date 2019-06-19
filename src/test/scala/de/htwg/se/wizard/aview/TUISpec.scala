@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.aview
 
-import de.htwg.se.wizard.controller.{Controller, RoundManager}
+import de.htwg.se.wizard.controller.maincontroller.{Controller, RoundManager}
 import de.htwg.se.wizard.model.ResultTable
 import org.scalatest.{Matchers, WordSpec}
 

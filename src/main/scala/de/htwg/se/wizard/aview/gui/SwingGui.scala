@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.{Controller, GameOverState, InGameState, PreSetupState, SetupState}
+import de.htwg.se.wizard.controller.maincontroller.{Controller, GameOverState, InGameState, PreSetupState, SetupState}
 import de.htwg.se.wizard.util.Observer
 
 import scala.swing._
