@@ -44,6 +44,15 @@ class RoundManagerSpec extends WordSpec with Matchers {
       controller.roundManager = controller.roundManager.addPlayer("Name")
       controller.roundManager.players should be(List(Player("Name")))
     }
+
+    "dont add a player if his name got entered already" in {
+      controller.roundManager = controller.roundManager.copy(players = Nil)
+      controller.roundManager = controller.roundManager.addPlayer("P1")
+      val oldList = controller.roundManager.players
+      controller.roundManager = controller.roundManager.addPlayer("P1")
+
+      controller.roundManager.players should be(oldList)
+    }
   }
 
   "controller is in game mode" should {
