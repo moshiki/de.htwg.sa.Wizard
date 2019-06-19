@@ -1,8 +1,6 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.maincontroller.{Controller, RoundManager}
-import de.htwg.se.wizard.model.Player
-import de.htwg.se.wizard.model.cards.Card
+import de.htwg.se.wizard.controller.ControllerInterface
 import javax.swing.{BorderFactory, ImageIcon}
 
 import scala.swing._
@@ -10,21 +8,20 @@ import Swing._
 import scala.collection.immutable
 import scala.swing.event.{ButtonClicked, Key, KeyPressed, MouseClicked}
 
-class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
-  val roundManager: RoundManager = controller.roundManager
-  val currentPlayer: Player = roundManager.players(roundManager.currentPlayer)
+class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
+  val currentPlayer: String = controller.getCurrentPlayerString
 
-  if (roundManager.predictionMode) preferredSize = new Dimension(1000, 720)
+  if (controller.predictionMode) preferredSize = new Dimension(1000, 720)
   else preferredSize = new Dimension(1000, 840)
   border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)
 
 
   contents += new BoxPanel(Orientation.Horizontal) {
-    if (!roundManager.predictionMode) {
+    if (!controller.predictionMode) {
       contents += new Label("Player: " + currentPlayer + " - Stitches: " +
-        roundManager.stitchesPerRound(currentPlayer.toString) + " (Prediction: " +
-        roundManager.predictionPerRound(roundManager.currentPlayer) + ")") {
+        controller.getCurrentAmountOfStitches + " (Prediction: " +
+        controller.getPlayerPrediction + ")") {
         font = myFont
       }
     } else {
@@ -34,7 +31,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     }
 
     contents += HGlue
-    contents += new Label("Round " + roundManager.currentRound) {
+    contents += new Label("Round " + controller.currentRound) {
       font = myFont
     }
   }
@@ -42,7 +39,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
   contents += RigidBox(new Dimension(0, 20))
 
   contents += new BoxPanel(Orientation.Horizontal) {
-    if (!roundManager.predictionMode) {
+    if (!controller.predictionMode) {
       contents += new Label("Already played cards") {
         font = myFont
       }
@@ -61,11 +58,11 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
 
   contents += new BoxPanel(Orientation.Horizontal) {
 
-    if (!roundManager.predictionMode) {
+    if (!controller.predictionMode) {
       contents += new ScrollPane() {
         // This pane shows all played cards
         contents = new FlowPanel() {
-          val playedCards: List[Card] = roundManager.playedCards
+          val playedCards: List[String] = controller.playedCardsAsString
 
           val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
             private val temp = new ImageIcon("src/main/resources/" + playedCards(i) + ".png").getImage
@@ -80,7 +77,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
       contents += new ScrollPane() {
         // This pane shows all cards of the current player
         contents = new FlowPanel() {
-          val playerCards: List[Card] = currentPlayer.playerCards.get
+          val playerCards: List[String] = controller.currentPlayersCards
           val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
             val index: Int = i
             private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
@@ -96,13 +93,13 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     contents += HGlue
 
     contents += new Label {
-      private val temp = new ImageIcon("src/main/resources/" + controller.roundManager.shuffledCardStack.head + ".png").getImage
+      private val temp = new ImageIcon("src/main/resources/" + controller.topOfStackCardString + ".png").getImage
       private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
       icon = new ImageIcon(resize)
     }
   }
 
-  if (roundManager.predictionMode) {
+  if (controller.predictionMode) {
     contents += new FlowPanel(FlowPanel.Alignment.Left)(new Label("Enter your prediction:") {
       font = myFont
     })
@@ -134,7 +131,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
     contents += new ScrollPane() {
       // This pane shows all cards of the current player
       contents = new FlowPanel() {
-        val playerCards: List[Card] = currentPlayer.playerCards.get
+        val playerCards: List[String] = controller.currentPlayersCards
         val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
           val index: Int = i
           private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
@@ -154,7 +151,7 @@ class InGamePanel(controller: Controller) extends BoxPanel(Orientation.Vertical)
 
   contents += new FlowPanel() {
     contents += new ScrollPane {
-      contents = new Table(roundManager.resultTable.toAnyArray, roundManager.players)
+      contents = new Table(controller.resultArray, controller.playersAsStringList)
     }
   }
 }

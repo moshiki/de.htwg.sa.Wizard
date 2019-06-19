@@ -1,17 +1,17 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.maincontroller.Controller
+import de.htwg.se.wizard.controller.ControllerInterface
 import javax.swing.BorderFactory
 
 import scala.swing._
 import scala.swing.event.{ButtonClicked, Key, KeyPressed}
 import Swing._
 
-class PlayerSetupPanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
+class PlayerSetupPanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
   border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)
 
-  val currentPlayer: Int = controller.roundManager.currentPlayer
+  val currentPlayer: Int = controller.getCurrentPlayerNumber
   val nameTextBox: TextField = new TextField() {
     listenTo(keys)
     reactions += {

@@ -8,6 +8,8 @@ class Controller(var roundManager: RoundManager) extends ControllerInterface {
 
   var state: ControllerState = PreSetupState(this)
 
+  def nextState(): Unit = state = state.nextState
+
   override def eval(input: String): Unit = {
     undoManager.doStep(new EvalStep(this))
     state.evaluate(input)
@@ -26,8 +28,36 @@ class Controller(var roundManager: RoundManager) extends ControllerInterface {
 
   override def getCurrentStateAsString: String = state.getCurrentStateAsString
 
-  def nextState(): Unit = state = state.nextState
+  override def controllerStateAsString: String = {
+    state match {
+      case _: PreSetupState => "PreSetupState"
+      case _: SetupState => "SetupState"
+      case _: InGameState => "InGameState"
+      case _: GameOverState => "GameOverState"
+    }
+  }
 
+  override def getCurrentPlayerNumber: Int = roundManager.currentPlayer
+
+  override def getCurrentPlayerString: String = roundManager.players(roundManager.currentPlayer).toString
+
+  override def getCurrentAmountOfStitches: Int = roundManager.stitchesPerRound(getCurrentPlayerString)
+
+  override def getPlayerPrediction: Int = roundManager.predictionPerRound(getCurrentPlayerNumber)
+
+  override def predictionMode: Boolean = roundManager.predictionMode
+
+  override def currentRound: Int = roundManager.currentRound
+
+  override def playedCardsAsString: List[String] = roundManager.playedCards.map(card => card.toString)
+
+  override def currentPlayersCards: List[String] = roundManager.players(getCurrentPlayerNumber).playerCards.get.map(card => card.toString)
+
+  override def topOfStackCardString: String = roundManager.shuffledCardStack.head.toString
+
+  override def playersAsStringList: List[String] = roundManager.players.map(player => player.toString)
+
+  override def resultArray: Array[Array[Any]] = roundManager.resultTable.toAnyArray
 }
 
 object Controller {

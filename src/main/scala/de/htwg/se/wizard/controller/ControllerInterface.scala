@@ -8,4 +8,24 @@ trait ControllerInterface extends Observable{
   def eval(input: String): Unit
 
   def getCurrentStateAsString: String
+  def controllerStateAsString: String
+
+  def getCurrentPlayerNumber: Int
+  def getCurrentPlayerString: String
+  def getCurrentAmountOfStitches: Int
+  def getPlayerPrediction: Int
+
+  def predictionMode: Boolean
+
+  def currentRound: Int
+
+  def playedCardsAsString: List[String]
+
+  def currentPlayersCards: List[String]
+
+  def topOfStackCardString: String
+
+  def playersAsStringList: List[String]
+
+  def resultArray: Array[Array[Any]]
 }
