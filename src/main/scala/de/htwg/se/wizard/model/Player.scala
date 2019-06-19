@@ -6,14 +6,14 @@ case class Player(name: String, playerCards: Option[List[Card]] = None) {
   override def toString: String = name
 }
 
-object Player {
+object Player extends PlayerInterface {
   def checkNumberOfPlayers(number: Int): Boolean = {
     if (number < 3 || number > 5) return false
     true
   }
 
 
-  def playerTurn(player: Player, round: Int): String = {
+  override def playerTurn(player: Player, round: Int): String = {
 
     val cards = player.playerCards.get
 
@@ -24,12 +24,16 @@ object Player {
     firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
   }
 
-  def playerPrediction(player: Player, round: Int, trump: Option[String]): String = {
+  override def playerPrediction(player: Player, round: Int, trump: Option[String]): String = {
     val firstString = "Round " + round + " - Player: " + player.name
     val secondString = "Trump Color: " + trump.getOrElse("None")
     val thirdString = "Your Cards: " + "{ " + player.playerCards.get.mkString(", ") + " }"
     val string = "Enter the amount of stitches you think you will get: "
     firstString + "\n" + secondString + "\n" + thirdString + "\n" + string
 
+  }
+
+  override def newPlayer(name: String): Player = {
+    Player(name)
   }
 }
