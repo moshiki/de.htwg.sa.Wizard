@@ -1,29 +1,30 @@
 package de.htwg.se.wizard.controller.maincontroller
 
-import de.htwg.se.wizard.util.{Observable, UndoManager}
+import de.htwg.se.wizard.controller.ControllerInterface
+import de.htwg.se.wizard.util.UndoManager
 
-class Controller(var roundManager: RoundManager) extends Observable {
+class Controller(var roundManager: RoundManager) extends ControllerInterface {
   val undoManager = new UndoManager
 
   var state: ControllerState = PreSetupState(this)
 
-  def eval(input: String): Unit = {
+  override def eval(input: String): Unit = {
     undoManager.doStep(new EvalStep(this))
     state.evaluate(input)
     notifyObservers()
   }
 
-  def undo(): Unit = {
+  override def undo(): Unit = {
     undoManager.undoStep()
     notifyObservers()
   }
 
-  def redo(): Unit = {
+  override def redo(): Unit = {
     undoManager.redoStep()
     notifyObservers()
   }
 
-  def getCurrentStateAsString: String = state.getCurrentStateAsString
+  override def getCurrentStateAsString: String = state.getCurrentStateAsString
 
   def nextState(): Unit = state = state.nextState
 
