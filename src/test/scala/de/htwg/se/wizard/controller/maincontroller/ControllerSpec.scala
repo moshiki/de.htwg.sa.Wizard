@@ -164,6 +164,12 @@ class ControllerSpec extends WordSpec with Matchers {
     val controller = new Controller(roundManager)
     val state = SetupState(controller)
 
+    "does nothing when theres no input" in {
+      val oldRM = controller.roundManager
+      state.evaluate("")
+      controller.roundManager should be(oldRM)
+    }
+
     "adds a player correctly" in {
       state.evaluate("Name")
       controller.roundManager.players.contains(Player("Name")) should be(true)
