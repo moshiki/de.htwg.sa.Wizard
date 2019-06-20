@@ -7,7 +7,7 @@ import de.htwg.se.wizard.util.UndoManager
 class Controller(var roundManager: RoundManager, playerInterface: PlayerInterface, cardInterface: CardInterface) extends ControllerInterface {
   val undoManager = new UndoManager
 
-  var state: ControllerState = PreSetupState(this, playerInterface)
+  var state: ControllerState = PreSetupState(this, playerInterface, cardInterface)
 
   def nextState(): Unit = state = state.nextState
 
@@ -81,12 +81,12 @@ trait ControllerState {
 }
 
 
-case class PreSetupState(controller: Controller, playerInterface: PlayerInterface) extends ControllerState {
+case class PreSetupState(controller: Controller, playerInterface: PlayerInterface, cardInterface: CardInterface) extends ControllerState {
   override def evaluate(input: String): Unit = {
     val number = Controller.toInt(input)
     if (number.isEmpty) return
     if (!controller.roundManager.checkNumberOfPlayers(number.get)) return
-    controller.roundManager = RoundStrategy.execute(number.get, playerInterface)
+    controller.roundManager = RoundStrategy.execute(number.get, playerInterface, cardInterface)
     controller.nextState()
 
     controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
