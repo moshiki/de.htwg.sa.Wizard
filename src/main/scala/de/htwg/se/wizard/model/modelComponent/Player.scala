@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent
 
 import de.htwg.se.wizard.model.{PlayerInterface, SpecificPlayerInterface}
-import de.htwg.se.wizard.model.cards.Card
+import de.htwg.se.wizard.model.modelComponent.cards.Card
 
 
 case class Player(name: String, playerCards: Option[List[Card]] = None) extends SpecificPlayerInterface {

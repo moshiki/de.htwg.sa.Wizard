@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.controller.maincontroller
 
-import de.htwg.se.wizard.model.cards.Card
+import de.htwg.se.wizard.model.modelComponent.cards.Card
 import de.htwg.se.wizard.model.{PlayerInterface, SpecificPlayerInterface}
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 

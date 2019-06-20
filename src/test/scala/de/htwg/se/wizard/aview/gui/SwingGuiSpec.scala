@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.aview.gui
 
 import de.htwg.se.wizard.controller.maincontroller.{Controller, GameOverState, InGameState, PreSetupState, RoundManager, SetupState}
-import de.htwg.se.wizard.model.cards.WizardCard
+import de.htwg.se.wizard.model.modelComponent.cards.WizardCard
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 import org.scalatest.{Matchers, WordSpec}
 

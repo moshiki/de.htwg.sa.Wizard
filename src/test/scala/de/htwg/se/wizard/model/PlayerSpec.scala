@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model
 
-import de.htwg.se.wizard.model.cards.{Card, JesterCard}
+import de.htwg.se.wizard.model.modelComponent.cards.{Card, JesterCard}
 import de.htwg.se.wizard.model.modelComponent.Player
 import org.scalatest.{Matchers, WordSpec}
 
