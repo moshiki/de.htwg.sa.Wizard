@@ -26,7 +26,8 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def addPlayer(name: String): RoundManager = {
-    val newPlayer = Player(name)
+
+    val newPlayer =  Player(name)
     val oldPlayerList = this.players
     if (oldPlayerList contains newPlayer) return this
     val newPlayerList = oldPlayerList ::: List(newPlayer)
