@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
-import de.htwg.se.wizard.model.{Player, ResultTable}
+import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 import org.scalatest.{Matchers, WordSpec}
 
 class RoundManagerSpec extends WordSpec with Matchers {

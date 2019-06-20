@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model.cards
 
-import de.htwg.se.wizard.model.Player
+import de.htwg.se.wizard.model.modelComponent.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class JesterCardSpec extends WordSpec with Matchers {

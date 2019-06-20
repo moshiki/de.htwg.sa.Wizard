@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.controller.maincontroller
 
-import de.htwg.se.wizard.model.ResultTable
+import de.htwg.se.wizard.model.modelComponent.ResultTable
 import org.scalatest.{Matchers, WordSpec}
 
 class EvalStepSpec extends WordSpec with Matchers {

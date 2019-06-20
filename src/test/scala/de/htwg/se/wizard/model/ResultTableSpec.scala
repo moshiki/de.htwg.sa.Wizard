@@ -1,5 +1,6 @@
 package de.htwg.se.wizard.model
 
+import de.htwg.se.wizard.model.modelComponent.ResultTable
 import org.scalatest.{Matchers, WordSpec}
 
 class ResultTableSpec extends WordSpec with Matchers{

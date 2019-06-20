@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model.cards
 
-import de.htwg.se.wizard.model.Player
+import de.htwg.se.wizard.model.modelComponent.Player
 
 abstract class Card(owner: Option[Player]) {
   def hasColor: Boolean

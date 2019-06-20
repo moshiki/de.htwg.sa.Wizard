@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model.cards
 
-import de.htwg.se.wizard.model.Player
+import de.htwg.se.wizard.model.modelComponent.Player
 
 import scala.collection.mutable.ListBuffer
 import scala.util.Random

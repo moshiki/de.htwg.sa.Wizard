@@ -1,4 +1,6 @@
-package de.htwg.se.wizard.model
+package de.htwg.se.wizard.model.modelComponent
+
+import de.htwg.se.wizard.model.PlayerInterface
 import de.htwg.se.wizard.model.cards.Card
 
 

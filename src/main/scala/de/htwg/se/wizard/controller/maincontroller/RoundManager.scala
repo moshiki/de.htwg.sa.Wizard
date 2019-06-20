@@ -2,7 +2,7 @@ package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.model.cards.Card
 import de.htwg.se.wizard.model.PlayerInterface
-import de.htwg.se.wizard.model.{Player, ResultTable}
+import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 
 import scala.collection.mutable.ListBuffer
 

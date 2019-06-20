@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model.cards
 
-import de.htwg.se.wizard.model.Player
+import de.htwg.se.wizard.model.modelComponent.Player
 
 case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
   extends Card(owner) with Ordered[DefaultCard] {
