@@ -1,10 +1,10 @@
 package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.controller.ControllerInterface
-import de.htwg.se.wizard.model.PlayerInterface
+import de.htwg.se.wizard.model.{CardInterface, PlayerInterface}
 import de.htwg.se.wizard.util.UndoManager
 
-class Controller(var roundManager: RoundManager, playerInterface: PlayerInterface) extends ControllerInterface {
+class Controller(var roundManager: RoundManager, playerInterface: PlayerInterface, cardInterface: CardInterface) extends ControllerInterface {
   val undoManager = new UndoManager
 
   var state: ControllerState = PreSetupState(this, playerInterface)

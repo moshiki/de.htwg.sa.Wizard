@@ -16,9 +16,9 @@ trait PlayerInterface {
 }
 
 trait SpecificPlayerInterface {
-  def getPlayerCards: Option[List[Card]]
+  def getPlayerCards: Option[List[CardInterface]]
 
-  def assignCards(cards: Option[List[Card]]): SpecificPlayerInterface
+  def assignCards(cards: Option[List[CardInterface]]): SpecificPlayerInterface
 
   def getName: String
 }

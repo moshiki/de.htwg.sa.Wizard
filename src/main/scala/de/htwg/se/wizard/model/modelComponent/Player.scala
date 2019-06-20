@@ -1,17 +1,17 @@
 package de.htwg.se.wizard.model.modelComponent
 
-import de.htwg.se.wizard.model.{PlayerInterface, SpecificPlayerInterface}
+import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, SpecificPlayerInterface}
 import de.htwg.se.wizard.model.modelComponent.cards.Card
 
 
-case class Player(name: String, playerCards: Option[List[Card]] = None) extends SpecificPlayerInterface {
+case class Player(name: String, playerCards: Option[List[CardInterface]] = None) extends SpecificPlayerInterface {
   override def toString: String = name
 
-  override def getPlayerCards:Option[List[Card]] = {
+  override def getPlayerCards:Option[List[CardInterface]] = {
     playerCards
   }
 
-  override def assignCards(cards: Option[List[Card]]): SpecificPlayerInterface = {
+  override def assignCards(cards: Option[List[CardInterface]]): SpecificPlayerInterface = {
     this.copy(playerCards = cards)
   }
 

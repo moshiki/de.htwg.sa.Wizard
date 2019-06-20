@@ -1,26 +1,27 @@
 package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.model.modelComponent.cards.Card
-import de.htwg.se.wizard.model.{PlayerInterface, SpecificPlayerInterface}
+import de.htwg.se.wizard.model.{PlayerInterface, SpecificPlayerInterface, CardInterface}
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 
 import scala.collection.mutable.ListBuffer
 
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
-                        shuffledCardStack: List[Card] = Card.shuffleCards(Card.initializeCardStack()),
+                        cardInterface: CardInterface,
+                        shuffledCardStack: List[CardInterface] = Nil,
                           //CardStack.shuffleCards(CardStack.initialize),
                         players: List[SpecificPlayerInterface] = Nil,
                         currentPlayer: Int = 0,
                         currentRound: Int = 1,
                         predictionPerRound: List[Int] = Nil,
                         stitchesPerRound: Map[String, Int] = Map.empty[String, Int],
-                        playedCards: List[Card] = Nil,
+                        playedCards: List[CardInterface] = Nil,
                         predictionMode:Boolean = true,
                         cleanMap: Map[String, Int] = Map.empty[String, Int],
                         resultTable: ResultTable,
                         playerInterface: PlayerInterface) {
-  val initialCardStack: List[Card] = Card.initializeCardStack()
+  val initialCardStack: List[CardInterface] = cardInterface.initializeCardStack()
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     playerInterface.checkNumberOfPlayers(number)
@@ -53,11 +54,11 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
 
   def cardDistribution(): RoundManager = {
-    var list = List[Card]()
+    var list = List[CardInterface]()
     val stack = shuffledCardStack.to[ListBuffer]
     for(_ <- 1 to currentRound) {
       val card = stack.remove(0)
-      val typ = Card.setOwner(card, players(currentPlayer))
+      val typ = cardInterface.setOwner(card, players(currentPlayer))
       list = list ::: List[Card](typ)
     }
 
@@ -93,7 +94,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       out += playerInterface.playerPrediction(players(currentPlayer), currentRound, trumpColor)
       out
     } else {
-      Player.playerTurn(players(currentPlayer), currentRound)
+      playerInterface.playerTurn(players(currentPlayer), currentRound)
     }
   }
 
@@ -101,7 +102,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     if (currentPlayer == 0 && currentRound != numberOfRounds && players.last.getPlayerCards.get.isEmpty) {
       this.copy(
         resultTable = pointsForRound(),
-        shuffledCardStack = Card.shuffleCards(initialCardStack),
+        shuffledCardStack = cardInterface.shuffleCards(initialCardStack),
         //shuffledCardStack = CardStack.shuffleCards(initialCardStack),
         predictionPerRound = Nil,
         stitchesPerRound = cleanMap,
@@ -121,17 +122,18 @@ case class RoundManager(numberOfPlayers: Int = 0,
     }
   }
 
+
   def trumpColor: Option[String] = {
     val topCard = shuffledCardStack.head
     /*topCard match {
       case card: DefaultCard => Some(card.color)
       case _ => None
     }*/
-    Card.getType(topCard)
+    cardInterface.getType(topCard)
   }
 
   def stitchInThisCycle: RoundManager = {
-    val stitchPlayer = Card.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
+    val stitchPlayer = cardInterface.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
     //val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
     val mutMap = collection.mutable.Map() ++ stitchesPerRound
     mutMap.put(stitchPlayer.getName, mutMap(stitchPlayer.getName) + 1)
@@ -175,9 +177,10 @@ object RoundManager {
       this
     }
 
-    def build(playerInterface: PlayerInterface): RoundManager = {
+    def build(playerInterface: PlayerInterface, cardInterface: CardInterface): RoundManager = {
       RoundManager(
-        numberOfPlayers, numberOfRounds, playerInterface = Player ,
+        numberOfPlayers, numberOfRounds, playerInterface = Player,
+        cardInterface = cardInterface,shuffledCardStack = cardInterface.shuffleCards(cardInterface.initializeCardStack()) ,
         resultTable = ResultTable(numberOfRounds, numberOfPlayers, ResultTable.initializeVector(numberOfRounds, numberOfPlayers))
       )
     }

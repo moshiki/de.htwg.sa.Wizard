@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model.modelComponent.cards
 
-import de.htwg.se.wizard.model.SpecificPlayerInterface
+import de.htwg.se.wizard.model.{CardInterface, SpecificPlayerInterface}
 import de.htwg.se.wizard.model.modelComponent.Player
 
 import scala.collection.mutable.ListBuffer
@@ -18,7 +18,7 @@ object CardStack {
     wizards ::: jesters ::: normals
   }
 
-  def shuffleCards(a: List[Card]): List[Card] = {
+  def shuffleCards(a: List[CardInterface]): List[CardInterface] = {
     Random.shuffle(a)
   }
 
