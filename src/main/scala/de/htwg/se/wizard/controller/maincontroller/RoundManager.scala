@@ -1,7 +1,6 @@
 package de.htwg.se.wizard.controller.maincontroller
 
-import de.htwg.se.wizard.model.modelComponent.cards.Card
-import de.htwg.se.wizard.model.{PlayerInterface, SpecificPlayerInterface, CardInterface}
+import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, SpecificCardInterface, SpecificPlayerInterface}
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 
 import scala.collection.mutable.ListBuffer
@@ -9,19 +8,19 @@ import scala.collection.mutable.ListBuffer
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
                         cardInterface: CardInterface,
-                        shuffledCardStack: List[CardInterface] = Nil,
+                        shuffledCardStack: List[SpecificCardInterface] = Nil,
                           //CardStack.shuffleCards(CardStack.initialize),
                         players: List[SpecificPlayerInterface] = Nil,
                         currentPlayer: Int = 0,
                         currentRound: Int = 1,
                         predictionPerRound: List[Int] = Nil,
                         stitchesPerRound: Map[String, Int] = Map.empty[String, Int],
-                        playedCards: List[CardInterface] = Nil,
+                        playedCards: List[SpecificCardInterface] = Nil,
                         predictionMode:Boolean = true,
                         cleanMap: Map[String, Int] = Map.empty[String, Int],
                         resultTable: ResultTable,
                         playerInterface: PlayerInterface) {
-  val initialCardStack: List[CardInterface] = cardInterface.initializeCardStack()
+  val initialCardStack: List[SpecificCardInterface] = cardInterface.initializeCardStack()
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     playerInterface.checkNumberOfPlayers(number)
@@ -54,12 +53,12 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
 
   def cardDistribution(): RoundManager = {
-    var list = List[CardInterface]()
+    var list = List[SpecificCardInterface]()
     val stack = shuffledCardStack.to[ListBuffer]
     for(_ <- 1 to currentRound) {
       val card = stack.remove(0)
       val typ = cardInterface.setOwner(card, players(currentPlayer))
-      list = list ::: List[Card](typ)
+      list = list ::: List[SpecificCardInterface](typ)
     }
 
     val newPlayer = players(currentPlayer).assignCards(Some(list))
@@ -180,7 +179,7 @@ object RoundManager {
     def build(playerInterface: PlayerInterface, cardInterface: CardInterface): RoundManager = {
       RoundManager(
         numberOfPlayers, numberOfRounds, playerInterface = Player,
-        cardInterface = cardInterface,shuffledCardStack = cardInterface.shuffleCards(cardInterface.initializeCardStack()) ,
+        cardInterface = cardInterface, shuffledCardStack = cardInterface.shuffleCards(cardInterface.initializeCardStack()) ,
         resultTable = ResultTable(numberOfRounds, numberOfPlayers, ResultTable.initializeVector(numberOfRounds, numberOfPlayers))
       )
     }

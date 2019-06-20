@@ -1,9 +1,6 @@
 package de.htwg.se.wizard.model.modelComponent.cards
 
-import de.htwg.se.wizard.model.{CardInterface, SpecificPlayerInterface}
-import de.htwg.se.wizard.model.modelComponent.Player
-
-import scala.collection.mutable.ListBuffer
+import de.htwg.se.wizard.model.{SpecificCardInterface, SpecificPlayerInterface}
 import scala.util.Random
 
 object CardStack {
@@ -18,11 +15,11 @@ object CardStack {
     wizards ::: jesters ::: normals
   }
 
-  def shuffleCards(a: List[CardInterface]): List[CardInterface] = {
+  def shuffleCards(a: List[SpecificCardInterface]): List[SpecificCardInterface] = {
     Random.shuffle(a)
   }
 
-  def getPlayerOfHighestCard(cardList: List[Card], color: Option[String]): SpecificPlayerInterface = {
+  def getPlayerOfHighestCard(cardList: List[SpecificCardInterface], color: Option[String]): SpecificPlayerInterface = {
     var actualColor = ""
     if (color.isDefined) actualColor = color.get
     val wizardCards = cardList.filter(card => card.isWizard).map(card => card.asInstanceOf[WizardCard])
