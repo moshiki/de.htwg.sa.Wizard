@@ -1,7 +1,6 @@
 package de.htwg.se.wizard.controller.maincontroller
 
-import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, SpecificCardInterface, SpecificPlayerInterface}
-import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
+import de.htwg.se.wizard.model._
 
 import scala.collection.mutable.ListBuffer
 
@@ -18,7 +17,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         playedCards: List[SpecificCardInterface] = Nil,
                         predictionMode:Boolean = true,
                         cleanMap: Map[String, Int] = Map.empty[String, Int],
-                        resultTable: ResultTable,
+                        resultTable: ResultTableInterface,
                         playerInterface: PlayerInterface) {
   val initialCardStack: List[SpecificCardInterface] = cardInterface.initializeCardStack()
 
@@ -139,7 +138,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     this.copy(stitchesPerRound = mutMap.toMap, playedCards = Nil)
   }
 
-  def pointsForRound(): ResultTable = {
+  def pointsForRound(): ResultTableInterface = {
     var table = resultTable
     for (i <- players.indices) {
       table = table.updatePoints(currentRound, i,
@@ -176,12 +175,11 @@ object RoundManager {
       this
     }
 
-    def build(playerInterface: PlayerInterface, cardInterface: CardInterface): RoundManager = {
+    def build(playerInterface: PlayerInterface, cardInterface: CardInterface, table: StaticResultTableInterface): RoundManager = {
       RoundManager(
-        numberOfPlayers, numberOfRounds, playerInterface = Player,
-        cardInterface = cardInterface, shuffledCardStack = cardInterface.shuffleCards(cardInterface.initializeCardStack()) ,
-        resultTable = ResultTable(numberOfRounds, numberOfPlayers, ResultTable.initializeVector(numberOfRounds, numberOfPlayers))
-      )
+        numberOfPlayers, numberOfRounds, playerInterface = playerInterface,
+        cardInterface = cardInterface, shuffledCardStack = cardInterface.shuffleCards(cardInterface.initializeCardStack()),
+        resultTable = table.initializeTable(numberOfRounds, numberOfPlayers))
     }
   }
 }

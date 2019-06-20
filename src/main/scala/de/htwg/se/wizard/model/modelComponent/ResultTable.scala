@@ -1,13 +1,15 @@
 package de.htwg.se.wizard.model.modelComponent
 
-case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) {
+import de.htwg.se.wizard.model.{ResultTableInterface, StaticResultTableInterface}
 
-  def updatePoints(round: Int, player: Int, result: Int): ResultTable = {
+case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) extends ResultTableInterface {
+
+  override def updatePoints(round: Int, player: Int, result: Int): ResultTable = {
     if (round == 1) this.copy(points = points.updated(round - 1, points(round - 1).updated(player, result)))
     else this.copy(points = points.updated(round - 1, points(round - 1).updated(player, result + points(round - 2)(player))))
   }
 
-  def toAnyArray: Array[Array[Any]] = {
+  override def toAnyArray: Array[Array[Any]] = {
     points.toArray map(innerVector => innerVector.toArray[Any])
   }
 
@@ -33,8 +35,9 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
   }
 }
 
-object ResultTable {
-  def initializeVector(roundsToPlay: Int = 20, numberOfPlayers: Int = 6): Vector[Vector[Int]] = {
-    Vector.fill(roundsToPlay, numberOfPlayers)(0)
+object ResultTable extends StaticResultTableInterface {
+  override def initializeTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6): ResultTable = {
+    val vector = Vector.fill(roundsToPlay, numberOfPlayers)(0)
+    ResultTable(roundsToPlay, numberOfPlayers, vector)
   }
 }

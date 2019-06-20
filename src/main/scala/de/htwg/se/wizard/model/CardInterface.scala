@@ -1,7 +1,5 @@
 package de.htwg.se.wizard.model
 
-import de.htwg.se.wizard.model.modelComponent.cards.Card
-
 trait CardInterface {
   def initializeCardStack(): List[SpecificCardInterface]
 

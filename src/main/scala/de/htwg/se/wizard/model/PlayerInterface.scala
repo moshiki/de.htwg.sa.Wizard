@@ -1,8 +1,5 @@
 package de.htwg.se.wizard.model
 
-import de.htwg.se.wizard.model.modelComponent.cards.Card
-import de.htwg.se.wizard.model.modelComponent.Player
-
 trait PlayerInterface {
 
   def newPlayer(name: String): SpecificPlayerInterface
