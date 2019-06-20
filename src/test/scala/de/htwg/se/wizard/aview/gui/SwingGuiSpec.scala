@@ -1,21 +1,19 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.maincontroller.{Controller, GameOverState, InGameState, PreSetupState, RoundManager, SetupState}
-import de.htwg.se.wizard.model.modelComponent.cards.{Card, WizardCard}
+import de.htwg.se.wizard.controller.maincontroller._
+import de.htwg.se.wizard.model.modelComponent.cards.{Card, CardStack, WizardCard}
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 import org.scalatest.{Matchers, WordSpec}
 
 class SwingGuiSpec extends WordSpec with Matchers{
 
-  val cardInterface = Card
-  val playerInterface = Player
-  val controller = new Controller(RoundManager(resultTable = ResultTable(points = ResultTable.initializeVector()),
-    playerInterface = playerInterface, cardInterface = cardInterface),
-    playerInterface = playerInterface, cardInterface = cardInterface)
+  val controller = new Controller(RoundManager(resultTable = ResultTable.initializeTable(),
+    playerInterface = Player, cardInterface = Card, shuffledCardStack = CardStack.shuffleCards(CardStack.initialize)),
+    playerInterface = Player, cardInterface = Card, staticResultTableInterface = ResultTable)
   "A SwingGuiSpec" should {
     "load the correct Panel" when {
       "Controller is in preSetupState" in {
-        controller.state = PreSetupState(controller, playerInterface = playerInterface, cardInterface = cardInterface)
+        controller.state = PreSetupState(controller, Player, Card, ResultTable)
         SwingGui.getPanel(controller).isInstanceOf[WelcomePanel] should be(true)
       }
 
@@ -24,11 +22,11 @@ class SwingGuiSpec extends WordSpec with Matchers{
         SwingGui.getPanel(controller).isInstanceOf[PlayerSetupPanel] should be(true)
       }
 
-      /*"Controller is in InGameState" in {
+      "Controller is in InGameState" in {
         controller.state = InGameState(controller)
         controller.roundManager = controller.roundManager.copy(players = List(Player("test", playerCards = Some(List(WizardCard())))))
         SwingGui.getPanel(controller).isInstanceOf[InGamePanel] should be(true)
-      }*/
+      }
 
       "Controller is in GameOverState" in {
         controller.state = GameOverState(controller)

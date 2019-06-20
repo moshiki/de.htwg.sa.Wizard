@@ -9,9 +9,9 @@ class RoundManagerSpec extends WordSpec with Matchers {
     "new" should {
       val cardInterface = Card
       val playerInterface = Player
-      val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
+      val resultTable = ResultTable.initializeTable(20, 3)
       val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
-      val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
+      val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTable)
       "set the number of players correctly" in {
         controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3)
         controller.roundManager.checkNumberOfPlayers(3)
@@ -22,9 +22,9 @@ class RoundManagerSpec extends WordSpec with Matchers {
   "controller is in setup mode" should {
     val cardInterface = Card
     val playerInterface = Player
-    val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
+    val resultTable = ResultTable.initializeTable(20, 3)
     val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
-    val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
+    val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTable)
     "ask for next player's name correctly" in {
       controller.roundManager = controller.roundManager.copy(currentPlayer = 1)
       controller.roundManager.getSetupStrings should be("Player 1, please enter your name:")
@@ -62,9 +62,9 @@ class RoundManagerSpec extends WordSpec with Matchers {
   "controller is in game mode" should {
     val cardInterface = Card
     val playerInterface = Player
-    val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
+    val resultTable = ResultTable.initializeTable(20, 3)
     val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
-    val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
+    val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTable)
 
     "should ask player for his prediction if Prediction list is empty" in {
       controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,

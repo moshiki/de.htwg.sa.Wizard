@@ -1,17 +1,17 @@
 package de.htwg.se.wizard.aview
 
 import de.htwg.se.wizard.controller.maincontroller.{Controller, RoundManager}
-import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 import de.htwg.se.wizard.model.modelComponent.cards.Card
+import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 import org.scalatest.{Matchers, WordSpec}
 
 class TUISpec extends WordSpec with Matchers {
   "A Wizard Tui" should {
     val cardInterface = Card
     val playerInterface = Player
-    val controller = new Controller(RoundManager(numberOfPlayers = 3, resultTable = new ResultTable(points = Vector.empty),
+    val controller = new Controller(RoundManager(numberOfPlayers = 3, resultTable = ResultTable.initializeTable(),
       playerInterface = playerInterface, cardInterface = cardInterface),
-      cardInterface = cardInterface, playerInterface = playerInterface)
+      cardInterface = cardInterface, playerInterface = playerInterface, staticResultTableInterface = ResultTable)
     val tui = new TUI(controller)
     "register itself in the controller" in {
         controller.subscribers.contains(tui) should be(true)
