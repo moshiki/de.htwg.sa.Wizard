@@ -1,12 +1,13 @@
 package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.controller.ControllerInterface
+import de.htwg.se.wizard.model.PlayerInterface
 import de.htwg.se.wizard.util.UndoManager
 
-class Controller(var roundManager: RoundManager) extends ControllerInterface {
+class Controller(var roundManager: RoundManager, playerInterface: PlayerInterface) extends ControllerInterface {
   val undoManager = new UndoManager
 
-  var state: ControllerState = PreSetupState(this)
+  var state: ControllerState = PreSetupState(this, playerInterface)
 
   def nextState(): Unit = state = state.nextState
 
@@ -51,7 +52,7 @@ class Controller(var roundManager: RoundManager) extends ControllerInterface {
 
   override def playedCardsAsString: List[String] = roundManager.playedCards.map(card => card.toString)
 
-  override def currentPlayersCards: List[String] = roundManager.players(getCurrentPlayerNumber).playerCards.get.map(card => card.toString)
+  override def currentPlayersCards: List[String] = roundManager.players(getCurrentPlayerNumber).getPlayerCards.get.map(card => card.toString)
 
   override def topOfStackCardString: String = roundManager.shuffledCardStack.head.toString
 
@@ -80,12 +81,12 @@ trait ControllerState {
 }
 
 
-case class PreSetupState(controller: Controller) extends ControllerState {
+case class PreSetupState(controller: Controller, playerInterface: PlayerInterface) extends ControllerState {
   override def evaluate(input: String): Unit = {
     val number = Controller.toInt(input)
     if (number.isEmpty) return
     if (!controller.roundManager.checkNumberOfPlayers(number.get)) return
-    controller.roundManager = RoundStrategy.execute(number.get)
+    controller.roundManager = RoundStrategy.execute(number.get, playerInterface)
     controller.nextState()
 
     controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)

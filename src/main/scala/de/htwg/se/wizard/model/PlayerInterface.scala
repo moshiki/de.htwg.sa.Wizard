@@ -1,14 +1,24 @@
 package de.htwg.se.wizard.model
 
+import de.htwg.se.wizard.model.cards.Card
 import de.htwg.se.wizard.model.modelComponent.Player
 
 trait PlayerInterface {
 
-  def newPlayer(name: String): Player
+  def newPlayer(name: String): SpecificPlayerInterface
 
-  def playerPrediction(player: Player, round: Int, trump: Option[String]): String
+  def checkNumberOfPlayers(number: Int): Boolean
 
-  def playerTurn(player: Player, round: Int): String
+  def playerPrediction(player: SpecificPlayerInterface, round: Int, trump: Option[String]): String
 
+  def playerTurn(player: SpecificPlayerInterface, round: Int): String
 
+}
+
+trait SpecificPlayerInterface {
+  def getPlayerCards: Option[List[Card]]
+
+  def assignCards(cards: Option[List[Card]]): SpecificPlayerInterface
+
+  def getName: String
 }

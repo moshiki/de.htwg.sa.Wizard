@@ -1,37 +1,39 @@
 package de.htwg.se.wizard.controller.maincontroller
 
+import de.htwg.se.wizard.model.PlayerInterface
+
 object RoundStrategy {
 
-  trait RoundStrategy {
-    def strategy(numberOfPlayers: Int)
+  abstract class RoundStrategy(playerInterface: PlayerInterface) {
+    def strategy(numberOfPlayers: Int, playerInterface: PlayerInterface)
 
-    def strategy3Players: RoundManager
+    def strategy3Players(playerInterface: PlayerInterface): RoundManager
 
-    def strategy4Players: RoundManager
+    def strategy4Players(playerInterface: PlayerInterface): RoundManager
 
-    def strategy5Players: RoundManager
+    def strategy5Players(playerInterface: PlayerInterface): RoundManager
 
     def execute(numberOfPlayers: Int, roundManager: RoundManager): RoundManager
   }
 
-  def execute(numberOfPlayers: Int): RoundManager = strategy(numberOfPlayers)
+  def execute(numberOfPlayers: Int, playerInterface: PlayerInterface): RoundManager = strategy(numberOfPlayers, playerInterface)
 
-  def strategy(numberOfPlayers: Int): RoundManager = numberOfPlayers match {
-    case 3 => strategy3Players
-    case 4 => strategy4Players
-    case 5 => strategy5Players
+  def strategy(numberOfPlayers: Int, playerInterface: PlayerInterface): RoundManager = numberOfPlayers match {
+    case 3 => strategy3Players(playerInterface)
+    case 4 => strategy4Players(playerInterface)
+    case 5 => strategy5Players(playerInterface)
 
   }
 
-  def strategy3Players: RoundManager = {
-    RoundManager.Builder().withNumberOfPlayers(3).withNumberOfRounds(20).build()
+  def strategy3Players(playerInterface: PlayerInterface): RoundManager = {
+    RoundManager.Builder().withNumberOfPlayers(3).withNumberOfRounds(20).build(playerInterface)
   }
 
-  def strategy4Players: RoundManager = {
-    RoundManager.Builder().withNumberOfPlayers(4).withNumberOfRounds(15).build()
+  def strategy4Players(playerInterface: PlayerInterface): RoundManager = {
+    RoundManager.Builder().withNumberOfPlayers(4).withNumberOfRounds(15).build(playerInterface)
   }
 
-  def strategy5Players: RoundManager = {
-    RoundManager.Builder().withNumberOfPlayers(5).withNumberOfRounds(12).build()
+  def strategy5Players(playerInterface: PlayerInterface): RoundManager = {
+    RoundManager.Builder().withNumberOfPlayers(5).withNumberOfRounds(12).build(playerInterface)
   }
 }

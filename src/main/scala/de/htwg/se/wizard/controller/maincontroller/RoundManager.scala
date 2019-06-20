@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.model.cards.Card
-import de.htwg.se.wizard.model.PlayerInterface
+import de.htwg.se.wizard.model.{PlayerInterface, SpecificPlayerInterface}
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 
 import scala.collection.mutable.ListBuffer
@@ -10,7 +10,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
                         shuffledCardStack: List[Card] = Card.shuffleCards(Card.initializeCardStack()),
                           //CardStack.shuffleCards(CardStack.initialize),
-                        players: List[Player] = Nil,
+                        players: List[SpecificPlayerInterface] = Nil,
                         currentPlayer: Int = 0,
                         currentRound: Int = 1,
                         predictionPerRound: List[Int] = Nil,
@@ -18,16 +18,18 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         playedCards: List[Card] = Nil,
                         predictionMode:Boolean = true,
                         cleanMap: Map[String, Int] = Map.empty[String, Int],
-                        resultTable: ResultTable) {
+                        resultTable: ResultTable,
+                        playerInterface: PlayerInterface) {
   val initialCardStack: List[Card] = Card.initializeCardStack()
 
   def checkNumberOfPlayers(number: Int): Boolean = {
-    Player.checkNumberOfPlayers(number)
+    playerInterface.checkNumberOfPlayers(number)
+    //Player.checkNumberOfPlayers(number)
   }
 
   def addPlayer(name: String): RoundManager = {
 
-    val newPlayer =  Player(name)
+    val newPlayer = playerInterface.newPlayer(name) //Player(name)
     val oldPlayerList = this.players
     if (oldPlayerList contains newPlayer) return this
     val newPlayerList = oldPlayerList ::: List(newPlayer)
@@ -40,11 +42,11 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   def playCard(selectedCard: Int): RoundManager = {
     val player = players(currentPlayer)
-    val currentPlayersCards = player.playerCards.get.to[ListBuffer]
+    val currentPlayersCards = player.getPlayerCards.get.to[ListBuffer]
     val playedCard = currentPlayersCards.remove(selectedCard - 1)
 
     val newPlayers = players.to[ListBuffer]
-    newPlayers.update(currentPlayer, player.copy(playerCards = Some(currentPlayersCards.toList)))
+    newPlayers.update(currentPlayer, player.assignCards(Some(currentPlayersCards.toList)))
 
     this.copy(playedCards = playedCard :: playedCards, players = newPlayers.toList)
   }
@@ -59,7 +61,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       list = list ::: List[Card](typ)
     }
 
-    val newPlayer = players(currentPlayer).copy(playerCards = Some(list))
+    val newPlayer = players(currentPlayer).assignCards(Some(list))
     val newPlayers = players.to[ListBuffer]
     newPlayers.update(currentPlayer, newPlayer)
 
@@ -88,7 +90,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     if(predictionPerRound.size < numberOfPlayers) {
       var out = "\n"
       if (currentPlayer == 0) out += resultTable.toString + "\n"
-      out += Player.playerPrediction(players(currentPlayer), currentRound, trumpColor)
+      out += playerInterface.playerPrediction(players(currentPlayer), currentRound, trumpColor)
       out
     } else {
       Player.playerTurn(players(currentPlayer), currentRound)
@@ -96,7 +98,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def nextRound: RoundManager = {
-    if (currentPlayer == 0 && currentRound != numberOfRounds && players.last.playerCards.get.isEmpty) {
+    if (currentPlayer == 0 && currentRound != numberOfRounds && players.last.getPlayerCards.get.isEmpty) {
       this.copy(
         resultTable = pointsForRound(),
         shuffledCardStack = Card.shuffleCards(initialCardStack),
@@ -132,7 +134,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val stitchPlayer = Card.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
     //val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
     val mutMap = collection.mutable.Map() ++ stitchesPerRound
-    mutMap.put(stitchPlayer.name, mutMap(stitchPlayer.name) + 1)
+    mutMap.put(stitchPlayer.getName, mutMap(stitchPlayer.getName) + 1)
     this.copy(stitchesPerRound = mutMap.toMap, playedCards = Nil)
   }
 
@@ -140,7 +142,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     var table = resultTable
     for (i <- players.indices) {
       table = table.updatePoints(currentRound, i,
-        RoundManager.calcPoints(predictionPerRound(i), stitchesPerRound(players(i).name)))
+        RoundManager.calcPoints(predictionPerRound(i), stitchesPerRound(players(i).getName)))
     }
 
     table
@@ -173,9 +175,9 @@ object RoundManager {
       this
     }
 
-    def build(): RoundManager = {
+    def build(playerInterface: PlayerInterface): RoundManager = {
       RoundManager(
-        numberOfPlayers, numberOfRounds,
+        numberOfPlayers, numberOfRounds, playerInterface = Player ,
         resultTable = ResultTable(numberOfRounds, numberOfPlayers, ResultTable.initializeVector(numberOfRounds, numberOfPlayers))
       )
     }

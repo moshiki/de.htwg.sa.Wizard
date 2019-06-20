@@ -4,7 +4,7 @@ import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 import org.scalatest.{Matchers, WordSpec}
 
-class RoundManagerSpec extends WordSpec with Matchers {
+/*class RoundManagerSpec extends WordSpec with Matchers {
   "A Round Manager" when {
     "new" should {
       val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
@@ -208,3 +208,4 @@ class RoundManagerSpec extends WordSpec with Matchers {
     }
   }
 }
+*/

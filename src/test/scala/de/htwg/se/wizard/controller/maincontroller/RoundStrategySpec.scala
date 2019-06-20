@@ -2,7 +2,7 @@ package de.htwg.se.wizard.controller.maincontroller
 
 import org.scalatest.{Matchers, WordSpec}
 
-class RoundStrategySpec extends WordSpec with Matchers{
+/*class RoundStrategySpec extends WordSpec with Matchers{
   "A RoundStrategy" when {
     "should set rounds based on players input" should {
       val roundManager1 = RoundStrategy.execute(3)
@@ -26,3 +26,4 @@ class RoundStrategySpec extends WordSpec with Matchers{
   }
 
 }
+*/

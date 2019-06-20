@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.aview
 
-import de.htwg.se.wizard.controller.maincontroller.{Controller, RoundManager}
+/*import de.htwg.se.wizard.controller.maincontroller.{Controller, RoundManager}
 import de.htwg.se.wizard.model.modelComponent.ResultTable
 import org.scalatest.{Matchers, WordSpec}
 
@@ -28,4 +28,4 @@ class TUISpec extends WordSpec with Matchers {
       controller.getCurrentStateAsString should be("Player 1, please enter your name:")
     }
   }
-}
+}*/

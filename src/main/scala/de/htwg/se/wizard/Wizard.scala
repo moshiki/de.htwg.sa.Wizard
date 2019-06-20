@@ -3,12 +3,13 @@ package de.htwg.se.wizard
 import de.htwg.se.wizard.aview.TUI
 import de.htwg.se.wizard.aview.gui.SwingGui
 import de.htwg.se.wizard.controller.maincontroller.{Controller, RoundManager}
-import de.htwg.se.wizard.model.modelComponent.ResultTable
+import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 
 import scala.io.StdIn.readLine
 
 object Wizard {
-  val controller = new Controller(RoundManager(resultTable = new ResultTable(points = Vector.empty)))
+  val roundManager = RoundManager(resultTable = new ResultTable(points = Vector.empty), playerInterface = Player)
+  val controller = new Controller(roundManager, Player)
   val tui = new TUI(controller)
   val gui = new SwingGui(controller)
   controller.notifyObservers()

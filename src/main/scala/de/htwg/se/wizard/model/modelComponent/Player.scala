@@ -1,35 +1,47 @@
 package de.htwg.se.wizard.model.modelComponent
 
-import de.htwg.se.wizard.model.PlayerInterface
+import de.htwg.se.wizard.model.{PlayerInterface, SpecificPlayerInterface}
 import de.htwg.se.wizard.model.cards.Card
 
 
-case class Player(name: String, playerCards: Option[List[Card]] = None) {
+case class Player(name: String, playerCards: Option[List[Card]] = None) extends SpecificPlayerInterface {
   override def toString: String = name
+
+  override def getPlayerCards:Option[List[Card]] = {
+    playerCards
+  }
+
+  override def assignCards(cards: Option[List[Card]]): SpecificPlayerInterface = {
+    this.copy(playerCards = cards)
+  }
+
+  override def getName: String = {
+    name
+  }
 }
 
 object Player extends PlayerInterface {
-  def checkNumberOfPlayers(number: Int): Boolean = {
+  override def checkNumberOfPlayers(number: Int): Boolean = {
     if (number < 3 || number > 5) return false
     true
   }
 
 
-  override def playerTurn(player: Player, round: Int): String = {
+  override def playerTurn(player: SpecificPlayerInterface, round: Int): String = {
 
-    val cards = player.playerCards.get
+    val cards = player.getPlayerCards.get
 
 
-    val firstString = "Round " + round + " - Player: " + player.name
+    val firstString = "Round " + round + " - Player: " + player.getName
     val secondString = "Select one of the following cards:"
 
     firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
   }
 
-  override def playerPrediction(player: Player, round: Int, trump: Option[String]): String = {
-    val firstString = "Round " + round + " - Player: " + player.name
+  override def playerPrediction(player: SpecificPlayerInterface, round: Int, trump: Option[String]): String = {
+    val firstString = "Round " + round + " - Player: " + player.getName
     val secondString = "Trump Color: " + trump.getOrElse("None")
-    val thirdString = "Your Cards: " + "{ " + player.playerCards.get.mkString(", ") + " }"
+    val thirdString = "Your Cards: " + "{ " + player.getPlayerCards.get.mkString(", ") + " }"
     val string = "Enter the amount of stitches you think you will get: "
     firstString + "\n" + secondString + "\n" + thirdString + "\n" + string
 
