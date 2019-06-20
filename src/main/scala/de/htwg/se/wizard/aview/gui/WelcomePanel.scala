@@ -1,12 +1,12 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.Controller
+import de.htwg.se.wizard.controller.ControllerInterface
 import javax.swing.{BorderFactory, ImageIcon}
 
 import scala.swing._
 import scala.swing.event.ButtonClicked
 
-class WelcomePanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
+class WelcomePanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
   background = new Color(0, 100, 0)
   border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)

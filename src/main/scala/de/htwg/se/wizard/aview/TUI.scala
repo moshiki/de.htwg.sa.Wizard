@@ -1,9 +1,9 @@
 package de.htwg.se.wizard.aview
 
-import de.htwg.se.wizard.controller.Controller
+import de.htwg.se.wizard.controller.ControllerInterface
 import de.htwg.se.wizard.util.Observer
 
-class TUI(controller: Controller) extends Observer{
+class TUI(controller: ControllerInterface) extends Observer{
   controller.add(this)
 
   def processInput(input: String): Unit = {

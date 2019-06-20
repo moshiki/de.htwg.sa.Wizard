@@ -1,6 +1,6 @@
-package de.htwg.se.wizard.controller
+package de.htwg.se.wizard.controller.maincontroller
 
-import de.htwg.se.wizard.model.cards.{Card, JesterCard, WizardCard}
+import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.model.{Player, ResultTable}
 import de.htwg.se.wizard.util.Observer
 import org.scalatest.{Matchers, WordSpec}
@@ -45,7 +45,74 @@ class ControllerSpec extends WordSpec with Matchers {
         val number = Controller.toInt("bla")
         number.isEmpty should be(true)
       }
+    }
 
+    "returns the current controller state as string representation" in {
+      controller.state = PreSetupState(controller)
+      controller.controllerStateAsString should be("PreSetupState")
+
+      controller.state = SetupState(controller)
+      controller.controllerStateAsString should be("SetupState")
+
+      controller.state = InGameState(controller)
+      controller.controllerStateAsString should be("InGameState")
+
+      controller.state = GameOverState(controller)
+      controller.controllerStateAsString should be("GameOverState")
+    }
+
+    "returns the current players number" in {
+      controller.roundManager = controller.roundManager.copy(currentPlayer = 0)
+      controller.getCurrentPlayerNumber should be(0)
+    }
+
+    "returns true if game asks for players predictions" in {
+      controller.roundManager = controller.roundManager.copy(predictionMode = true)
+      controller.predictionMode should be(true)
+    }
+
+    "returns the name of a player" in {
+      controller.roundManager = controller.roundManager.copy(players = List(new Player("test")), currentPlayer = 0)
+      controller.getCurrentPlayerString should be("test")
+    }
+
+    "returns the current players prediction" in {
+      controller.roundManager = controller.roundManager.copy(predictionPerRound = List(5),
+        players = List(new Player("test")), currentPlayer = 0)
+      controller.getPlayerPrediction should be(5)
+    }
+
+    "returns the current players amount of stitches" in {
+      controller.roundManager = controller.roundManager.copy(stitchesPerRound = Map("test" -> 2),
+        players = List(new Player("test")), currentPlayer = 0)
+      controller.getCurrentAmountOfStitches should be(2)
+    }
+
+    "return the current round" in {
+      controller.roundManager = controller.roundManager.copy(currentRound = 20)
+      controller.currentRound should be(20)
+    }
+
+    "convert the already played cards to a list of strings" in {
+      controller.roundManager = controller.roundManager.copy(playedCards = List(WizardCard(), JesterCard()))
+      controller.playedCardsAsString should be(List(WizardCard().toString(), JesterCard().toString()))
+    }
+
+    "convert the current players cards to a list of strings" in {
+      val player = Player("player", Some(List(JesterCard(), WizardCard())))
+      controller.roundManager = controller.roundManager.copy(players = List(player), currentPlayer = 0)
+      controller.currentPlayersCards should be(List(JesterCard().toString(), WizardCard().toString()))
+    }
+
+    "return a string representation of the top card on the shuffled card stack" in {
+      controller.roundManager = controller.roundManager.copy(shuffledCardStack = List(DefaultCard("blue", 2), WizardCard()))
+      controller.topOfStackCardString should be(DefaultCard("blue", 2).toString)
+    }
+
+    "return a list with all players string representations" in {
+      val playerList = List(Player("P1"), Player("P2"))
+      controller.roundManager = controller.roundManager.copy(players = playerList, currentPlayer = 0)
+      controller.playersAsStringList should be(List("P1", "P2"))
     }
   }
 
@@ -85,6 +152,10 @@ class ControllerSpec extends WordSpec with Matchers {
     "return the correct next state" in {
       state.nextState should be(SetupState(controller))
     }
+
+    "return the same result array stored in ResultTable" in {
+      controller.resultArray should be(controller.roundManager.resultTable.toAnyArray)
+    }
   }
 
   "A SetupState" when {
@@ -92,6 +163,12 @@ class ControllerSpec extends WordSpec with Matchers {
     val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager)
     val state = SetupState(controller)
+
+    "does nothing when theres no input" in {
+      val oldRM = controller.roundManager
+      state.evaluate("")
+      controller.roundManager should be(oldRM)
+    }
 
     "adds a player correctly" in {
       state.evaluate("Name")

@@ -1,11 +1,11 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.{Controller, GameOverState, InGameState, PreSetupState, SetupState}
+import de.htwg.se.wizard.controller.ControllerInterface
 import de.htwg.se.wizard.util.Observer
 
 import scala.swing._
 
-class SwingGui(controller: Controller) extends Frame with Observer {
+class SwingGui(controller: ControllerInterface) extends Frame with Observer {
   controller.add(this)
 
   title = "Wizard"
@@ -26,12 +26,12 @@ class SwingGui(controller: Controller) extends Frame with Observer {
 }
 
 object SwingGui {
-  def getPanel(controller: Controller): Panel = {
-    controller.state match {
-      case _: PreSetupState => new WelcomePanel(controller)
-      case _: SetupState => new PlayerSetupPanel(controller)
-      case _: InGameState => new InGamePanel(controller)
-      case _: GameOverState => new GameOverPanel(controller)
+  def getPanel(controller: ControllerInterface): Panel = {
+    controller.controllerStateAsString match {
+      case "PreSetupState" => new WelcomePanel(controller)
+      case "SetupState" => new PlayerSetupPanel(controller)
+      case "InGameState" => new InGamePanel(controller)
+      case "GameOverState" => new GameOverPanel(controller)
     }
   }
 }

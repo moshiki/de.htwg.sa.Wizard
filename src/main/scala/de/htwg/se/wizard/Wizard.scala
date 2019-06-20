@@ -2,7 +2,7 @@ package de.htwg.se.wizard
 
 import de.htwg.se.wizard.aview.TUI
 import de.htwg.se.wizard.aview.gui.SwingGui
-import de.htwg.se.wizard.controller.{Controller, RoundManager}
+import de.htwg.se.wizard.controller.maincontroller.{Controller, RoundManager}
 import de.htwg.se.wizard.model.ResultTable
 
 import scala.io.StdIn.readLine

@@ -1,4 +1,4 @@
-package de.htwg.se.wizard.controller
+package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.model.cards.{Card, DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.model.{Player, ResultTable}
@@ -43,6 +43,15 @@ class RoundManagerSpec extends WordSpec with Matchers {
     "add a player correctly to a list of all players" in {
       controller.roundManager = controller.roundManager.addPlayer("Name")
       controller.roundManager.players should be(List(Player("Name")))
+    }
+
+    "dont add a player if his name got entered already" in {
+      controller.roundManager = controller.roundManager.copy(players = Nil)
+      controller.roundManager = controller.roundManager.addPlayer("P1")
+      val oldList = controller.roundManager.players
+      controller.roundManager = controller.roundManager.addPlayer("P1")
+
+      controller.roundManager.players should be(oldList)
     }
   }
 

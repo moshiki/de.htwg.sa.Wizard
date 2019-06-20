@@ -1,11 +1,11 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.Controller
+import de.htwg.se.wizard.controller.ControllerInterface
 import javax.swing.BorderFactory
 
 import scala.swing._
 
-class GameOverPanel(controller: Controller) extends BoxPanel(Orientation.Vertical) {
+class GameOverPanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
   border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)
 
@@ -19,6 +19,6 @@ class GameOverPanel(controller: Controller) extends BoxPanel(Orientation.Vertica
   contents += Swing.RigidBox(new Dimension(0, 20))
 
   contents += new ScrollPane {
-    contents = new Table(controller.roundManager.resultTable.toAnyArray, controller.roundManager.players)
+    contents = new Table(controller.resultArray, controller.playersAsStringList)
   }
 }
