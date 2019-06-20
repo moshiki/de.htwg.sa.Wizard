@@ -5,7 +5,8 @@ import de.htwg.se.wizard.model.modelComponent.cards.WizardCard
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 import org.scalatest.{Matchers, WordSpec}
 
-/*class SwingGuiSpec extends WordSpec with Matchers{
+class SwingGuiSpec extends WordSpec with Matchers{
+
   val controller = new Controller(RoundManager(resultTable = ResultTable(points = ResultTable.initializeVector())))
   "A SwingGuiSpec" should {
     "load the correct Panel" when {
@@ -32,4 +33,4 @@ import org.scalatest.{Matchers, WordSpec}
     }
   }
 
-}*/
+}
