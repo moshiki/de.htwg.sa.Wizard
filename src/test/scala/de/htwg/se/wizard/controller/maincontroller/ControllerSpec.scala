@@ -1,15 +1,18 @@
 package de.htwg.se.wizard.controller.maincontroller
 
+import de.htwg.se.wizard.model.SpecificCardInterface
 import de.htwg.se.wizard.model.modelComponent.cards.{Card, DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 import de.htwg.se.wizard.util.Observer
 import org.scalatest.{Matchers, WordSpec}
 
-/*class ControllerSpec extends WordSpec with Matchers {
+class ControllerSpec extends WordSpec with Matchers {
   "A Controller" when {
+    val cardInterface = Card
+    val playerInterface = Player
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
-    val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
     val observer = new Observer { // wontfix
       var updated: Boolean = false
 
@@ -24,12 +27,12 @@ import org.scalatest.{Matchers, WordSpec}
     }
 
     "gets the correct string depending of the current state" in {
-      controller.state = PreSetupState(controller)
+      controller.state = PreSetupState(controller, playerInterface = playerInterface, cardInterface = cardInterface)
       controller.getCurrentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
     }
 
     "switches to the next state correctly" in {
-      controller.state = PreSetupState(controller)
+      controller.state = PreSetupState(controller, playerInterface = playerInterface, cardInterface = cardInterface)
       controller.nextState()
       controller.state should be(SetupState(controller))
     }
@@ -48,7 +51,7 @@ import org.scalatest.{Matchers, WordSpec}
     }
 
     "returns the current controller state as string representation" in {
-      controller.state = PreSetupState(controller)
+      controller.state = PreSetupState(controller, playerInterface = playerInterface, cardInterface = cardInterface)
       controller.controllerStateAsString should be("PreSetupState")
 
       controller.state = SetupState(controller)
@@ -117,10 +120,12 @@ import org.scalatest.{Matchers, WordSpec}
   }
 
   "A preSetupState" when {
+    val cardInterface = Card
+    val playerInterface = Player
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
-    val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
-    val state = PreSetupState(controller)
+    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
+    val state = PreSetupState(controller, playerInterface = playerInterface, cardInterface = cardInterface)
     "does nothing when trying to evaluate a string that's not a number" in {
       val old = roundManager
       state.evaluate("AAA")
@@ -134,7 +139,7 @@ import org.scalatest.{Matchers, WordSpec}
 
     "set the number of players correctly" in {
       state.evaluate("3")
-      val newRoundManager = RoundManager(3, resultTable = resultTable)
+      val newRoundManager = RoundManager(3, resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
       newRoundManager.numberOfPlayers should be(3)
     }
 
@@ -159,9 +164,11 @@ import org.scalatest.{Matchers, WordSpec}
   }
 
   "A SetupState" when {
+    val cardInterface = Card
+    val playerInterface = Player
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
-    val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
     val state = SetupState(controller)
 
     "does nothing when theres no input" in {
@@ -176,7 +183,8 @@ import org.scalatest.{Matchers, WordSpec}
     }
 
     "reads in stitches per round" in {
-      controller.roundManager = roundManager.copy(3, players = List(Player("Name1"), Player("Name2")))
+      controller.roundManager = roundManager.copy(3, players = List(Player("Name1"), Player("Name2")),
+        shuffledCardStack = List(DefaultCard("blue", 2), WizardCard()))
       state.evaluate("Name3")
       controller.roundManager.numberOfPlayers should be(3)
       controller.roundManager.players.size should be(3)
@@ -197,9 +205,11 @@ import org.scalatest.{Matchers, WordSpec}
   }
 
   "A InGameState" when {
+    val cardInterface = Card
+    val playerInterface = Player
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
-    val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
     controller.state = InGameState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       controller.eval("AAA")
@@ -213,7 +223,8 @@ import org.scalatest.{Matchers, WordSpec}
     }
 
     "stay to prediction mode" in {
-      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, numberOfRounds = 20, predictionMode = true)
+      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, numberOfRounds = 20, predictionMode = true,
+       shuffledCardStack = List(DefaultCard("blue", 2), WizardCard()))
       controller.roundManager = controller.roundManager.addPlayer("1")
       controller.roundManager = controller.roundManager.addPlayer("2")
       controller.roundManager = controller.roundManager.addPlayer("3")
@@ -259,9 +270,11 @@ import org.scalatest.{Matchers, WordSpec}
   }
 
   "A GameOverState" should {
+    val cardInterface = Card
+    val playerInterface = Player
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
-    val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
     val state = GameOverState(controller)
     "do nothing when evaluating" in {
       state.evaluate("5")
@@ -276,4 +289,3 @@ import org.scalatest.{Matchers, WordSpec}
 
   }
 }
-*/

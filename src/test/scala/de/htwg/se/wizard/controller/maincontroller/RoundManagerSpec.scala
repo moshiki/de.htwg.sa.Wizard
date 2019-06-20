@@ -4,12 +4,14 @@ import de.htwg.se.wizard.model.modelComponent.cards.{Card, DefaultCard, JesterCa
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable}
 import org.scalatest.{Matchers, WordSpec}
 
-/*class RoundManagerSpec extends WordSpec with Matchers {
+class RoundManagerSpec extends WordSpec with Matchers {
   "A Round Manager" when {
     "new" should {
+      val cardInterface = Card
+      val playerInterface = Player
       val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
-      val roundManager = RoundManager(resultTable = resultTable)
-      val controller = new Controller(roundManager)
+      val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+      val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
       "set the number of players correctly" in {
         controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3)
         controller.roundManager.checkNumberOfPlayers(3)
@@ -18,9 +20,11 @@ import org.scalatest.{Matchers, WordSpec}
     }
   }
   "controller is in setup mode" should {
+    val cardInterface = Card
+    val playerInterface = Player
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(3, 3))
-    val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
     "ask for next player's name correctly" in {
       controller.roundManager = controller.roundManager.copy(currentPlayer = 1)
       controller.roundManager.getSetupStrings should be("Player 1, please enter your name:")
@@ -56,13 +60,16 @@ import org.scalatest.{Matchers, WordSpec}
   }
 
   "controller is in game mode" should {
+    val cardInterface = Card
+    val playerInterface = Player
     val resultTable = ResultTable(20, 3, ResultTable.initializeVector(20, 3))
-    val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val controller = new Controller(roundManager, playerInterface = playerInterface, cardInterface = cardInterface)
 
     "should ask player for his prediction if Prediction list is empty" in {
       controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,
-        players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
+        players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true,
+        shuffledCardStack = List(DefaultCard("blue", 2), WizardCard()))
       controller.roundManager = controller.roundManager.cardDistribution()
       controller.roundManager.getPlayerStateStrings
       controller.roundManager.predictionPerRound.size should be(0)
@@ -208,4 +215,3 @@ import org.scalatest.{Matchers, WordSpec}
     }
   }
 }
-*/
