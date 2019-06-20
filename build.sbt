@@ -1,6 +1,6 @@
 name := "Wizard"
 
-version := "0.1"
+version := "0.10"
 
 scalaVersion := "2.12.8"
 
