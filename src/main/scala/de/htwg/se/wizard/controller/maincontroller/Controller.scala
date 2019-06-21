@@ -1,10 +1,11 @@
 package de.htwg.se.wizard.controller.maincontroller
 
+import com.google.inject.Inject
 import de.htwg.se.wizard.controller.ControllerInterface
 import de.htwg.se.wizard.model.{ResultTableBuilderInterface, StaticCardInterface, StaticPlayerInterface}
 import de.htwg.se.wizard.util.UndoManager
 
-class Controller(var roundManager: RoundManager,
+class Controller @Inject() (var roundManager: RoundManager,
                  staticPlayerInterface: StaticPlayerInterface,
                  staticCardInterface: StaticCardInterface,
                  resultTableBuilderInterface: ResultTableBuilderInterface) extends ControllerInterface {

@@ -1,16 +1,16 @@
 package de.htwg.se.wizard
 
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.wizard.aview.TUI
 import de.htwg.se.wizard.aview.gui.SwingGui
-import de.htwg.se.wizard.controller.maincontroller.{Controller, RoundManager}
-import de.htwg.se.wizard.model.modelComponent.cards.StaticCard
-import de.htwg.se.wizard.model.modelComponent.{ResultTableBuilder, StaticPlayer}
+import de.htwg.se.wizard.controller.maincontroller.Controller
 
 import scala.io.StdIn.readLine
 
 object Wizard {
-  val roundManager = RoundManager(resultTable = ResultTableBuilder().initializeTable(), staticPlayerInterface = StaticPlayer(), staticCardInterface = StaticCard())
-  val controller = new Controller(roundManager, StaticPlayer(), StaticCard(), ResultTableBuilder())
+  val injector: Injector = Guice.createInjector(new WizardModule)
+  val controller: Controller = injector.getInstance(classOf[Controller])
+
   val tui = new TUI(controller)
   val gui = new SwingGui(controller)
   controller.notifyObservers()
