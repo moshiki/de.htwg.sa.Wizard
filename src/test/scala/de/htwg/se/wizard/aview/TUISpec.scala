@@ -10,8 +10,8 @@ class TUISpec extends WordSpec with Matchers {
     val cardInterface = StaticCard()
     val playerInterface = StaticPlayer()
     val controller = new Controller(RoundManager(numberOfPlayers = 3, resultTable = ResultTableBuilder().initializeTable(),
-      playerInterface = playerInterface, cardInterface = cardInterface),
-      cardInterface = cardInterface, playerInterface = playerInterface, staticResultTableInterface = ResultTableBuilder())
+      staticPlayerInterface = playerInterface, staticCardInterface = cardInterface),
+      staticCardInterface = cardInterface, staticPlayerInterface = playerInterface, resultTableBuilderInterface = ResultTableBuilder())
     val tui = new TUI(controller)
     "register itself in the controller" in {
         controller.subscribers.contains(tui) should be(true)

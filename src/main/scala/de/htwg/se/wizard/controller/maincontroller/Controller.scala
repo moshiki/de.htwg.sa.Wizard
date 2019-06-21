@@ -4,11 +4,13 @@ import de.htwg.se.wizard.controller.ControllerInterface
 import de.htwg.se.wizard.model.{ResultTableBuilderInterface, StaticCardInterface, StaticPlayerInterface}
 import de.htwg.se.wizard.util.UndoManager
 
-class Controller(var roundManager: RoundManager, playerInterface: StaticPlayerInterface,
-                 cardInterface: StaticCardInterface, staticResultTableInterface: ResultTableBuilderInterface) extends ControllerInterface {
+class Controller(var roundManager: RoundManager,
+                 staticPlayerInterface: StaticPlayerInterface,
+                 staticCardInterface: StaticCardInterface,
+                 resultTableBuilderInterface: ResultTableBuilderInterface) extends ControllerInterface {
   val undoManager = new UndoManager
 
-  var state: ControllerState = PreSetupState(this, playerInterface, cardInterface, staticResultTableInterface)
+  var state: ControllerState = PreSetupState(this, staticPlayerInterface, staticCardInterface, resultTableBuilderInterface)
 
   def nextState(): Unit = state = state.nextState
 

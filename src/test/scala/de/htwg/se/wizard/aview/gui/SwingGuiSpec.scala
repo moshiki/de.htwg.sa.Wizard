@@ -8,8 +8,8 @@ import org.scalatest.{Matchers, WordSpec}
 class SwingGuiSpec extends WordSpec with Matchers{
 
   val controller = new Controller(RoundManager(resultTable = ResultTableBuilder().initializeTable(),
-    playerInterface = StaticPlayer(), cardInterface = StaticCard(), shuffledCardStack = CardStack.shuffleCards(CardStack.initialize)),
-    playerInterface = StaticPlayer(), cardInterface = StaticCard(), staticResultTableInterface = ResultTableBuilder())
+    staticPlayerInterface = StaticPlayer(), staticCardInterface = StaticCard(), shuffledCardStack = CardStack.shuffleCards(CardStack.initialize)),
+    staticPlayerInterface = StaticPlayer(), staticCardInterface = StaticCard(), resultTableBuilderInterface = ResultTableBuilder())
   "A SwingGuiSpec" should {
     "load the correct Panel" when {
       "Controller is in preSetupState" in {

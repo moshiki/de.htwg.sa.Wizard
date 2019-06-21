@@ -10,7 +10,7 @@ class ControllerSpec extends WordSpec with Matchers {
     val cardInterface = StaticCard()
     val playerInterface = StaticPlayer()
     val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
     val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
     val observer = new Observer { // wontfix
       var updated: Boolean = false
@@ -122,7 +122,7 @@ class ControllerSpec extends WordSpec with Matchers {
     val cardInterface = StaticCard()
     val playerInterface = StaticPlayer()
     val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
     val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
     val state = PreSetupState(controller, playerInterface, cardInterface, ResultTableBuilder())
     "does nothing when trying to evaluate a string that's not a number" in {
@@ -138,7 +138,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
     "set the number of players correctly" in {
       state.evaluate("3")
-      val newRoundManager = RoundManager(3, resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+      val newRoundManager = RoundManager(3, resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
       newRoundManager.numberOfPlayers should be(3)
     }
 
@@ -166,7 +166,7 @@ class ControllerSpec extends WordSpec with Matchers {
     val cardInterface = StaticCard()
     val playerInterface = StaticPlayer()
     val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
     val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
     val state = SetupState(controller)
 
@@ -207,7 +207,7 @@ class ControllerSpec extends WordSpec with Matchers {
     val cardInterface = StaticCard()
     val playerInterface = StaticPlayer()
     val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
     val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
     controller.state = InGameState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
@@ -272,7 +272,7 @@ class ControllerSpec extends WordSpec with Matchers {
     val cardInterface = StaticCard()
     val playerInterface = StaticPlayer()
     val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
     val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
     val state = GameOverState(controller)
     "do nothing when evaluating" in {

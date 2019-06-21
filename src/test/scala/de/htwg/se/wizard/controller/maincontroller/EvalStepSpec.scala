@@ -9,8 +9,8 @@ class EvalStepSpec extends WordSpec with Matchers {
     val cardInterface = StaticCard()
     val playerInterface = StaticPlayer()
     val controller = new Controller(RoundManager(resultTable = ResultTableBuilder().initializeTable(),
-      playerInterface = playerInterface, cardInterface = cardInterface),
-      playerInterface = playerInterface, cardInterface = cardInterface, staticResultTableInterface = ResultTableBuilder())
+      staticPlayerInterface = playerInterface, staticCardInterface = cardInterface),
+      staticPlayerInterface = playerInterface, staticCardInterface = cardInterface, resultTableBuilderInterface = ResultTableBuilder())
     val evalStep = new EvalStep(controller)
     "saves the current controller's state and round manager" in {
       val state = (controller.roundManager, controller.state)

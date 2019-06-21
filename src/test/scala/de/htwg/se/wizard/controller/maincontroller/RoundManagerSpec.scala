@@ -10,7 +10,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
       val cardInterface = StaticCard()
       val playerInterface = StaticPlayer()
       val resultTable = ResultTableBuilder().initializeTable(20, 3)
-      val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+      val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
       val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
       "set the number of players correctly" in {
         controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3)
@@ -23,7 +23,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
     val cardInterface = StaticCard()
     val playerInterface = StaticPlayer()
     val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
     val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
     "ask for next player's name correctly" in {
       controller.roundManager = controller.roundManager.copy(currentPlayer = 1)
@@ -63,7 +63,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
     val cardInterface = StaticCard()
     val playerInterface = StaticPlayer()
     val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, playerInterface = playerInterface, cardInterface = cardInterface)
+    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
     val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
 
     "should ask player for his prediction if Prediction list is empty" in {

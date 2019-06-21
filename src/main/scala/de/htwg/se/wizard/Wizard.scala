@@ -9,7 +9,7 @@ import de.htwg.se.wizard.model.modelComponent.{ResultTableBuilder, StaticPlayer}
 import scala.io.StdIn.readLine
 
 object Wizard {
-  val roundManager = RoundManager(resultTable = ResultTableBuilder().initializeTable(), playerInterface = StaticPlayer(), cardInterface = StaticCard())
+  val roundManager = RoundManager(resultTable = ResultTableBuilder().initializeTable(), staticPlayerInterface = StaticPlayer(), staticCardInterface = StaticCard())
   val controller = new Controller(roundManager, StaticPlayer(), StaticCard(), ResultTableBuilder())
   val tui = new TUI(controller)
   val gui = new SwingGui(controller)
