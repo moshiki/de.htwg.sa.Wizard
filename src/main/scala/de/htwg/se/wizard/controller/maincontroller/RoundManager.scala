@@ -52,17 +52,21 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
 
   def cardDistribution(): RoundManager = {
-    var list = List[SpecificCardInterface]()
+    if (players.head.getPlayerCards.nonEmpty || players.head.getPlayerCards.get.nonEmpty) return this
     val stack = shuffledCardStack.to[ListBuffer]
-    for(_ <- 1 to currentRound) {
-      val card = stack.remove(0)
-      val typ = cardInterface.setOwner(card, players(currentPlayer))
-      list = list ::: List[SpecificCardInterface](typ)
-    }
-
-    val newPlayer = players(currentPlayer).assignCards(Some(list))
     val newPlayers = players.to[ListBuffer]
-    newPlayers.update(currentPlayer, newPlayer)
+
+    for (i <- players.indices) {
+    var list = List[SpecificCardInterface]()
+      for (_ <- 1 to currentRound) {
+        val card = stack.remove(0)
+        val typ = cardInterface.setOwner(card, players(i))
+        list = list ::: List[SpecificCardInterface](typ)
+      }
+
+      val newPlayer = players(i).assignCards(Some(list))
+      newPlayers.update(i, newPlayer)
+    }
 
     this.copy(shuffledCardStack = stack.toList, players = newPlayers.toList)
 
