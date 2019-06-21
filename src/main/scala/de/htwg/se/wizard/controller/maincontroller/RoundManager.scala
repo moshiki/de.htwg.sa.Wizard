@@ -6,29 +6,29 @@ import scala.collection.mutable.ListBuffer
 
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
-                        cardInterface: CardInterface,
-                        shuffledCardStack: List[SpecificCardInterface] = Nil,
-                          //CardStack.shuffleCards(CardStack.initialize),
-                        players: List[SpecificPlayerInterface] = Nil,
+                        staticCardInterface: StaticCardInterface,
+                        shuffledCardStack: List[CardInterface] = Nil,
+                        //CardStack.shuffleCards(CardStack.initialize),
+                        players: List[PlayerInterface] = Nil,
                         currentPlayer: Int = 0,
                         currentRound: Int = 1,
                         predictionPerRound: List[Int] = Nil,
                         stitchesPerRound: Map[String, Int] = Map.empty[String, Int],
-                        playedCards: List[SpecificCardInterface] = Nil,
+                        playedCards: List[CardInterface] = Nil,
                         predictionMode:Boolean = true,
                         cleanMap: Map[String, Int] = Map.empty[String, Int],
                         resultTable: ResultTableInterface,
-                        playerInterface: PlayerInterface) {
-  val initialCardStack: List[SpecificCardInterface] = cardInterface.initializeCardStack()
+                        staticPlayerInterface: StaticPlayerInterface) {
+  val initialCardStack: List[CardInterface] = staticCardInterface.initializeCardStack()
 
   def checkNumberOfPlayers(number: Int): Boolean = {
-    playerInterface.checkNumberOfPlayers(number)
+    staticPlayerInterface.checkNumberOfPlayers(number)
     //Player.checkNumberOfPlayers(number)
   }
 
   def addPlayer(name: String): RoundManager = {
 
-    val newPlayer = playerInterface.newPlayer(name) //Player(name)
+    val newPlayer = staticPlayerInterface.newPlayer(name) //Player(name)
     val oldPlayerList = this.players
     if (oldPlayerList contains newPlayer) return this
     val newPlayerList = oldPlayerList ::: List(newPlayer)
@@ -52,12 +52,12 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
 
   def cardDistribution(): RoundManager = {
-    var list = List[SpecificCardInterface]()
+    var list = List[CardInterface]()
     val stack = shuffledCardStack.to[ListBuffer]
     for(_ <- 1 to currentRound) {
       val card = stack.remove(0)
-      val typ = cardInterface.setOwner(card, players(currentPlayer))
-      list = list ::: List[SpecificCardInterface](typ)
+      val typ = staticCardInterface.setOwner(card, players(currentPlayer))
+      list = list ::: List[CardInterface](typ)
     }
 
     val newPlayer = players(currentPlayer).assignCards(Some(list))
@@ -89,10 +89,10 @@ case class RoundManager(numberOfPlayers: Int = 0,
     if(predictionPerRound.size < numberOfPlayers) {
       var out = "\n"
       if (currentPlayer == 0) out += resultTable.toString + "\n"
-      out += playerInterface.playerPrediction(players(currentPlayer), currentRound, trumpColor)
+      out += staticPlayerInterface.playerPrediction(players(currentPlayer), currentRound, trumpColor)
       out
     } else {
-      playerInterface.playerTurn(players(currentPlayer), currentRound)
+      staticPlayerInterface.playerTurn(players(currentPlayer), currentRound)
     }
   }
 
@@ -100,7 +100,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     if (currentPlayer == 0 && currentRound != numberOfRounds && players.last.getPlayerCards.get.isEmpty) {
       this.copy(
         resultTable = pointsForRound(),
-        shuffledCardStack = cardInterface.shuffleCards(initialCardStack),
+        shuffledCardStack = staticCardInterface.shuffleCards(initialCardStack),
         //shuffledCardStack = CardStack.shuffleCards(initialCardStack),
         predictionPerRound = Nil,
         stitchesPerRound = cleanMap,
@@ -127,11 +127,11 @@ case class RoundManager(numberOfPlayers: Int = 0,
       case card: DefaultCard => Some(card.color)
       case _ => None
     }*/
-    cardInterface.getType(topCard)
+    staticCardInterface.getType(topCard)
   }
 
   def stitchInThisCycle: RoundManager = {
-    val stitchPlayer = cardInterface.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
+    val stitchPlayer = staticCardInterface.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
     //val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
     val mutMap = collection.mutable.Map() ++ stitchesPerRound
     mutMap.put(stitchPlayer.getName, mutMap(stitchPlayer.getName) + 1)
@@ -175,10 +175,10 @@ object RoundManager {
       this
     }
 
-    def build(playerInterface: PlayerInterface, cardInterface: CardInterface, table: StaticResultTableInterface): RoundManager = {
+    def build(playerInterface: StaticPlayerInterface, cardInterface: StaticCardInterface, table: ResultTableBuilderInterface): RoundManager = {
       RoundManager(
-        numberOfPlayers, numberOfRounds, playerInterface = playerInterface,
-        cardInterface = cardInterface, shuffledCardStack = cardInterface.shuffleCards(cardInterface.initializeCardStack()),
+        numberOfPlayers, numberOfRounds, staticPlayerInterface = playerInterface,
+        staticCardInterface = cardInterface, shuffledCardStack = cardInterface.shuffleCards(cardInterface.initializeCardStack()),
         resultTable = table.initializeTable(numberOfRounds, numberOfPlayers))
     }
   }
