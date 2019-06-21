@@ -1,9 +1,8 @@
 package de.htwg.se.wizard.model.modelComponent.cards
 
-import de.htwg.se.wizard.model.SpecificPlayerInterface
-import de.htwg.se.wizard.model.modelComponent.Player
+import de.htwg.se.wizard.model.PlayerInterface
 
-case class WizardCard(owner: Option[SpecificPlayerInterface] = None) extends Card(owner) {
+case class WizardCard(owner: Option[PlayerInterface] = None) extends Card(owner) {
   def hasColor: Boolean = false
 
   def isWizard: Boolean = true

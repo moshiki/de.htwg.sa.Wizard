@@ -1,9 +1,8 @@
 package de.htwg.se.wizard.model.modelComponent.cards
 
-import de.htwg.se.wizard.model.SpecificPlayerInterface
-import de.htwg.se.wizard.model.modelComponent.Player
+import de.htwg.se.wizard.model.PlayerInterface
 
-case class DefaultCard(color: String, number: Int, owner: Option[SpecificPlayerInterface] = None)
+case class DefaultCard(color: String, number: Int, owner: Option[PlayerInterface] = None)
   extends Card(owner) with Ordered[DefaultCard] {
   require(number >= 1 && number <= 13)
   require(color == "blue" || color == "red" || color == "yellow" || color == "green")

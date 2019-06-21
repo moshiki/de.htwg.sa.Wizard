@@ -8,6 +8,6 @@ trait ResultTableInterface {
   def toAnyArray: Array[Array[Any]]
 }
 
-trait StaticResultTableInterface {
+trait ResultTableBuilderInterface {
   def initializeTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6): ResultTableInterface
 }

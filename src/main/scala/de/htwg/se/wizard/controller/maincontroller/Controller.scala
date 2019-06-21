@@ -1,11 +1,11 @@
 package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.controller.ControllerInterface
-import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, StaticResultTableInterface}
+import de.htwg.se.wizard.model.{ResultTableBuilderInterface, StaticCardInterface, StaticPlayerInterface}
 import de.htwg.se.wizard.util.UndoManager
 
-class Controller(var roundManager: RoundManager, playerInterface: PlayerInterface,
-                 cardInterface: CardInterface, staticResultTableInterface: StaticResultTableInterface) extends ControllerInterface {
+class Controller(var roundManager: RoundManager, playerInterface: StaticPlayerInterface,
+                 cardInterface: StaticCardInterface, staticResultTableInterface: ResultTableBuilderInterface) extends ControllerInterface {
   val undoManager = new UndoManager
 
   var state: ControllerState = PreSetupState(this, playerInterface, cardInterface, staticResultTableInterface)
@@ -82,8 +82,8 @@ trait ControllerState {
 }
 
 
-case class PreSetupState(controller: Controller, playerInterface: PlayerInterface,
-                         cardInterface: CardInterface, staticResultTableInterface: StaticResultTableInterface) extends ControllerState {
+case class PreSetupState(controller: Controller, playerInterface: StaticPlayerInterface,
+                         cardInterface: StaticCardInterface, staticResultTableInterface: ResultTableBuilderInterface) extends ControllerState {
   override def evaluate(input: String): Unit = {
     val number = Controller.toInt(input)
     if (number.isEmpty) return

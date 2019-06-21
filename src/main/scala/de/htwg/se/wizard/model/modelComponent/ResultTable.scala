@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model.modelComponent
 
-import de.htwg.se.wizard.model.{ResultTableInterface, StaticResultTableInterface}
+import de.htwg.se.wizard.model.{ResultTableBuilderInterface, ResultTableInterface}
 
 case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) extends ResultTableInterface {
 
@@ -35,7 +35,7 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
   }
 }
 
-object ResultTable extends StaticResultTableInterface {
+case class ResultTableBuilder() extends ResultTableBuilderInterface {
   override def initializeTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6): ResultTable = {
     val vector = Vector.fill(roundsToPlay, numberOfPlayers)(0)
     ResultTable(roundsToPlay, numberOfPlayers, vector)

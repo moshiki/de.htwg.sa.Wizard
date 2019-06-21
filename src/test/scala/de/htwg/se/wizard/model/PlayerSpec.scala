@@ -1,10 +1,8 @@
 package de.htwg.se.wizard.model
 
 import de.htwg.se.wizard.model.modelComponent.cards.{Card, JesterCard}
-import de.htwg.se.wizard.model.modelComponent.Player
+import de.htwg.se.wizard.model.modelComponent.{Player, StaticPlayer}
 import org.scalatest.{Matchers, WordSpec}
-
-import scala.collection.mutable.ListBuffer
 
 class PlayerSpec extends WordSpec with Matchers {
 
@@ -26,7 +24,7 @@ class PlayerSpec extends WordSpec with Matchers {
         val player = Player("TestPlayer")
         val list = List[Card](JesterCard(Some(player)))
         val player1 = player.copy(playerCards = Some(list))
-        Player.playerTurn(player1, 1) should startWith(
+        StaticPlayer().playerTurn(player1, 1) should startWith(
           """Round 1 - Player: TestPlayer
             |Select one of the following cards:
             |{ cards/Jester }""".stripMargin
@@ -37,7 +35,7 @@ class PlayerSpec extends WordSpec with Matchers {
           val player = Player("TestPlayer")
           val list = List[Card](JesterCard(Some(player)))
           val player1 = player.copy(playerCards = Some(list))
-          Player.playerPrediction(player1,1,Some("blue")) should startWith(
+          StaticPlayer().playerPrediction(player1,1,Some("blue")) should startWith(
             """Round 1 - Player: TestPlayer
               |Trump Color: blue
               |Your Cards: { cards/Jester }

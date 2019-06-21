@@ -6,20 +6,20 @@ import scala.collection.mutable.ListBuffer
 
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
-                        cardInterface: CardInterface,
-                        shuffledCardStack: List[SpecificCardInterface] = Nil,
-                          //CardStack.shuffleCards(CardStack.initialize),
-                        players: List[SpecificPlayerInterface] = Nil,
+                        cardInterface: StaticCardInterface,
+                        shuffledCardStack: List[CardInterface] = Nil,
+                        //CardStack.shuffleCards(CardStack.initialize),
+                        players: List[PlayerInterface] = Nil,
                         currentPlayer: Int = 0,
                         currentRound: Int = 1,
                         predictionPerRound: List[Int] = Nil,
                         stitchesPerRound: Map[String, Int] = Map.empty[String, Int],
-                        playedCards: List[SpecificCardInterface] = Nil,
+                        playedCards: List[CardInterface] = Nil,
                         predictionMode:Boolean = true,
                         cleanMap: Map[String, Int] = Map.empty[String, Int],
                         resultTable: ResultTableInterface,
-                        playerInterface: PlayerInterface) {
-  val initialCardStack: List[SpecificCardInterface] = cardInterface.initializeCardStack()
+                        playerInterface: StaticPlayerInterface) {
+  val initialCardStack: List[CardInterface] = cardInterface.initializeCardStack()
 
   def checkNumberOfPlayers(number: Int): Boolean = {
     playerInterface.checkNumberOfPlayers(number)
@@ -52,12 +52,12 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
 
   def cardDistribution(): RoundManager = {
-    var list = List[SpecificCardInterface]()
+    var list = List[CardInterface]()
     val stack = shuffledCardStack.to[ListBuffer]
     for(_ <- 1 to currentRound) {
       val card = stack.remove(0)
       val typ = cardInterface.setOwner(card, players(currentPlayer))
-      list = list ::: List[SpecificCardInterface](typ)
+      list = list ::: List[CardInterface](typ)
     }
 
     val newPlayer = players(currentPlayer).assignCards(Some(list))
@@ -175,7 +175,7 @@ object RoundManager {
       this
     }
 
-    def build(playerInterface: PlayerInterface, cardInterface: CardInterface, table: StaticResultTableInterface): RoundManager = {
+    def build(playerInterface: StaticPlayerInterface, cardInterface: StaticCardInterface, table: ResultTableBuilderInterface): RoundManager = {
       RoundManager(
         numberOfPlayers, numberOfRounds, playerInterface = playerInterface,
         cardInterface = cardInterface, shuffledCardStack = cardInterface.shuffleCards(cardInterface.initializeCardStack()),
