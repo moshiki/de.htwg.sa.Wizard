@@ -113,15 +113,15 @@ class RoundManagerSpec extends WordSpec with Matchers {
     }
 
     "calculate points when player prediction was correct" in {
-      RoundManager.calcPoints(2, 2) should be(20)
+      RoundManager.calcPoints(2, 2) should be(40)
     }
 
     "calculate points when player prediction was less than stitches" in {
-      RoundManager.calcPoints(1, 2) should be(0)
+      RoundManager.calcPoints(1, 2) should be(10)
     }
 
     "calculate points where player prediction was higher than stitches" in {
-      RoundManager.calcPoints(3, 1) should be(-20)
+      RoundManager.calcPoints(3, 1) should be(-10)
     }
 
     "get right stitch in one cycle and delete played cards" in {

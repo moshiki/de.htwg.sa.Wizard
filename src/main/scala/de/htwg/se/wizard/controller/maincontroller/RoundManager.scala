@@ -154,10 +154,10 @@ object RoundManager {
     var points = 0
     for(_ <- 1 to stitches) points += 10
     if(playerPrediction == stitches) {
-      points = 20
+      points += 20
     }
-    if(playerPrediction < stitches) for(_ <- playerPrediction to stitches) {points -= 10}
-    if(playerPrediction > stitches) for (_ <- stitches to playerPrediction) {points -= 10}
+    if(playerPrediction < stitches) for(_ <- playerPrediction until stitches) {points -= 10}
+    if(playerPrediction > stitches) for (_ <- stitches until playerPrediction) {points -= 10}
     points
   }
 
