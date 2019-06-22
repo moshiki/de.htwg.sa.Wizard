@@ -52,21 +52,23 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
 
   def cardDistribution(): RoundManager = {
-    var list = List[CardInterface]()
+    if (players.head.getPlayerCards.isDefined && players.head.getPlayerCards.get.nonEmpty) return this
     val stack = shuffledCardStack.to[ListBuffer]
-    for(_ <- 1 to currentRound) {
-      val card = stack.remove(0)
-      val typ = staticCardInterface.setOwner(card, players(currentPlayer))
-      list = list ::: List[CardInterface](typ)
+    val newPlayers = players.to[ListBuffer]
+
+    for (i <- players.indices) {
+    var list = List[CardInterface]()
+      for (_ <- 1 to currentRound) {
+        val card = stack.remove(0)
+        val typ = staticCardInterface.setOwner(card, players(i))
+        list = list ::: List[CardInterface](typ)
+      }
+
+      val newPlayer = players(i).assignCards(Some(list))
+      newPlayers.update(i, newPlayer)
     }
 
-    val newPlayer = players(currentPlayer).assignCards(Some(list))
-    val newPlayers = players.to[ListBuffer]
-    newPlayers.update(currentPlayer, newPlayer)
-
     this.copy(shuffledCardStack = stack.toList, players = newPlayers.toList)
-
-    //todo: Probably need to do this for all players and not only the current one.
   }
 
   def updatePlayerPrediction(input: Int): RoundManager = {

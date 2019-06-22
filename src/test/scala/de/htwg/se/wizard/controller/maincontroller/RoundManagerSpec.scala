@@ -69,7 +69,7 @@ class RoundManagerSpec extends WordSpec with Matchers {
     "should ask player for his prediction if Prediction list is empty" in {
       controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,
         players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true,
-        shuffledCardStack = List(DefaultCard("blue", 2), WizardCard()))
+        shuffledCardStack = List(DefaultCard("blue", 2), WizardCard(), JesterCard(), WizardCard()))
       controller.roundManager = controller.roundManager.cardDistribution()
       controller.roundManager.getPlayerStateStrings
       controller.roundManager.predictionPerRound.size should be(0)
@@ -212,6 +212,20 @@ class RoundManagerSpec extends WordSpec with Matchers {
 ###########################################
 #      0      #      0      #      0      #
 ###########################################""")
+    }
+
+    "assign cards if no cards assigned or make no changes to already assigned cards when in prediction mode" in {
+      var roundManager = controller.roundManager.copy(numberOfPlayers = 3, predictionMode = true, players = Nil)
+      roundManager = roundManager.copy(shuffledCardStack = List(WizardCard(), WizardCard(), WizardCard()), currentRound = 1)
+      roundManager = roundManager.addPlayer("P1")
+      roundManager = roundManager.addPlayer("P2")
+      roundManager = roundManager.addPlayer("P3")
+
+      roundManager = roundManager.cardDistribution()
+      roundManager.players.head.getPlayerCards.size should be(1)
+
+      val newRoundManager = roundManager.cardDistribution()
+      newRoundManager should be(roundManager)
     }
   }
 }
