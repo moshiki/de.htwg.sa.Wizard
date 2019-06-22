@@ -183,7 +183,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
     "reads in stitches per round" in {
       controller.roundManager = roundManager.copy(3, players = List(Player("Name1"), Player("Name2")),
-        shuffledCardStack = List(DefaultCard("blue", 2), WizardCard()))
+        shuffledCardStack = List(DefaultCard("blue", 2), WizardCard(), WizardCard(), WizardCard()))
       state.evaluate("Name3")
       controller.roundManager.numberOfPlayers should be(3)
       controller.roundManager.players.size should be(3)
@@ -223,7 +223,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
     "stay to prediction mode" in {
       controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, numberOfRounds = 20, predictionMode = true,
-       shuffledCardStack = List(DefaultCard("blue", 2), WizardCard()))
+       shuffledCardStack = List(DefaultCard("blue", 2), WizardCard(), WizardCard(), WizardCard()), players = Nil)
       controller.roundManager = controller.roundManager.addPlayer("1")
       controller.roundManager = controller.roundManager.addPlayer("2")
       controller.roundManager = controller.roundManager.addPlayer("3")

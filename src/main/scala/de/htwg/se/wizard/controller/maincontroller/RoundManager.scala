@@ -52,7 +52,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
 
   def cardDistribution(): RoundManager = {
-    if (players.head.getPlayerCards.nonEmpty || players.head.getPlayerCards.get.nonEmpty) return this
+    if (players.head.getPlayerCards.isDefined && players.head.getPlayerCards.get.nonEmpty) return this
     val stack = shuffledCardStack.to[ListBuffer]
     val newPlayers = players.to[ListBuffer]
 
@@ -69,8 +69,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
     }
 
     this.copy(shuffledCardStack = stack.toList, players = newPlayers.toList)
-
-    //todo: Probably need to do this for all players and not only the current one.
   }
 
   def updatePlayerPrediction(input: Int): RoundManager = {
