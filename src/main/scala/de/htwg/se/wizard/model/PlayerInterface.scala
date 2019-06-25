@@ -6,6 +6,8 @@ trait PlayerInterface {
   def assignCards(cards: Option[List[CardInterface]]): PlayerInterface
 
   def getName: String
+
+  def toXML: String
 }
 
 trait StaticPlayerInterface {
@@ -17,6 +19,5 @@ trait StaticPlayerInterface {
   def playerPrediction(player: PlayerInterface, round: Int, trump: Option[String]): String
 
   def playerTurn(player: PlayerInterface, round: Int): String
-
 }
 

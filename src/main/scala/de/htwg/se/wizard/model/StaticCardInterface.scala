@@ -18,4 +18,5 @@ trait CardInterface {
   def hasColor: Boolean
   def isJester: Boolean
   def isWizard: Boolean
+  def toXML: String
 }

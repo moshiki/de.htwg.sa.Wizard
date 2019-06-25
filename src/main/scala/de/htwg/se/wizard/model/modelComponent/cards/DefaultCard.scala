@@ -23,4 +23,14 @@ case class DefaultCard(color: String, number: Int, owner: Option[PlayerInterface
       case _ => false
     }
   }
+
+  override def toXML: String = {
+    var ownerXML = "None"
+    if (owner.isDefined) ownerXML = owner.get.toXML
+    <DefaultCard>
+      <color>{color}</color>
+      <number>{number}</number>
+      <owner>{ownerXML}</owner>
+    </DefaultCard>
+  }
 }

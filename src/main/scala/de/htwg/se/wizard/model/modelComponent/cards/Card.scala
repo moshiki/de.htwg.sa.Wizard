@@ -20,6 +20,8 @@ abstract class Card(owner: Option[PlayerInterface]) extends CardInterface {
   def getStringRep: String
 
   override def toString: String = "cards/" + getStringRep
+
+  override def toXML: String
 }
 
 

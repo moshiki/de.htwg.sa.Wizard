@@ -6,7 +6,7 @@ import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, StaticPlayerInte
 case class Player(name: String, playerCards: Option[List[CardInterface]] = None) extends PlayerInterface {
   override def toString: String = name
 
-  override def getPlayerCards:Option[List[CardInterface]] = {
+  override def getPlayerCards: Option[List[CardInterface]] = {
     playerCards
   }
 
@@ -16,6 +16,18 @@ case class Player(name: String, playerCards: Option[List[CardInterface]] = None)
 
   override def getName: String = {
     name
+  }
+
+  override def toXML: String = {
+    <Player>
+      <name>
+        {name}
+      </name>
+      <playerCards>
+        {if (playerCards.isDefined) playerCards.get.map(card => card.toXML)
+      else "None"}
+      </playerCards>
+    </Player>
   }
 }
 
