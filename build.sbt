@@ -1,6 +1,6 @@
 name := "Wizard"
 
-version := "0.11"
+version := "0.12"
 
 scalaVersion := "2.12.8"
 
@@ -11,3 +11,5 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "2.1.1"
 
 libraryDependencies += "com.google.inject" % "guice" % "4.1.0"
 libraryDependencies += "net.codingwell" %% "scala-guice" % "4.1.0"
+
+libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.1.1"
