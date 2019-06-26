@@ -151,8 +151,27 @@ case class RoundManager(numberOfPlayers: Int = 0,
     table
   }
 
-  def toXML: Elem = {
+  def mapToXMLList(map: Map[String, Int]): List[Elem] = {
+    var list = Nil
+    map.foreach(kv => list += "<player>" + kv._1 + "</player><trick>" + kv._2 + "</trick>")
+    list
+  }
 
+  def toXML: Elem = {
+    <RoundManager>
+      <numberOfPlayers>{numberOfPlayers}</numberOfPlayers>
+      <numberOfRounds>{numberOfRounds}</numberOfRounds>
+      <shuffledCardStack>{shuffledCardStack map(card => card.toXML)}</shuffledCardStack>
+      <players>{players map(player => player.toXML)}</players>
+      <currentPlayer>{currentPlayer}</currentPlayer>
+      <currentRound>{currentRound}</currentRound>
+      <predictionPerRound>{for (i <- predictionPerRound.indices) yield <prediction>{predictionPerRound(i)}</prediction>}</predictionPerRound>
+      <stitchesPerRound>{mapToXMLList(stitchesPerRound)}</stitchesPerRound>
+      <playedCards>{playedCards.map(card => card.toXML)}</playedCards>
+      <predictionMode>{predictionMode}</predictionMode>
+      <cleanMap>{mapToXMLList(cleanMap)}</cleanMap>
+      <resultTable>{resultTable.toXML}</resultTable>
+    </RoundManager>
   }
 }
 
