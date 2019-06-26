@@ -2,6 +2,8 @@ package de.htwg.se.wizard.model.modelComponent
 
 import de.htwg.se.wizard.model.{ResultTableBuilderInterface, ResultTableInterface}
 
+import scala.xml.Elem
+
 case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) extends ResultTableInterface {
 
   override def updatePoints(round: Int, player: Int, result: Int): ResultTable = {
@@ -32,6 +34,14 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
 
     returnString += horizontalBar
     returnString
+  }
+
+  override def toXML: Elem = { //TODO: Test this
+    <ResultTable>
+      <roundsToPlay>{roundsToPlay}</roundsToPlay>
+      <numberOfPlayers>{numberOfPlayers}</numberOfPlayers>
+      <points>{points.map(vector => for (i <- vector.indices) yield <point>{vector(i)}</point>)}</points>
+    </ResultTable>
   }
 }
 

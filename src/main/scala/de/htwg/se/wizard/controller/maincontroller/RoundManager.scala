@@ -3,6 +3,7 @@ package de.htwg.se.wizard.controller.maincontroller
 import de.htwg.se.wizard.model._
 
 import scala.collection.mutable.ListBuffer
+import scala.xml.Elem
 
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
@@ -148,6 +149,10 @@ case class RoundManager(numberOfPlayers: Int = 0,
     }
 
     table
+  }
+
+  def toXML: Elem = {
+
   }
 }
 

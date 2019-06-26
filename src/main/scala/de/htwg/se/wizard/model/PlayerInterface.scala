@@ -1,5 +1,7 @@
 package de.htwg.se.wizard.model
 
+import scala.xml.Elem
+
 trait PlayerInterface {
   def getPlayerCards: Option[List[CardInterface]]
 
@@ -7,7 +9,7 @@ trait PlayerInterface {
 
   def getName: String
 
-  def toXML: String
+  def toXML: Elem
 }
 
 trait StaticPlayerInterface {

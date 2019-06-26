@@ -1,5 +1,7 @@
 package de.htwg.se.wizard.model
 
+import scala.xml.Elem
+
 trait StaticCardInterface {
   def initializeCardStack(): List[CardInterface]
 
@@ -18,5 +20,5 @@ trait CardInterface {
   def hasColor: Boolean
   def isJester: Boolean
   def isWizard: Boolean
-  def toXML: String
+  def toXML: Elem
 }

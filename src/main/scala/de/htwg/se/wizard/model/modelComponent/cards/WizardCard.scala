@@ -2,6 +2,8 @@ package de.htwg.se.wizard.model.modelComponent.cards
 
 import de.htwg.se.wizard.model.PlayerInterface
 
+import scala.xml.Elem
+
 case class WizardCard(owner: Option[PlayerInterface] = None) extends Card(owner) {
   def hasColor: Boolean = false
 
@@ -11,12 +13,11 @@ case class WizardCard(owner: Option[PlayerInterface] = None) extends Card(owner)
 
   override def getStringRep: String = "Wizard"
 
-  override def toXML: String = {
-    var ownerXML = "None"
-    if (owner.isDefined) ownerXML = owner.get.toXML
+  override def toXML: Elem = {
     <WizardCard>
       <owner>
-        {ownerXML}
+        {if (owner.isDefined) owner.get.toXML
+      else "None"}
       </owner>
     </WizardCard>
   }

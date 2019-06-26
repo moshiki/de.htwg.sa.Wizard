@@ -2,6 +2,8 @@ package de.htwg.se.wizard.model.modelComponent.cards
 
 import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, StaticCardInterface}
 
+import scala.xml.Elem
+
 
 abstract class Card(owner: Option[PlayerInterface]) extends CardInterface {
   override def hasColor: Boolean
@@ -21,7 +23,7 @@ abstract class Card(owner: Option[PlayerInterface]) extends CardInterface {
 
   override def toString: String = "cards/" + getStringRep
 
-  override def toXML: String
+  override def toXML: Elem
 }
 
 

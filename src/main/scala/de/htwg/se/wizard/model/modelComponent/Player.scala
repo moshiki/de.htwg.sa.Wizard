@@ -2,6 +2,8 @@ package de.htwg.se.wizard.model.modelComponent
 
 import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, StaticPlayerInterface}
 
+import scala.xml.Elem
+
 
 case class Player(name: String, playerCards: Option[List[CardInterface]] = None) extends PlayerInterface {
   override def toString: String = name
@@ -18,7 +20,7 @@ case class Player(name: String, playerCards: Option[List[CardInterface]] = None)
     name
   }
 
-  override def toXML: String = {
+  override def toXML: Elem = {
     <Player>
       <name>
         {name}
