@@ -5,15 +5,34 @@ import de.htwg.se.wizard.controller.ControllerInterface
 import de.htwg.se.wizard.model.{ResultTableBuilderInterface, StaticCardInterface, StaticPlayerInterface}
 import de.htwg.se.wizard.util.UndoManager
 
-class Controller @Inject() (var roundManager: RoundManager,
-                 staticPlayerInterface: StaticPlayerInterface,
-                 staticCardInterface: StaticCardInterface,
-                 resultTableBuilderInterface: ResultTableBuilderInterface) extends ControllerInterface {
+import scala.xml.Elem
+
+class Controller @Inject()(var roundManager: RoundManager,
+                           staticPlayerInterface: StaticPlayerInterface,
+                           staticCardInterface: StaticCardInterface,
+                           resultTableBuilderInterface: ResultTableBuilderInterface) extends ControllerInterface {
   val undoManager = new UndoManager
 
   var state: ControllerState = PreSetupState(this, staticPlayerInterface, staticCardInterface, resultTableBuilderInterface)
 
   def nextState(): Unit = state = state.nextState
+
+  def gameToXML: Elem = {
+    <Game>
+      <state>
+        {controllerStateAsString}
+      </state>
+      {roundManager.toXML}
+    </Game>
+  }
+
+  override def saveGameXML(): Unit = {
+    import java.io._
+    val pw = new PrintWriter(new File("WizardSaveGame.xml" ))
+    pw.write(gameToXML.toString())
+    pw.close()
+    notifyObservers()
+  }
 
   override def eval(input: String): Unit = {
     undoManager.doStep(new EvalStep(this))
@@ -140,7 +159,7 @@ case class InGameState(controller: Controller) extends ControllerState {
       return
     }
 
-    if(controller.roundManager.predictionPerRound.size < controller.roundManager.numberOfPlayers) {
+    if (controller.roundManager.predictionPerRound.size < controller.roundManager.numberOfPlayers) {
       controller.roundManager = controller.roundManager.copy(predictionMode = true)
       controller.roundManager = controller.roundManager.cardDistribution()
     } else {

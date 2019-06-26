@@ -151,9 +151,9 @@ case class RoundManager(numberOfPlayers: Int = 0,
     table
   }
 
-  def mapToXMLList(map: Map[String, Int]): List[Elem] = {
-    var list = Nil
-    map.foreach(kv => list += "<player>" + kv._1 + "</player><trick>" + kv._2 + "</trick>")
+  def mapToXMLList(map: Map[String, Int]): List[String] = {
+    var list = List.empty[String]
+    map.foreach(kv => list :+ "<player>" + kv._1 + "</player><trick>" + kv._2 + "</trick>")
     list
   }
 

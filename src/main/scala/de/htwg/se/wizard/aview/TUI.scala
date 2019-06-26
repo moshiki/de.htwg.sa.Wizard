@@ -11,6 +11,7 @@ class TUI(controller: ControllerInterface) extends Observer{
       case "q" =>
       case "z" => controller.undo()
       case "y" => controller.redo()
+      case "s" => controller.saveGameXML()
       case _ => controller.eval(input)
     }
   }
