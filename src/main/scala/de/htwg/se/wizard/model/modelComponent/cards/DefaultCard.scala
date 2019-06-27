@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.cards
 
 import de.htwg.se.wizard.model.PlayerInterface
+import de.htwg.se.wizard.model.modelComponent.StaticPlayer
 
 import scala.xml.Elem
 
@@ -33,5 +34,19 @@ case class DefaultCard(color: String, number: Int, owner: Option[PlayerInterface
       <owner>{if (owner.isDefined) owner.get.toXML
       else "None"}</owner>
     </DefaultCard>
+  }
+
+  def fromXML(node: scala.xml.Node): DefaultCard = {
+    val color = (node \ "color").text.trim
+
+    val number = (node \ "color").text.trim.toInt
+
+    var owner: Option[PlayerInterface] = None
+    if ((node \ "owner" ).text.trim != "None") {
+      val player = StaticPlayer().fromXML((node \ "owner").head)
+      owner = Some(player)
+    }
+
+    this.copy(color = color, number = number, owner = owner)
   }
 }

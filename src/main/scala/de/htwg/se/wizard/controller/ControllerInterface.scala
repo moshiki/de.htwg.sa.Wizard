@@ -30,4 +30,6 @@ trait ControllerInterface extends Observable{
   def resultArray: Array[Array[Any]]
 
   def saveGameXML(): Unit
+
+  def loadGameXML(): Unit
 }

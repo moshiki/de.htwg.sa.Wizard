@@ -2,7 +2,7 @@ package de.htwg.se.wizard.model.modelComponent.cards
 
 import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, StaticCardInterface}
 
-import scala.xml.Elem
+import scala.xml.{Elem, Node}
 
 
 abstract class Card(owner: Option[PlayerInterface]) extends CardInterface {
@@ -59,5 +59,12 @@ case class StaticCard() extends StaticCardInterface  {
     if(card.isJester) card.asInstanceOf[JesterCard].copy(owner = Some(player))
     else if(card.isWizard) card.asInstanceOf[WizardCard].copy(owner = Some(player))
     else card.asInstanceOf[DefaultCard].copy(owner = Some(player))
+  }
+
+  override def fromXML(node: Node): CardInterface = {
+    node.label match {
+      case "WizardCard" => WizardCard().fromXML(node)
+      case "JesterCard" => JesterCard().fromXML(node)
+    }
   }
 }

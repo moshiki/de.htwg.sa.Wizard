@@ -14,6 +14,8 @@ trait StaticCardInterface {
   def getType(card: CardInterface): Option[String]
 
   def setOwner(card: CardInterface, player: PlayerInterface): CardInterface
+
+  def fromXML(node: scala.xml.Node): CardInterface
 }
 
 trait CardInterface {

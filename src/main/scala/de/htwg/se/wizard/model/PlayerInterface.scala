@@ -13,7 +13,6 @@ trait PlayerInterface {
 }
 
 trait StaticPlayerInterface {
-
   def newPlayer(name: String): PlayerInterface
 
   def checkNumberOfPlayers(number: Int): Boolean
@@ -21,5 +20,7 @@ trait StaticPlayerInterface {
   def playerPrediction(player: PlayerInterface, round: Int, trump: Option[String]): String
 
   def playerTurn(player: PlayerInterface, round: Int): String
+
+  def fromXML(node: scala.xml.Node): PlayerInterface
 }
 

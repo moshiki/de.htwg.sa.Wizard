@@ -1,5 +1,6 @@
 package de.htwg.se.wizard.model.modelComponent
 
+import de.htwg.se.wizard.model.modelComponent.cards.StaticCard
 import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, StaticPlayerInterface}
 
 import scala.xml.Elem
@@ -62,5 +63,19 @@ case class StaticPlayer() extends StaticPlayerInterface {
 
   override def newPlayer(name: String): Player = {
     Player(name)
+  }
+
+  override def fromXML(node: scala.xml.Node): PlayerInterface = {
+    val name = (node \ "name").text.trim
+    val player = Player(name)
+
+    val cards = node \ "playerCards"
+    var playerCards: Option[List[CardInterface]] = None
+    if (cards.text.trim != "None")  {
+      val playerCardsList = cards.map(node => StaticCard().fromXML(node)).toList//.map(card => StaticCard().setOwner(card, player))
+      playerCards = Some(playerCardsList)
+    }
+
+    player.copy(playerCards = playerCards)
   }
 }
