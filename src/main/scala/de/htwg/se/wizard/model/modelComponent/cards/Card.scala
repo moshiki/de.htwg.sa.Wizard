@@ -65,6 +65,7 @@ case class StaticCard() extends StaticCardInterface  {
     node.label match {
       case "WizardCard" => WizardCard().fromXML(node)
       case "JesterCard" => JesterCard().fromXML(node)
+      case "DefaultCard" => DefaultCard("blue", 1).fromXML(node)
     }
   }
 }

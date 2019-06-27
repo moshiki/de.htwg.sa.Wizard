@@ -69,7 +69,9 @@ case class StaticPlayer() extends StaticPlayerInterface {
     val name = (node \ "name").text.trim
     val player = Player(name)
 
-    val cards = node \ "playerCards"
+    val cards = (node \ "playerCards").head.child.filter(node => node.text.trim != "")
+    println(cards)
+
     var playerCards: Option[List[CardInterface]] = None
     if (cards.text.trim != "None")  {
       val playerCardsList = cards.map(node => StaticCard().fromXML(node)).toList//.map(card => StaticCard().setOwner(card, player))
