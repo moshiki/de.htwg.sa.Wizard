@@ -70,7 +70,6 @@ case class StaticPlayer() extends StaticPlayerInterface {
     val player = Player(name)
 
     val cards = (node \ "playerCards").head.child.filter(node => node.text.trim != "")
-    println(cards)
 
     var playerCards: Option[List[CardInterface]] = None
     if (cards.text.trim != "None")  {

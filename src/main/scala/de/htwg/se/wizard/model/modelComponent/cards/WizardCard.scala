@@ -26,7 +26,7 @@ case class WizardCard(owner: Option[PlayerInterface] = None) extends Card(owner)
   def fromXML(node: scala.xml.Node): WizardCard = {
     var owner: Option[PlayerInterface] = None
     if ((node \ "owner" ).text.trim != "None") {
-      val player = StaticPlayer().fromXML((node \ "owner").head)
+      val player = StaticPlayer().fromXML((node \ "owner").head.child.filter(node => node.text.trim != "").head)
       owner = Some(player)
     }
 
