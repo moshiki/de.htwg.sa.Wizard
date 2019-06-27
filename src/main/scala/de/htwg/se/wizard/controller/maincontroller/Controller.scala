@@ -37,14 +37,16 @@ class Controller @Inject()(var roundManager: RoundManager,
   override def loadGameXML(): Unit = {
     val saveState = scala.xml.XML.loadFile("WizardSaveGame.xml")
     val controllerStateString = (saveState \ "state").text.trim
-    this.state = controllerStateString match {
+    state = controllerStateString match {
       case "PreSetupState" => PreSetupState(this, staticPlayerInterface, staticCardInterface, resultTableBuilderInterface)
       case "SetupState" => SetupState(this)
       case "InGameState" => InGameState(this)
       case "GameOverState" => GameOverState(this)
     }
 
+    roundManager = RoundManager.fromXML((saveState \ "RoundManager").head, roundManager)
 
+    notifyObservers()
   }
 
   override def eval(input: String): Unit = {
