@@ -1,6 +1,6 @@
 package de.htwg.se.wizard
 
-import de.htwg.se.wizard.model.modelComponent.cards.{JesterCard, StaticCard, WizardCard}
+import de.htwg.se.wizard.model.modelComponent.cards.{DefaultCard, JesterCard, StaticCard, WizardCard}
 import de.htwg.se.wizard.model.modelComponent.{Player, StaticPlayer}
 
 object xmltest {
@@ -14,10 +14,12 @@ object xmltest {
     val newPlayer = StaticPlayer().fromXML(playerXML)
     println(newPlayer)*/
 
-    val card = WizardCard()//owner = Some(Player("P1")))
+    val card = DefaultCard("red", 5, owner = Some(Player("P1")))
     val xml = card.toXML
     //println(xml)
     val card2 = StaticCard().fromXML(xml)
     println(card2)
+
+
   }
 }

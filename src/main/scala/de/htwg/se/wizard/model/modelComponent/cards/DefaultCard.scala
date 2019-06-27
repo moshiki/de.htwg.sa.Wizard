@@ -39,11 +39,11 @@ case class DefaultCard(color: String, number: Int, owner: Option[PlayerInterface
   def fromXML(node: scala.xml.Node): DefaultCard = {
     val color = (node \ "color").text.trim
 
-    val number = (node \ "color").text.trim.toInt
+    val number = (node \ "number").text.trim.toInt
 
     var owner: Option[PlayerInterface] = None
     if ((node \ "owner" ).text.trim != "None") {
-      val player = StaticPlayer().fromXML((node \ "owner").head)
+      val player = StaticPlayer().fromXML((node \ "owner").head.child.filter(node => node.text.trim != "").head)
       owner = Some(player)
     }
 

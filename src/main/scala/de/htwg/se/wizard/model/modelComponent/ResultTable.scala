@@ -2,7 +2,7 @@ package de.htwg.se.wizard.model.modelComponent
 
 import de.htwg.se.wizard.model.{ResultTableBuilderInterface, ResultTableInterface}
 
-import scala.xml.Elem
+import scala.xml.{Elem, Node}
 
 case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) extends ResultTableInterface {
 
@@ -50,4 +50,6 @@ case class ResultTableBuilder() extends ResultTableBuilderInterface {
     val vector = Vector.fill(roundsToPlay, numberOfPlayers)(0)
     ResultTable(roundsToPlay, numberOfPlayers, vector)
   }
+
+  override def fromXML(node: Node): ResultTableInterface = ???
 }
