@@ -1,53 +1,23 @@
 package de.htwg.se.wizard.controller.maincontroller
 
-import com.google.inject.Inject
+import com.google.inject.{Guice, Inject}
+import de.htwg.se.wizard.WizardModule
 import de.htwg.se.wizard.controller.ControllerInterface
+import de.htwg.se.wizard.controller.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.{ResultTableBuilderInterface, StaticCardInterface, StaticPlayerInterface}
 import de.htwg.se.wizard.util.UndoManager
-
-import scala.xml.Elem
 
 class Controller @Inject()(var roundManager: RoundManager,
                            staticPlayerInterface: StaticPlayerInterface,
                            staticCardInterface: StaticCardInterface,
                            resultTableBuilderInterface: ResultTableBuilderInterface) extends ControllerInterface {
+  val fileIOInterface: FileIOInterface = Guice.createInjector(new WizardModule).getInstance(classOf[FileIOInterface])
+
   val undoManager = new UndoManager
 
   var state: ControllerState = PreSetupState(this, staticPlayerInterface, staticCardInterface, resultTableBuilderInterface)
 
   def nextState(): Unit = state = state.nextState
-
-  def gameToXML: Elem = {
-    <Game>
-      <state>
-        {controllerStateAsString}
-      </state>
-      {roundManager.toXML}
-    </Game>
-  }
-
-  override def saveGameXML(): Unit = {
-    import java.io._
-    val pw = new PrintWriter(new File("WizardSaveGame.xml" ))
-    pw.write(gameToXML.toString())
-    pw.close()
-    notifyObservers()
-  }
-
-  override def loadGameXML(): Unit = {
-    val saveState = scala.xml.XML.loadFile("WizardSaveGame.xml")
-    val controllerStateString = (saveState \ "state").text.trim
-    state = controllerStateString match {
-      case "PreSetupState" => PreSetupState(this, staticPlayerInterface, staticCardInterface, resultTableBuilderInterface)
-      case "SetupState" => SetupState(this)
-      case "InGameState" => InGameState(this)
-      case "GameOverState" => GameOverState(this)
-    }
-
-    roundManager = RoundManager.fromXML((saveState \ "RoundManager").head, roundManager)
-
-    notifyObservers()
-  }
 
   override def eval(input: String): Unit = {
     undoManager.doStep(new EvalStep(this))
@@ -97,6 +67,18 @@ class Controller @Inject()(var roundManager: RoundManager,
   override def playersAsStringList: List[String] = roundManager.players.map(player => player.toString)
 
   override def resultArray: Array[Array[Any]] = roundManager.resultTable.toAnyArray
+
+  override def save(): Unit = {
+    fileIOInterface.save(this)
+    notifyObservers()
+  }
+
+  override def load(): Unit = {
+    val ret = fileIOInterface.load(this, staticPlayerInterface, staticCardInterface, resultTableBuilderInterface)
+    state = ret._1
+    roundManager = ret._2
+    notifyObservers()
+  }
 }
 
 object Controller {

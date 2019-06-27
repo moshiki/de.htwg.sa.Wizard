@@ -6,6 +6,8 @@ trait ControllerInterface extends Observable{
   def undo(): Unit
   def redo(): Unit
   def eval(input: String): Unit
+  def save(): Unit
+  def load(): Unit
 
   def getCurrentStateAsString: String
   def controllerStateAsString: String
@@ -28,8 +30,4 @@ trait ControllerInterface extends Observable{
   def playersAsStringList: List[String]
 
   def resultArray: Array[Array[Any]]
-
-  def saveGameXML(): Unit
-
-  def loadGameXML(): Unit
 }
