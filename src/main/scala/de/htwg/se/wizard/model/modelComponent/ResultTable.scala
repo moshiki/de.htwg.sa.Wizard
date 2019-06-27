@@ -43,13 +43,6 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
       <points>{points.map(vector => for (i <- vector.indices) yield <point>{vector(i)}</point>)}</points>
     </ResultTable>
   }
-}
-
-case class ResultTableBuilder() extends ResultTableBuilderInterface {
-  override def initializeTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6): ResultTable = {
-    val vector = Vector.fill(roundsToPlay, numberOfPlayers)(0)
-    ResultTable(roundsToPlay, numberOfPlayers, vector)
-  }
 
   override def fromXML(node: Node): ResultTableInterface = {
     val roundsToPlay = (node \ "roundsToPlay").text.trim.toInt
@@ -58,7 +51,7 @@ case class ResultTableBuilder() extends ResultTableBuilderInterface {
     val points = (node \ "points").head.child
     val pointList = points.map(node => (node \\ "point").text.toInt)
 
-    val table = initializeTable(roundsToPlay, numberOfPlayers)
+    val table = ResultTableBuilder().initializeTable(roundsToPlay, numberOfPlayers)
     var vector = table.points
 
     for(i <- vector.indices) {
@@ -68,5 +61,12 @@ case class ResultTableBuilder() extends ResultTableBuilderInterface {
     }
 
     table.copy(points = vector)
+  }
+}
+
+case class ResultTableBuilder() extends ResultTableBuilderInterface {
+  override def initializeTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6): ResultTable = {
+    val vector = Vector.fill(roundsToPlay, numberOfPlayers)(0)
+    ResultTable(roundsToPlay, numberOfPlayers, vector)
   }
 }

@@ -151,9 +151,9 @@ case class RoundManager(numberOfPlayers: Int = 0,
     table
   }
 
-  def mapToXMLList(map: Map[String, Int]): List[String] = {
-    var list = List.empty[String]
-    map.foreach(kv => list = "<player>" + kv._1 + "</player><trick>" + kv._2 + "</trick>" :: list)
+  def mapToXMLList(map: Map[String, Int]): List[Elem] = {
+    var list = List.empty[Elem]
+    map.foreach(kv => list = <entry><player>{kv._1}</player><trick>{kv._2}</trick></entry> :: list)
     list
   }
 
@@ -185,6 +185,53 @@ object RoundManager {
     if(playerPrediction < stitches) for(_ <- playerPrediction until stitches) {points -= 10}
     if(playerPrediction > stitches) for (_ <- stitches until playerPrediction) {points -= 10}
     points
+  }
+
+  def fromXML(node: scala.xml.Node, roundManager: RoundManager): RoundManager = {
+    val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
+    val numberOfRounds = (node \ "numberOfRounds").text.toInt
+
+    val shuffledCardStackNode = (node \ "shuffledCardStack").head.child
+    val shuffledCardStack = shuffledCardStackNode.map(node => roundManager.staticCardInterface.fromXML(node))
+
+    val playersNode = (node \ "players").head.child
+    val players = playersNode.map(node => roundManager.staticPlayerInterface.fromXML(node))
+
+    val currentPlayer = (node \ "currentPlayer").text.toInt
+    val currentRound = (node \ "currentRound").text.toInt
+
+    val predictionPerRoundNode = (node \ "predictionPerRound").head.child
+    val predictionPerRound = predictionPerRoundNode.map(node => (node \\ "prediction").text.toInt)
+
+    val stitchesPerRoundNode = (node \ "stitchesPerRound") \ "entry"
+    var stitchesPerRound = Map.empty[String, Int]
+    stitchesPerRoundNode.reverse.foreach(node => stitchesPerRound = stitchesPerRound + ((node \ "player").text  -> (node \ "trick").text.toInt))
+
+    val playedCardsNode = (node \ "playedCards").head.child
+    val playedCards = playedCardsNode.map(node => roundManager.staticCardInterface.fromXML(node))
+
+    val predictionMode = (node \ "predictionMode").text.toBoolean
+
+    val cleanMapNode = (node \ "cleanMap") \ "entry"
+    var cleanMap = Map.empty[String, Int]
+    cleanMapNode.reverse.foreach(node => cleanMap = cleanMap + ((node \ "player").text  -> (node \ "trick").text.toInt))
+
+    val resultTable = roundManager.resultTable.fromXML((node \ "resultTable").head.child.head)
+
+    roundManager.copy(
+      numberOfPlayers = numberOfPlayers,
+      numberOfRounds = numberOfRounds,
+      shuffledCardStack = shuffledCardStack.toList,
+      players = players.toList,
+      currentPlayer = currentPlayer,
+      currentRound = currentRound,
+      predictionPerRound = predictionPerRound.toList,
+      stitchesPerRound = stitchesPerRound,
+      playedCards = playedCards.toList,
+      predictionMode = predictionMode,
+      cleanMap = cleanMap,
+      resultTable = resultTable
+    )
   }
 
   case class Builder() {
