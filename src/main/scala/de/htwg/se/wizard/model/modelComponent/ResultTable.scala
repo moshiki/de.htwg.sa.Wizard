@@ -36,7 +36,7 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
     returnString
   }
 
-  override def toXML: Elem = { //TODO: Test this
+  override def toXML: Elem = {
     <ResultTable>
       <roundsToPlay>{roundsToPlay}</roundsToPlay>
       <numberOfPlayers>{numberOfPlayers}</numberOfPlayers>
@@ -51,5 +51,22 @@ case class ResultTableBuilder() extends ResultTableBuilderInterface {
     ResultTable(roundsToPlay, numberOfPlayers, vector)
   }
 
-  override def fromXML(node: Node): ResultTableInterface = ???
+  override def fromXML(node: Node): ResultTableInterface = {
+    val roundsToPlay = (node \ "roundsToPlay").text.trim.toInt
+    val numberOfPlayers = (node \ "numberOfPlayers").text.trim.toInt
+
+    val points = (node \ "points").head.child
+    val pointList = points.map(node => (node \\ "point").text.toInt)
+
+    val table = initializeTable(roundsToPlay, numberOfPlayers)
+    var vector = table.points
+
+    for(i <- vector.indices) {
+      for (j <- vector(i).indices) {
+        vector = vector.updated(i, vector(i).updated(j,pointList(i * j + j)))
+      }
+    }
+
+    table.copy(points = vector)
+  }
 }
