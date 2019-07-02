@@ -1,27 +1,26 @@
 package de.htwg.se.wizard.model.modelComponent
 
-import de.htwg.se.wizard.model.modelComponent.cards.StaticCard
-import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, StaticPlayerInterface}
+import de.htwg.se.wizard.model.modelComponent.cards.Card
 
 import scala.xml.Elem
 
 
-case class Player(name: String, playerCards: Option[List[CardInterface]] = None) extends PlayerInterface {
+case class Player(name: String, playerCards: Option[List[Card]] = None) {
   override def toString: String = name
 
-  override def getPlayerCards: Option[List[CardInterface]] = {
+  def getPlayerCards: Option[List[Card]] = {
     playerCards
   }
 
-  override def assignCards(cards: Option[List[CardInterface]]): PlayerInterface = {
+   def assignCards(cards: Option[List[Card]]): Player = {
     this.copy(playerCards = cards)
   }
 
-  override def getName: String = {
+   def getName: String = {
     name
   }
 
-  override def toXML: Elem = {
+   def toXML: Elem = {
     <Player>
       <name>
         {name}
@@ -34,14 +33,14 @@ case class Player(name: String, playerCards: Option[List[CardInterface]] = None)
   }
 }
 
-case class StaticPlayer() extends StaticPlayerInterface {
-  override def checkNumberOfPlayers(number: Int): Boolean = {
+object Player {
+  def checkNumberOfPlayers(number: Int): Boolean = {
     if (number < 3 || number > 5) return false
     true
   }
 
 
-  override def playerTurn(player: PlayerInterface, round: Int): String = {
+  def playerTurn(player: Player, round: Int): String = {
 
     val cards = player.getPlayerCards.get
 
@@ -52,7 +51,7 @@ case class StaticPlayer() extends StaticPlayerInterface {
     firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
   }
 
-  override def playerPrediction(player: PlayerInterface, round: Int, trump: Option[String]): String = {
+  def playerPrediction(player: Player, round: Int, trump: Option[String]): String = {
     val firstString = "Round " + round + " - Player: " + player.getName
     val secondString = "Trump Color: " + trump.getOrElse("None")
     val thirdString = "Your Cards: " + "{ " + player.getPlayerCards.get.mkString(", ") + " }"
@@ -61,19 +60,19 @@ case class StaticPlayer() extends StaticPlayerInterface {
 
   }
 
-  override def newPlayer(name: String): Player = {
+  def newPlayer(name: String): Player = {
     Player(name)
   }
 
-  override def fromXML(node: scala.xml.Node): PlayerInterface = {
+  def fromXML(node: scala.xml.Node): Player = {
     val name = (node \ "name").text.trim
     val player = Player(name)
 
     val cards = (node \ "playerCards").head.child.filter(node => node.text.trim != "")
 
-    var playerCards: Option[List[CardInterface]] = None
+    var playerCards: Option[List[Card]] = None
     if (cards.text.trim != "None")  {
-      val playerCardsList = cards.map(node => StaticCard().fromXML(node)).toList//.map(card => StaticCard().setOwner(card, player))
+      val playerCardsList = cards.map(node => Card.fromXML(node)).toList//.map(card => StaticCard().setOwner(card, player))
       playerCards = Some(playerCardsList)
     }
 

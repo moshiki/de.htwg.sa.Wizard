@@ -3,19 +3,16 @@ package de.htwg.se.wizard.controller.maincontroller
 import com.google.inject.{Guice, Inject}
 import de.htwg.se.wizard.WizardModule
 import de.htwg.se.wizard.controller.ControllerInterface
-import de.htwg.se.wizard.controller.fileIOComponent.FileIOInterface
-import de.htwg.se.wizard.model.{ResultTableBuilderInterface, StaticCardInterface, StaticPlayerInterface}
+import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
+import de.htwg.se.wizard.model.modelComponent.{RoundManager, RoundStrategy}
 import de.htwg.se.wizard.util.UndoManager
 
-class Controller @Inject()(var roundManager: RoundManager,
-                           staticPlayerInterface: StaticPlayerInterface,
-                           staticCardInterface: StaticCardInterface,
-                           resultTableBuilderInterface: ResultTableBuilderInterface) extends ControllerInterface {
+class Controller @Inject()(var roundManager: RoundManager) extends ControllerInterface {
   val fileIOInterface: FileIOInterface = Guice.createInjector(new WizardModule).getInstance(classOf[FileIOInterface])
 
   val undoManager = new UndoManager
 
-  var state: ControllerState = PreSetupState(this, staticPlayerInterface, staticCardInterface, resultTableBuilderInterface)
+  var state: ControllerState = PreSetupState(this)
 
   def nextState(): Unit = state = state.nextState
 
@@ -69,13 +66,18 @@ class Controller @Inject()(var roundManager: RoundManager,
   override def resultArray: Array[Array[Any]] = roundManager.resultTable.toAnyArray
 
   override def save(): Unit = {
-    fileIOInterface.save(this)
+    fileIOInterface.save(controllerStateAsString, roundManager)
     notifyObservers()
   }
 
   override def load(): Unit = {
-    val ret = fileIOInterface.load(this, staticPlayerInterface, staticCardInterface, resultTableBuilderInterface)
-    state = ret._1
+    val ret = fileIOInterface.load(roundManager)
+    state = ret._1 match {
+      case "PreSetupState" => PreSetupState(this)
+      case "SetupState" => SetupState(this)
+      case "InGameState" => InGameState(this)
+      case "GameOverState" => GameOverState(this)
+    }
     roundManager = ret._2
     notifyObservers()
   }
@@ -101,13 +103,12 @@ trait ControllerState {
 }
 
 
-case class PreSetupState(controller: Controller, playerInterface: StaticPlayerInterface,
-                         cardInterface: StaticCardInterface, staticResultTableInterface: ResultTableBuilderInterface) extends ControllerState {
+case class PreSetupState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     val number = Controller.toInt(input)
     if (number.isEmpty) return
     if (!controller.roundManager.checkNumberOfPlayers(number.get)) return
-    controller.roundManager = RoundStrategy.execute(number.get, playerInterface, cardInterface, staticResultTableInterface)
+    controller.roundManager = RoundStrategy.execute(number.get)
     controller.nextState()
 
     controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)

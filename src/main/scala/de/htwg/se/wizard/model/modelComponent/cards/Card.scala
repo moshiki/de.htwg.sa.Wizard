@@ -1,16 +1,16 @@
 package de.htwg.se.wizard.model.modelComponent.cards
 
-import de.htwg.se.wizard.model.{CardInterface, PlayerInterface, StaticCardInterface}
+import de.htwg.se.wizard.model.modelComponent.Player
 
 import scala.xml.{Elem, Node}
 
 
-abstract class Card(owner: Option[PlayerInterface]) extends CardInterface {
-  override def hasColor: Boolean
+abstract class Card(owner: Option[Player]) {
+  def hasColor: Boolean
 
-  override def isWizard: Boolean
+  def isWizard: Boolean
 
-  override def isJester: Boolean
+  def isJester: Boolean
 
   def hasOwner: Boolean = owner.isDefined
 
@@ -23,12 +23,12 @@ abstract class Card(owner: Option[PlayerInterface]) extends CardInterface {
 
   override def toString: String = "cards/" + getStringRep
 
-  override def toXML: Elem
+  def toXML: Elem
 }
 
 
 
-case class StaticCard() extends StaticCardInterface  {
+object Card {
   def apply(card: String):Card = {
     card match {
       case "wizard" => WizardCard()
@@ -36,32 +36,13 @@ case class StaticCard() extends StaticCardInterface  {
     }
   }
 
-  override def shuffleCards(cardStack: List[CardInterface]): List[CardInterface] = {
-    CardStack.shuffleCards(cardStack)
-  }
-
-  override def initializeCardStack(): List[CardInterface] = {
-    CardStack.initialize
-  }
-
-  override def getPlayerOfHighestCard(cardList: List[CardInterface], color: Option[String]): PlayerInterface = {
-    CardStack.getPlayerOfHighestCard(cardList, color)
-  }
-
-  override def getType(card: CardInterface):Option[String] = {
-    card match {
-      case card: DefaultCard => Some(card.color)
-      case _ => None
-    }
-  }
-
-  override def setOwner(card:CardInterface, player: PlayerInterface):Card = {
+  def setOwner(card:Card, player: Player): Card = {
     if(card.isJester) card.asInstanceOf[JesterCard].copy(owner = Some(player))
     else if(card.isWizard) card.asInstanceOf[WizardCard].copy(owner = Some(player))
     else card.asInstanceOf[DefaultCard].copy(owner = Some(player))
   }
 
-  override def fromXML(node: Node): CardInterface = {
+  def fromXML(node: Node): Card = {
     node.label match {
       case "WizardCard" => WizardCard().fromXML(node)
       case "JesterCard" => JesterCard().fromXML(node)

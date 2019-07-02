@@ -1,11 +1,11 @@
 package de.htwg.se.wizard.model.modelComponent.cards
 
-import de.htwg.se.wizard.model.PlayerInterface
-import de.htwg.se.wizard.model.modelComponent.StaticPlayer
+
+import de.htwg.se.wizard.model.modelComponent.Player
 
 import scala.xml.Elem
 
-case class JesterCard(owner: Option[PlayerInterface] = None) extends Card(owner) {
+case class JesterCard(owner: Option[Player] = None) extends Card(owner) {
   def hasColor: Boolean = false
 
   def isWizard: Boolean = false
@@ -24,9 +24,9 @@ case class JesterCard(owner: Option[PlayerInterface] = None) extends Card(owner)
   }
 
   def fromXML(node: scala.xml.Node): JesterCard = {
-    var owner: Option[PlayerInterface] = None
+    var owner: Option[Player] = None
     if ((node \ "owner" ).text.trim != "None") {
-      val player = StaticPlayer().fromXML((node \ "owner").head.child.filter(node => node.text.trim != "").head)
+      val player = Player.fromXML((node \ "owner").head.child.filter(node => node.text.trim != "").head)
       owner = Some(player)
     }
 

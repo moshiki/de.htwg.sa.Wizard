@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.model.modelComponent.cards.StaticCard
-import de.htwg.se.wizard.model.modelComponent.{ResultTableBuilder, StaticPlayer}
+import de.htwg.se.wizard.model.modelComponent.{ResultTableBuilder, RoundStrategy, StaticPlayer}
 import org.scalatest.{Matchers, WordSpec}
 
 class RoundStrategySpec extends WordSpec with Matchers{

@@ -1,11 +1,11 @@
 package de.htwg.se.wizard.model.modelComponent.cards
 
-import de.htwg.se.wizard.model.PlayerInterface
-import de.htwg.se.wizard.model.modelComponent.StaticPlayer
+
+import de.htwg.se.wizard.model.modelComponent.Player
 
 import scala.xml.Elem
 
-case class DefaultCard(color: String, number: Int, owner: Option[PlayerInterface] = None)
+case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
   extends Card(owner) with Ordered[DefaultCard] {
   require(number >= 1 && number <= 13)
   require(color == "blue" || color == "red" || color == "yellow" || color == "green")
@@ -41,9 +41,9 @@ case class DefaultCard(color: String, number: Int, owner: Option[PlayerInterface
 
     val number = (node \ "number").text.trim.toInt
 
-    var owner: Option[PlayerInterface] = None
+    var owner: Option[Player] = None
     if ((node \ "owner" ).text.trim != "None") {
-      val player = StaticPlayer().fromXML((node \ "owner").head.child.filter(node => node.text.trim != "").head)
+      val player = Player.fromXML((node \ "owner").head.child.filter(node => node.text.trim != "").head)
       owner = Some(player)
     }
 

@@ -1,4 +1,4 @@
-package de.htwg.se.wizard.controller.fileIOComponent.FileIOXML
+package de.htwg.se.wizard.model.fileIOComponent.FileIOXML
 
 import de.htwg.se.wizard.controller.maincontroller.{Controller, GameOverState, InGameState, PreSetupState, RoundManager, SetupState}
 import de.htwg.se.wizard.model.modelComponent.cards.StaticCard
