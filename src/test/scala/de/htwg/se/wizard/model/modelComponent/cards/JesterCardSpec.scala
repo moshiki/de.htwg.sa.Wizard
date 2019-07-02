@@ -20,6 +20,11 @@ class JesterCardSpec extends WordSpec with Matchers {
         jesterCard.hasOwner should be(false)
         jesterCard.ownerName should be("unknown")
       }
+      "is able to store itself in an xml representation and restore successfully" in {
+        val xml = jesterCard.toXML
+        val newCard = jesterCard.fromXML(xml)
+        newCard should be(jesterCard)
+      }
     }
 
     "is a JesterCard with owner 'TestPlayer'" should {
@@ -29,6 +34,11 @@ class JesterCardSpec extends WordSpec with Matchers {
       }
       "has owner 'TestPlayer'" in {
         jesterCardWithPlayer.ownerName should be("TestPlayer")
+      }
+      "is able to store itself in an xml representation and restore successfully" in {
+        val xml = jesterCardWithPlayer.toXML
+        val newCard = jesterCardWithPlayer.fromXML(xml)
+        newCard should be(jesterCardWithPlayer)
       }
     }
 

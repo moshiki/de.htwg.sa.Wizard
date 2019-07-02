@@ -28,6 +28,13 @@ class TUISpec extends WordSpec with Matchers {
       tui.processInput("y")
     }
 
+    "save the current game on input 's' and load with 'l'" in {
+      val roundManager = controller.roundManager
+      tui.processInput("s")
+      tui.processInput("l")
+      controller.roundManager should be(roundManager)
+    }
+
     "should let the controller evaluate the input" in {
       tui.processInput("3")
       controller.getCurrentStateAsString should be("Player 1, please enter your name:")

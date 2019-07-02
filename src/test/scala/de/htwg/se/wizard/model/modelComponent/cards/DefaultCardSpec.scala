@@ -24,6 +24,11 @@ class DefaultCardSpec extends WordSpec with Matchers {
         defaultCard.hasOwner should be(false)
         defaultCard.ownerName should be("unknown")
       }
+      "is able to store itself in an xml representation and restore successfully" in {
+        val xml = defaultCard.toXML
+        val newCard = defaultCard.fromXML(xml)
+        newCard should be(defaultCard)
+      }
     }
 
     "is a blue DefaultCard of value 2 with owner 'TestPlayer" should {
@@ -34,6 +39,11 @@ class DefaultCardSpec extends WordSpec with Matchers {
       "has owner 'TestPayer" in {
         defCardWithOwner.ownerName should be("TestPlayer")
       }
+      "is able to store itself in an xml representation and restore successfully" in {
+        val xml = defCardWithOwner.toXML
+        val newCard = defCardWithOwner.fromXML(xml)
+        newCard should be(defCardWithOwner)
+      }
     }
 
     "should set Owner correctly" in {
@@ -41,7 +51,6 @@ class DefaultCardSpec extends WordSpec with Matchers {
       val testPlayer = Player("TestPlayer")
       val cardWithOwner = StaticCard().setOwner(defCardWithoutOwner, testPlayer)
       cardWithOwner.ownerName should be("TestPlayer")
-
     }
 
     "is not a valid DefaultCard" should {

@@ -17,6 +17,12 @@ class RoundManagerSpec extends WordSpec with Matchers {
         controller.roundManager.checkNumberOfPlayers(3)
         controller.roundManager.numberOfPlayers should be(3)
       }
+
+      "is able to store itself in an xml representation and restore successfully" in {
+        val xml = roundManager.toXML
+        val roundManager2 = RoundManager.fromXML(xml, roundManager)
+        roundManager2 should be(roundManager)
+      }
     }
   }
   "controller is in setup mode" should {

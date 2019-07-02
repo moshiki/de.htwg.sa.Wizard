@@ -116,6 +116,14 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.roundManager = controller.roundManager.copy(players = playerList, currentPlayer = 0)
       controller.playersAsStringList should be(List("P1", "P2"))
     }
+
+    "save and restore the whole game" in {
+      val roundManager = RoundManager.Builder().build(StaticPlayer(), StaticCard(), ResultTableBuilder())
+      val controller = new Controller(roundManager, StaticPlayer(), StaticCard(), ResultTableBuilder())
+      controller.save()
+      controller.load()
+      controller.roundManager should be(roundManager)
+    }
   }
 
   "A preSetupState" when {

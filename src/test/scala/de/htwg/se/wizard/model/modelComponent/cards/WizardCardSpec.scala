@@ -20,6 +20,12 @@ class WizardCardSpec extends WordSpec with Matchers {
         wizardCard.hasOwner should be(false)
         wizardCard.ownerName should be("unknown")
       }
+
+      "is able to store itself in an xml representation and restore successfully" in {
+        val xml = wizardCard.toXML
+        val newCard = wizardCard.fromXML(xml)
+        newCard should be(wizardCard)
+      }
     }
 
     "is a WizardCard with owner 'TestPlayer'" should {
@@ -30,12 +36,17 @@ class WizardCardSpec extends WordSpec with Matchers {
       "has owner 'TestPlayer'" in {
         wizardCardWithOwner.ownerName should be("TestPlayer")
       }
+      "is able to store itself in an xml representation and restore successfully" in {
+        val xml = wizardCardWithOwner.toXML
+        val newCard = wizardCardWithOwner.fromXML(xml)
+        newCard should be(wizardCardWithOwner)
+      }
     }
 
     "should set Owner correctly" in {
       val wizardCardWithoutOwner = WizardCard()
       val testPlayer = Player("TestPlayer")
-      val cardWithOwner = StaticCard().setOwner(wizardCardWithoutOwner, testPlayer)
+      val cardWithOwner = StaticCard() .setOwner(wizardCardWithoutOwner, testPlayer)
       cardWithOwner.ownerName should be("TestPlayer")
     }
 
