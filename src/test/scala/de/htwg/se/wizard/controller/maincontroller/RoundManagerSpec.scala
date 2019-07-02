@@ -1,17 +1,15 @@
 package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.model.modelComponent.cards._
-import de.htwg.se.wizard.model.modelComponent.{Player, ResultTableBuilder, StaticPlayer}
+import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable, RoundManager}
 import org.scalatest.{Matchers, WordSpec}
 
 class RoundManagerSpec extends WordSpec with Matchers {
   "A Round Manager" when {
     "new" should {
-      val cardInterface = StaticCard()
-      val playerInterface = StaticPlayer()
-      val resultTable = ResultTableBuilder().initializeTable(20, 3)
-      val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
-      val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
+      val resultTable = ResultTable.initializeTable(20, 3)
+      val roundManager = RoundManager(resultTable = resultTable)
+      val controller = new Controller(roundManager)
       "set the number of players correctly" in {
         controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3)
         controller.roundManager.checkNumberOfPlayers(3)
@@ -27,11 +25,9 @@ class RoundManagerSpec extends WordSpec with Matchers {
     }
   }
   "controller is in setup mode" should {
-    val cardInterface = StaticCard()
-    val playerInterface = StaticPlayer()
-    val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
-    val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
+    val resultTable = ResultTable.initializeTable(20, 3)
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
     "ask for next player's name correctly" in {
       controller.roundManager = controller.roundManager.copy(currentPlayer = 1)
       controller.roundManager.getSetupStrings should be("Player 1, please enter your name:")
@@ -67,11 +63,9 @@ class RoundManagerSpec extends WordSpec with Matchers {
   }
 
   "controller is in game mode" should {
-    val cardInterface = StaticCard()
-    val playerInterface = StaticPlayer()
-    val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
-    val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
+    val resultTable = ResultTable.initializeTable(20, 3)
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
 
     "should ask player for his prediction if Prediction list is empty" in {
       controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,
@@ -135,9 +129,9 @@ class RoundManagerSpec extends WordSpec with Matchers {
       val player1 = Player("name1")
       val player2 = Player("name2")
       val player3 = Player("name3")
-      val card1 = StaticCard().setOwner(JesterCard(), player1)
-      val card2 = StaticCard().setOwner(WizardCard(), player2)
-      val card3 = StaticCard().setOwner(DefaultCard("blue", 3), player3)
+      val card1 = Card.setOwner(JesterCard(), player1)
+      val card2 = Card.setOwner(WizardCard(), player2)
+      val card3 = Card.setOwner(DefaultCard("blue", 3), player3)
       controller.roundManager = controller.roundManager.copy(playedCards = List[Card](card1, card2, card3),
         stitchesPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
       controller.roundManager = controller.roundManager.stitchInThisCycle

@@ -1,17 +1,16 @@
 package de.htwg.se.wizard.controller.maincontroller
 
+import de.htwg.se.wizard.model.fileIOComponent.FileIOXML.FileIO
 import de.htwg.se.wizard.model.modelComponent.cards._
-import de.htwg.se.wizard.model.modelComponent.{Player, ResultTableBuilder, StaticPlayer}
+import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable, RoundManager}
 import de.htwg.se.wizard.util.Observer
 import org.scalatest.{Matchers, WordSpec}
 
 class ControllerSpec extends WordSpec with Matchers {
   "A Controller" when {
-    val cardInterface = StaticCard()
-    val playerInterface = StaticPlayer()
-    val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
-    val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
+    val resultTable = ResultTable.initializeTable(20, 3)
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
     val observer = new Observer { // wontfix
       var updated: Boolean = false
 
@@ -26,12 +25,12 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "gets the correct string depending of the current state" in {
-      controller.state = PreSetupState(controller, playerInterface, cardInterface, ResultTableBuilder())
+      controller.state = PreSetupState(controller)
       controller.getCurrentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
     }
 
     "switches to the next state correctly" in {
-      controller.state = PreSetupState(controller, playerInterface, cardInterface, ResultTableBuilder())
+      controller.state = PreSetupState(controller)
       controller.nextState()
       controller.state should be(SetupState(controller))
     }
@@ -50,7 +49,7 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "returns the current controller state as string representation" in {
-      controller.state = PreSetupState(controller, playerInterface, cardInterface, ResultTableBuilder())
+      controller.state = PreSetupState(controller)
       controller.controllerStateAsString should be("PreSetupState")
 
       controller.state = SetupState(controller)
@@ -118,21 +117,46 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "save and restore the whole game" in {
-      val roundManager = RoundManager.Builder().build(StaticPlayer(), StaticCard(), ResultTableBuilder())
-      val controller = new Controller(roundManager, StaticPlayer(), StaticCard(), ResultTableBuilder())
+      val roundManager = RoundManager.Builder().build()
+      val controller = new Controller(roundManager)
       controller.save()
       controller.load()
       controller.roundManager should be(roundManager)
     }
+
+    "save and restore the whole game with all four possible controller states" in {
+      val roundManager = RoundManager.Builder().build()
+      val controller = new Controller(roundManager)
+      var state = controller.state
+      controller.save()
+      controller.load()
+      controller.state should be(state)
+
+      state = SetupState(controller)
+      controller.state = state
+      controller.save()
+      controller.load()
+      controller.state should be(state)
+
+      state = InGameState(controller)
+      controller.state = state
+      controller.save()
+      controller.load()
+      controller.state should be(state)
+
+      state = GameOverState(controller)
+      controller.state = state
+      controller.save()
+      controller.load()
+      controller.state should be(state)
+    }
   }
 
   "A preSetupState" when {
-    val cardInterface = StaticCard()
-    val playerInterface = StaticPlayer()
-    val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
-    val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
-    val state = PreSetupState(controller, playerInterface, cardInterface, ResultTableBuilder())
+    val resultTable = ResultTable.initializeTable(20, 3)
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
+    val state = PreSetupState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       val old = roundManager
       state.evaluate("AAA")
@@ -146,7 +170,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
     "set the number of players correctly" in {
       state.evaluate("3")
-      val newRoundManager = RoundManager(3, resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
+      val newRoundManager = RoundManager(3, resultTable = resultTable)
       newRoundManager.numberOfPlayers should be(3)
     }
 
@@ -171,11 +195,9 @@ class ControllerSpec extends WordSpec with Matchers {
   }
 
   "A SetupState" when {
-    val cardInterface = StaticCard()
-    val playerInterface = StaticPlayer()
-    val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
-    val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
+    val resultTable = ResultTable.initializeTable(20, 3)
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
     val state = SetupState(controller)
 
     "does nothing when theres no input" in {
@@ -212,11 +234,9 @@ class ControllerSpec extends WordSpec with Matchers {
   }
 
   "A InGameState" when {
-    val cardInterface = StaticCard()
-    val playerInterface = StaticPlayer()
-    val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
-    val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
+    val resultTable = ResultTable.initializeTable(20, 3)
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
     controller.state = InGameState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       controller.eval("AAA")
@@ -277,11 +297,9 @@ class ControllerSpec extends WordSpec with Matchers {
   }
 
   "A GameOverState" should {
-    val cardInterface = StaticCard()
-    val playerInterface = StaticPlayer()
-    val resultTable = ResultTableBuilder().initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable, staticPlayerInterface = playerInterface, staticCardInterface = cardInterface)
-    val controller = new Controller(roundManager, playerInterface, cardInterface, ResultTableBuilder())
+    val resultTable = ResultTable.initializeTable(20, 3)
+    val roundManager = RoundManager(resultTable = resultTable)
+    val controller = new Controller(roundManager)
     val state = GameOverState(controller)
     "do nothing when evaluating" in {
       state.evaluate("5")

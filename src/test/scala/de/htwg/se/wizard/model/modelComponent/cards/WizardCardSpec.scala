@@ -46,7 +46,7 @@ class WizardCardSpec extends WordSpec with Matchers {
     "should set Owner correctly" in {
       val wizardCardWithoutOwner = WizardCard()
       val testPlayer = Player("TestPlayer")
-      val cardWithOwner = StaticCard() .setOwner(wizardCardWithoutOwner, testPlayer)
+      val cardWithOwner = Card.setOwner(wizardCardWithoutOwner, testPlayer)
       cardWithOwner.ownerName should be("TestPlayer")
     }
 

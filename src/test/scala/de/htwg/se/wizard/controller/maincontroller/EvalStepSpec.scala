@@ -1,16 +1,11 @@
 package de.htwg.se.wizard.controller.maincontroller
 
-import de.htwg.se.wizard.model.modelComponent.cards.StaticCard
-import de.htwg.se.wizard.model.modelComponent.{ResultTableBuilder, StaticPlayer}
+import de.htwg.se.wizard.model.modelComponent.{ResultTable, RoundManager}
 import org.scalatest.{Matchers, WordSpec}
 
 class EvalStepSpec extends WordSpec with Matchers {
   "An EvalStep" when {
-    val cardInterface = StaticCard()
-    val playerInterface = StaticPlayer()
-    val controller = new Controller(RoundManager(resultTable = ResultTableBuilder().initializeTable(),
-      staticPlayerInterface = playerInterface, staticCardInterface = cardInterface),
-      staticPlayerInterface = playerInterface, staticCardInterface = cardInterface, resultTableBuilderInterface = ResultTableBuilder())
+    val controller = new Controller(RoundManager(resultTable = ResultTable.initializeTable()))
     val evalStep = new EvalStep(controller)
     "saves the current controller's state and round manager" in {
       val state = (controller.roundManager, controller.state)

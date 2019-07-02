@@ -1,19 +1,18 @@
 package de.htwg.se.wizard.aview.gui
 
 import de.htwg.se.wizard.controller.maincontroller._
-import de.htwg.se.wizard.model.modelComponent.cards.{CardStack, StaticCard, WizardCard}
-import de.htwg.se.wizard.model.modelComponent.{Player, ResultTableBuilder, StaticPlayer}
+import de.htwg.se.wizard.model.modelComponent.cards.{CardStack, WizardCard}
+import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable, RoundManager}
 import org.scalatest.{Matchers, WordSpec}
 
 class SwingGuiSpec extends WordSpec with Matchers{
 
-  val controller = new Controller(RoundManager(resultTable = ResultTableBuilder().initializeTable(),
-    staticPlayerInterface = StaticPlayer(), staticCardInterface = StaticCard(), shuffledCardStack = CardStack.shuffleCards(CardStack.initialize)),
-    staticPlayerInterface = StaticPlayer(), staticCardInterface = StaticCard(), resultTableBuilderInterface = ResultTableBuilder())
+  val controller = new Controller(RoundManager(resultTable = ResultTable.initializeTable(),
+     shuffledCardStack = CardStack.shuffleCards(CardStack.initialize)))
   "A SwingGuiSpec" should {
     "load the correct Panel" when {
       "Controller is in preSetupState" in {
-        controller.state = PreSetupState(controller, StaticPlayer(), StaticCard(), ResultTableBuilder())
+        controller.state = PreSetupState(controller)
         SwingGui.getPanel(controller).isInstanceOf[WelcomePanel] should be(true)
       }
 

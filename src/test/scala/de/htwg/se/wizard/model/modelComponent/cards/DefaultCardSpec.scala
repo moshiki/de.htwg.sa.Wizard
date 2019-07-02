@@ -49,7 +49,7 @@ class DefaultCardSpec extends WordSpec with Matchers {
     "should set Owner correctly" in {
       val defCardWithoutOwner = DefaultCard("blue", 2)
       val testPlayer = Player("TestPlayer")
-      val cardWithOwner = StaticCard().setOwner(defCardWithoutOwner, testPlayer)
+      val cardWithOwner = Card.setOwner(defCardWithoutOwner, testPlayer)
       cardWithOwner.ownerName should be("TestPlayer")
     }
 

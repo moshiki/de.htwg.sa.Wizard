@@ -16,7 +16,7 @@ class PlayerSpec extends WordSpec with Matchers {
       }
       "is able to store itself in an xml representation and restore successfully" in {
         val xml = player.toXML
-        val newPlayer = StaticPlayer().fromXML(xml)
+        val newPlayer = Player.fromXML(xml)
         newPlayer should be(player)
       }
 
@@ -28,7 +28,7 @@ class PlayerSpec extends WordSpec with Matchers {
         val player = Player("TestPlayer")
         val list = List[Card](JesterCard(Some(player)))
         val player1 = player.copy(playerCards = Some(list))
-        StaticPlayer().playerTurn(player1, 1) should startWith(
+        Player.playerTurn(player1, 1) should startWith(
           """Round 1 - Player: TestPlayer
             |Select one of the following cards:
             |{ cards/Jester }""".stripMargin
@@ -39,7 +39,7 @@ class PlayerSpec extends WordSpec with Matchers {
         val player = Player("TestPlayer")
         val list = List[Card](JesterCard(Some(player)))
         val player1 = player.copy(playerCards = Some(list))
-        StaticPlayer().playerPrediction(player1, 1, Some("blue")) should startWith(
+        Player.playerPrediction(player1, 1, Some("blue")) should startWith(
           """Round 1 - Player: TestPlayer
             |Trump Color: blue
             |Your Cards: { cards/Jester }
@@ -51,7 +51,7 @@ class PlayerSpec extends WordSpec with Matchers {
       val player = Player("P", Some(List(WizardCard(), JesterCard())))
       "is able to store itself in an xml representation and restore successfully" in {
         val xml = player.toXML
-        val newPlayer = StaticPlayer().fromXML(xml)
+        val newPlayer = Player.fromXML(xml)
         newPlayer should be(player)
       }
     }
