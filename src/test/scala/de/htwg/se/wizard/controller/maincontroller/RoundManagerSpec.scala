@@ -19,9 +19,10 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
 
       "is able to store itself in an xml representation and restore successfully" in {
-        val xml = roundManager.toXML
+        val rm = roundManager.addPlayer("P").copy(predictionPerRound = List(0, 1))
+        val xml = rm.toXML
         val roundManager2 = RoundManager.fromXML(xml, roundManager)
-        roundManager2 should be(roundManager)
+        roundManager2 should be(rm)
       }
     }
   }
