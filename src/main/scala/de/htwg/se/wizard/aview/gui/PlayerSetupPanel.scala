@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.ControllerInterface
+import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import javax.swing.BorderFactory
 
 import scala.swing._

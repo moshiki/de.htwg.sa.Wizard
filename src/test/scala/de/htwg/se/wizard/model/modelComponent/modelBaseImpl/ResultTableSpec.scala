@@ -1,4 +1,4 @@
-package de.htwg.se.wizard.model.modelComponent
+package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
 import org.scalatest.{Matchers, WordSpec}
 

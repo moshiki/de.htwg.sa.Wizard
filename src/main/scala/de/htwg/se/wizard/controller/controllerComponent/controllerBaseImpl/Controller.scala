@@ -1,10 +1,10 @@
-package de.htwg.se.wizard.controller.maincontroller
+package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
 import com.google.inject.{Guice, Inject}
 import de.htwg.se.wizard.WizardModule
-import de.htwg.se.wizard.controller.ControllerInterface
-import de.htwg.se.wizard.model.ModelInterface
+import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
+import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import de.htwg.se.wizard.util.UndoManager
 
 class Controller @Inject()(var roundManager: ModelInterface) extends ControllerInterface {

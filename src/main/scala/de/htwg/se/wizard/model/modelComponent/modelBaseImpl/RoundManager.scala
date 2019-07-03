@@ -1,7 +1,7 @@
-package de.htwg.se.wizard.model.modelComponent
+package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import de.htwg.se.wizard.model.ModelInterface
-import de.htwg.se.wizard.model.modelComponent.cards.{Card, CardStack, DefaultCard}
+import de.htwg.se.wizard.model.modelComponent.ModelInterface
+import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards.{Card, CardStack, DefaultCard}
 
 import scala.collection.mutable.ListBuffer
 import scala.xml.Elem

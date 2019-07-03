@@ -3,7 +3,7 @@ package de.htwg.se.wizard
 import com.google.inject.{Guice, Injector}
 import de.htwg.se.wizard.aview.TUI
 import de.htwg.se.wizard.aview.gui.SwingGui
-import de.htwg.se.wizard.controller.maincontroller.Controller
+import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Controller
 
 import scala.io.StdIn.readLine
 

@@ -1,6 +1,6 @@
-package de.htwg.se.wizard.model.modelComponent.cards
+package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
 
-import de.htwg.se.wizard.model.modelComponent.Player
+import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import org.scalatest.{Matchers, WordSpec}
 
 class WizardCardSpec extends WordSpec with Matchers {

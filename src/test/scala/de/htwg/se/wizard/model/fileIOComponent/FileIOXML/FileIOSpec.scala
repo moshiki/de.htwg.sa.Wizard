@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.model.fileIOComponent.FileIOXML
 
-import de.htwg.se.wizard.controller.maincontroller.Controller
-import de.htwg.se.wizard.model.modelComponent.RoundManager
+import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.RoundManager
 import org.scalatest.{Matchers, WordSpec}
 
 class FileIOSpec extends WordSpec with Matchers{

@@ -1,9 +1,9 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.maincontroller._
-import de.htwg.se.wizard.model.modelComponent
-import de.htwg.se.wizard.model.modelComponent.cards.{CardStack, WizardCard}
-import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable, RoundManager}
+import de.htwg.se.wizard.controller.controllerComponent._
+import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.{Controller, GameOverState, InGameState, PreSetupState, SetupState}
+import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, ResultTable, RoundManager}
+import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards.{CardStack, WizardCard}
 import org.scalatest.{Matchers, WordSpec}
 
 class SwingGuiSpec extends WordSpec with Matchers{
@@ -24,7 +24,7 @@ class SwingGuiSpec extends WordSpec with Matchers{
 
       "Controller is in InGameState" in {
         controller.state = InGameState(controller)
-        controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(players = List(Player("test", playerCards = Some(List(WizardCard())))))
+        controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(Player("test", playerCards = Some(List(WizardCard())))))
         SwingGui.getPanel(controller).isInstanceOf[InGamePanel] should be(true)
       }
 

@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model.fileIOComponent
 
-import de.htwg.se.wizard.model.ModelInterface
+import de.htwg.se.wizard.model.modelComponent.ModelInterface
 
 trait FileIOInterface {
   def load(modelInterface: ModelInterface): (String, ModelInterface)

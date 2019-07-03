@@ -1,6 +1,6 @@
-package de.htwg.se.wizard.model.modelComponent
+package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import de.htwg.se.wizard.model.modelComponent.cards.Card
+import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards.Card
 
 import scala.xml.Elem
 

@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.model.fileIOComponent.FileIOXML
 
-import de.htwg.se.wizard.model.ModelInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
+import de.htwg.se.wizard.model.modelComponent.ModelInterface
 
 import scala.xml.Elem
 

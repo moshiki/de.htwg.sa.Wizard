@@ -1,6 +1,5 @@
-package de.htwg.se.wizard.controller.maincontroller
+package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import de.htwg.se.wizard.model.modelComponent.RoundStrategy
 import org.scalatest.{Matchers, WordSpec}
 
 class RoundStrategySpec extends WordSpec with Matchers{

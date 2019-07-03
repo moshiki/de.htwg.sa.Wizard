@@ -1,6 +1,6 @@
-package de.htwg.se.wizard.controller.maincontroller
+package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
-import de.htwg.se.wizard.model.ModelInterface
+import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import de.htwg.se.wizard.util.Command
 
 class EvalStep(controller: Controller) extends Command {
