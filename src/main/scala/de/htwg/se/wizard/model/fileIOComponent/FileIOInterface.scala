@@ -1,8 +1,9 @@
 package de.htwg.se.wizard.model.fileIOComponent
 
-import de.htwg.se.wizard.model.modelComponent.RoundManager
+import de.htwg.se.wizard.model.ModelInterface
 
 trait FileIOInterface {
-  def load(roundManager: RoundManager): (String, RoundManager)
-  def save (controllerState: String, roundManager: RoundManager): Unit
+  def load(modelInterface: ModelInterface): (String, ModelInterface)
+
+  def save(controllerState: String, modelInterface: ModelInterface): Unit
 }

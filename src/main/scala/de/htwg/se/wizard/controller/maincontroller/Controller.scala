@@ -3,11 +3,11 @@ package de.htwg.se.wizard.controller.maincontroller
 import com.google.inject.{Guice, Inject}
 import de.htwg.se.wizard.WizardModule
 import de.htwg.se.wizard.controller.ControllerInterface
+import de.htwg.se.wizard.model.ModelInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
-import de.htwg.se.wizard.model.modelComponent.{RoundManager, RoundStrategy}
 import de.htwg.se.wizard.util.UndoManager
 
-class Controller @Inject()(var roundManager: RoundManager) extends ControllerInterface {
+class Controller @Inject()(var roundManager: ModelInterface) extends ControllerInterface {
   val fileIOInterface: FileIOInterface = Guice.createInjector(new WizardModule).getInstance(classOf[FileIOInterface])
 
   val undoManager = new UndoManager
@@ -43,27 +43,27 @@ class Controller @Inject()(var roundManager: RoundManager) extends ControllerInt
     }
   }
 
-  override def getCurrentPlayerNumber: Int = roundManager.currentPlayer
+  override def getCurrentPlayerNumber: Int = roundManager.getCurrentPlayerNumber
 
-  override def getCurrentPlayerString: String = roundManager.players(roundManager.currentPlayer).toString
+  override def getCurrentPlayerString: String = roundManager.getCurrentPlayerString
 
-  override def getCurrentAmountOfStitches: Int = roundManager.stitchesPerRound(getCurrentPlayerString)
+  override def getCurrentAmountOfStitches: Int = roundManager.getCurrentAmountOfStitches
 
-  override def getPlayerPrediction: Int = roundManager.predictionPerRound(getCurrentPlayerNumber)
+  override def getPlayerPrediction: Int = roundManager.getPlayerPrediction
 
   override def predictionMode: Boolean = roundManager.predictionMode
 
   override def currentRound: Int = roundManager.currentRound
 
-  override def playedCardsAsString: List[String] = roundManager.playedCards.map(card => card.toString)
+  override def playedCardsAsString: List[String] = roundManager.playedCardsAsString
 
-  override def currentPlayersCards: List[String] = roundManager.players(getCurrentPlayerNumber).getPlayerCards.get.map(card => card.toString)
+  override def currentPlayersCards: List[String] = roundManager.currentPlayersCards
 
-  override def topOfStackCardString: String = roundManager.shuffledCardStack.head.toString
+  override def topOfStackCardString: String = roundManager.topOfStackCardString
 
-  override def playersAsStringList: List[String] = roundManager.players.map(player => player.toString)
+  override def playersAsStringList: List[String] = roundManager.playersAsStringList
 
-  override def resultArray: Array[Array[Any]] = roundManager.resultTable.toAnyArray
+  override def resultArray: Array[Array[Any]] = roundManager.resultArray
 
   override def save(): Unit = {
     fileIOInterface.save(controllerStateAsString, roundManager)
@@ -108,10 +108,10 @@ case class PreSetupState(controller: Controller) extends ControllerState {
     val number = Controller.toInt(input)
     if (number.isEmpty) return
     if (!controller.roundManager.checkNumberOfPlayers(number.get)) return
-    controller.roundManager = RoundStrategy.execute(number.get)
+    controller.roundManager = controller.roundManager.setPlayersAndRounds(number.get)
     controller.nextState()
 
-    controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
+    controller.roundManager = controller.roundManager.nextPlayerInSetup
   }
 
   override def getCurrentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
@@ -124,14 +124,14 @@ case class SetupState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     if (input.isEmpty) return
 
-    controller.roundManager = controller.roundManager.copy(currentPlayer = controller.roundManager.nextPlayerSetup)
+    controller.roundManager = controller.roundManager.nextPlayerInSetup
 
     controller.roundManager = controller.roundManager.addPlayer(input)
-    if (controller.roundManager.players.size == controller.roundManager.numberOfPlayers) {
-      controller.roundManager = controller.roundManager.copy(cleanMap = controller.roundManager.stitchesPerRound)
+    if (controller.roundManager.createdPlayers == controller.roundManager.numberOfPlayers) {
+      controller.roundManager = controller.roundManager.saveCleanMap
 
-      controller.roundManager = controller.roundManager.copy(predictionMode = true)
-      controller.roundManager = controller.roundManager.cardDistribution()
+      controller.roundManager = controller.roundManager.setPredictionMode
+      controller.roundManager = controller.roundManager.cardDistribution
       controller.nextState()
     }
   }
@@ -152,16 +152,16 @@ case class InGameState(controller: Controller) extends ControllerState {
     controller.roundManager = controller.roundManager.nextPlayer
     if (!controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.nextRound
     if (controller.roundManager.currentRound == controller.roundManager.numberOfRounds &&
-      controller.roundManager.currentPlayer == 0) {
+      controller.roundManager.getCurrentPlayerNumber == 0) {
       controller.nextState()
       return
     }
 
-    if (controller.roundManager.predictionPerRound.size < controller.roundManager.numberOfPlayers) {
-      controller.roundManager = controller.roundManager.copy(predictionMode = true)
-      controller.roundManager = controller.roundManager.cardDistribution()
+    if (controller.roundManager.recordedPredictions < controller.roundManager.numberOfPlayers) {
+      controller.roundManager = controller.roundManager.setPredictionMode
+      controller.roundManager = controller.roundManager.cardDistribution
     } else {
-      controller.roundManager = controller.roundManager.copy(predictionMode = false)
+      controller.roundManager = controller.roundManager.unsetPredictionMode
     }
   }
 

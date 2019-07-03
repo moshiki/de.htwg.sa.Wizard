@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.model.fileIOComponent.FileIOXML
 
-import de.htwg.se.wizard.controller.maincontroller.{Controller, GameOverState, InGameState, PreSetupState, SetupState}
+import de.htwg.se.wizard.controller.maincontroller.Controller
 import de.htwg.se.wizard.model.modelComponent.RoundManager
 import org.scalatest.{Matchers, WordSpec}
 
