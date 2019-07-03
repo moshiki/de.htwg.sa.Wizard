@@ -19,7 +19,7 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
 
   contents += new BoxPanel(Orientation.Horizontal) {
     if (!controller.predictionMode) {
-      contents += new Label("Player: " + currentPlayer + " - Stitches: " +
+      contents += new Label("Player: " + currentPlayer + " - Tricks: " +
         controller.getCurrentAmountOfStitches + " (Prediction: " +
         controller.getPlayerPrediction + ")") {
         font = myFont

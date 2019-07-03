@@ -50,7 +50,7 @@ class PlayerSpec extends WordSpec with Matchers {
           """Round 1 - Player: TestPlayer
             |Trump Color: blue
             |Your Cards: { cards/Jester }
-            |Enter the amount of stitches you think you will get: """.stripMargin)
+            |Guess your amount of tricks: """.stripMargin)
       }
     }
 

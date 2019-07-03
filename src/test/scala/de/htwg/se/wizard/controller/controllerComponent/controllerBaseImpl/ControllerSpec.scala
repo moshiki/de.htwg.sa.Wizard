@@ -284,7 +284,7 @@ class ControllerSpec extends WordSpec with Matchers {
         "\n" + "Round 1 - Player: Name2" + "\n" +
           "Trump Color: None" + "\n" +
           "Your Cards: " + "{ " + card.mkString + " }" + "\n" +
-          "Enter the amount of stitches you think you will get: "
+          "Guess your amount of tricks: "
       )
     }
 

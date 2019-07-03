@@ -55,7 +55,7 @@ object Player {
     val firstString = "Round " + round + " - Player: " + player.getName
     val secondString = "Trump Color: " + trump.getOrElse("None")
     val thirdString = "Your Cards: " + "{ " + player.getPlayerCards.get.mkString(", ") + " }"
-    val string = "Enter the amount of stitches you think you will get: "
+    val string = "Guess your amount of tricks: "
     firstString + "\n" + secondString + "\n" + thirdString + "\n" + string
   }
 
@@ -67,7 +67,7 @@ object Player {
 
     var playerCards: Option[List[Card]] = None
     if (cards.text.trim != "None")  {
-      val playerCardsList = cards.map(node => Card.fromXML(node)).toList//.map(card => StaticCard().setOwner(card, player))
+      val playerCardsList = cards.map(node => Card.fromXML(node)).toList
       playerCards = Some(playerCardsList)
     }
 
