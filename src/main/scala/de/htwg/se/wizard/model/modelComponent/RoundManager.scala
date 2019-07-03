@@ -160,49 +160,22 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def toXML: Elem = {
     <RoundManager>
-      <numberOfPlayers>
-        {numberOfPlayers}
-      </numberOfPlayers>
-      <numberOfRounds>
-        {numberOfRounds}
-      </numberOfRounds>
-      <shuffledCardStack>
-        {shuffledCardStack map (card => card.toXML)}
-      </shuffledCardStack>
-      <players>
-        {players map (player => player.toXML)}
-      </players>
-      <currentPlayer>
-        {currentPlayer}
-      </currentPlayer>
-      <currentRound>
-        {currentRound}
-      </currentRound>
-      <predictionPerRound>
-        {for (i <- predictionPerRound.indices) yield <prediction>
-        {predictionPerRound(i)}
-      </prediction>}
-      </predictionPerRound>
-      <stitchesPerRound>
-        {mapToXMLList(stitchesPerRound)}
-      </stitchesPerRound>
-      <playedCards>
-        {playedCards.map(card => card.toXML)}
-      </playedCards>
-      <predictionMode>
-        {predictionMode}
-      </predictionMode>
-      <cleanMap>
-        {mapToXMLList(cleanMap)}
-      </cleanMap>
-      <resultTable>
-        {resultTable.toXML}
-      </resultTable>
+      <numberOfPlayers>{numberOfPlayers}</numberOfPlayers>
+      <numberOfRounds>{numberOfRounds}</numberOfRounds>
+      <shuffledCardStack>{shuffledCardStack map(card => card.toXML)}</shuffledCardStack>
+      <players>{players map(player => player.toXML)}</players>
+      <currentPlayer>{currentPlayer}</currentPlayer>
+      <currentRound>{currentRound}</currentRound>
+      <predictionPerRound>{for (i <- predictionPerRound.indices) yield <prediction>{predictionPerRound(i)}</prediction>}</predictionPerRound>
+      <stitchesPerRound>{mapToXMLList(stitchesPerRound)}</stitchesPerRound>
+      <playedCards>{playedCards.map(card => card.toXML)}</playedCards>
+      <predictionMode>{predictionMode}</predictionMode>
+      <cleanMap>{mapToXMLList(cleanMap)}</cleanMap>
+      <resultTable>{resultTable.toXML}</resultTable>
     </RoundManager>
   }
 
   override def fromXML(node: scala.xml.Node): RoundManager = {
-    println(node)
     val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
     val numberOfRounds = (node \ "numberOfRounds").text.toInt
 
