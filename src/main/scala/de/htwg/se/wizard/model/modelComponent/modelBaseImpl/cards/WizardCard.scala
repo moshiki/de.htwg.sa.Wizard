@@ -33,10 +33,16 @@ case class WizardCard(owner: Option[Player] = None) extends Card(owner) {
     this.copy(owner = owner)
   }
 
-  def ownerString: String = if (owner.isDefined) owner.get.name else "None"
-
   override def toJson: JsValue = Json.obj(
     "type" -> "Wizard",
     "owner" -> ownerString
   )
+
+  override def fromJson(jsValue: JsValue): Card = {
+    var owner: Option[Player] = None
+    val ownerString = (jsValue \ "owner").get.as[String]
+    if (ownerString != "None") owner = Some(Player(ownerString))
+
+    this copy owner
+  }
 }

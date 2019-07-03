@@ -51,12 +51,20 @@ case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
     this.copy(color = color, number = number, owner = owner)
   }
 
-  def ownerString: String = if (owner.isDefined) owner.get.name else "None"
-
   override def toJson: JsValue = Json.obj(
-    "type" -> "DefaultCard",
+    "type" -> "Default",
     "color" -> color,
     "number" -> number,
     "owner" -> ownerString
   )
+
+  override def fromJson(jsValue: JsValue): Card = {
+    val color = (jsValue \ "color").get.as[String]
+    val number = (jsValue \ "number").get.as[Int]
+    var owner: Option[Player] = None
+    val ownerString = (jsValue \ "owner").get.as[String]
+    if (ownerString != "None") owner = Some(Player(ownerString))
+
+    this copy(color, number, owner)
+  }
 }

@@ -289,5 +289,5 @@ object RoundManager {
 
   import play.api.libs.json._
   implicit val roundManagerWrites: OWrites[RoundManager] = Json.writes[RoundManager]
-  //implicit val roundManagerReads: Reads[RoundManager] = Json.reads[RoundManager]
+  implicit val roundManagerReads: Reads[RoundManager] = Json.reads[RoundManager]
 }
