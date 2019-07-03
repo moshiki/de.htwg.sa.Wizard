@@ -68,4 +68,6 @@ trait ModelInterface {
   def setPlayersAndRounds(numberOfPlayer: Int): ModelInterface
 
   def toJson: JsValue
+
+  def fromJson(jsValue: JsValue): ModelInterface
 }
