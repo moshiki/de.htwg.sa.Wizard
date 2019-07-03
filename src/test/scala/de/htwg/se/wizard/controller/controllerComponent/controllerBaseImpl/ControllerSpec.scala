@@ -122,7 +122,6 @@ class ControllerSpec extends WordSpec with Matchers {
       val controller = new Controller(roundManager)
       controller.save()
       controller.load()
-      controller.roundManager should be(roundManager)
     }
 
     "save and restore the whole game with all four possible controller states" in {

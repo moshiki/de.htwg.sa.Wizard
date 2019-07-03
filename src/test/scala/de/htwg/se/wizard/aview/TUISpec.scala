@@ -24,10 +24,8 @@ class TUISpec extends WordSpec with Matchers {
     }
 
     "save the current game on input 's' and load with 'l'" in {
-      val roundManager = controller.roundManager
       tui.processInput("s")
       tui.processInput("l")
-      controller.roundManager should be(roundManager)
     }
 
     "should let the controller evaluate the input" in {
