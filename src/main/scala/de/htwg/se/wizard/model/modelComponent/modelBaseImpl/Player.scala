@@ -57,11 +57,6 @@ object Player {
     val thirdString = "Your Cards: " + "{ " + player.getPlayerCards.get.mkString(", ") + " }"
     val string = "Enter the amount of stitches you think you will get: "
     firstString + "\n" + secondString + "\n" + thirdString + "\n" + string
-
-  }
-
-  def newPlayer(name: String): Player = {
-    Player(name)
   }
 
   def fromXML(node: scala.xml.Node): Player = {
