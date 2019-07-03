@@ -10,6 +10,6 @@ import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{ResultTable, RoundM
 class WizardModule extends AbstractModule with ScalaModule{
   override def configure(): Unit = {
     bind[ModelInterface].toInstance(RoundManager(resultTable = ResultTable.initializeTable()))
-    bind[FileIOInterface].to[FileIOXML.FileIO]
+    bind[FileIOInterface].to[FileIOJSON.FileIO]
   }
 }

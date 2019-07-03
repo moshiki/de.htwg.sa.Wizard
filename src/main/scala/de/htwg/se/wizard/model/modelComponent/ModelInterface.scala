@@ -1,5 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent
 
+import play.api.libs.json.JsValue
+
 import scala.xml.Elem
 
 trait ModelInterface {
@@ -64,4 +66,6 @@ trait ModelInterface {
   def getPlayerStateStrings: String
 
   def setPlayersAndRounds(numberOfPlayer: Int): ModelInterface
+
+  def toJson: JsValue
 }

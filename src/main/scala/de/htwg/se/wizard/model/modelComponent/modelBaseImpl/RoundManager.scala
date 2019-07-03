@@ -2,6 +2,7 @@ package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards.{Card, CardStack, DefaultCard}
+import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.mutable.ListBuffer
 import scala.xml.Elem
@@ -247,6 +248,8 @@ case class RoundManager(numberOfPlayers: Int = 0,
   override def unsetPredictionMode: ModelInterface = this copy(predictionMode = false)
 
   override def setPlayersAndRounds(numberOfPlayer: Int): ModelInterface = RoundStrategy.execute(numberOfPlayer)
+
+  override def toJson: JsValue = Json.toJson(this)
 }
 
 object RoundManager {
