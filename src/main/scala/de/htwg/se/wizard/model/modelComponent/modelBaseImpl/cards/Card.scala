@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
 
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
+import play.api.libs.json.JsValue
 
 import scala.xml.{Elem, Node}
 
@@ -24,6 +25,8 @@ abstract class Card(owner: Option[Player]) {
   override def toString: String = "cards/" + getStringRep
 
   def toXML: Elem
+
+  def toJson: JsValue
 }
 
 
@@ -49,4 +52,13 @@ object Card {
       case "DefaultCard" => DefaultCard("blue", 1).fromXML(node)
     }
   }
+
+  import play.api.libs.json._
+  implicit val cardWrites: Writes[Card] = {
+    case jesterCard: JesterCard => jesterCard.toJson
+    case defaultCard: DefaultCard => defaultCard.toJson
+    case wizardCard: WizardCard => wizardCard.toJson
+  }
+
+  //implicit val cardReads = ???
 }

@@ -2,6 +2,7 @@ package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
 
 
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
+import play.api.libs.json.{JsValue, Json}
 
 import scala.xml.Elem
 
@@ -49,4 +50,13 @@ case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
 
     this.copy(color = color, number = number, owner = owner)
   }
+
+  def ownerString: String = if (owner.isDefined) owner.get.name else "None"
+
+  override def toJson: JsValue = Json.obj(
+    "type" -> "DefaultCard",
+    "color" -> color,
+    "number" -> number,
+    "owner" -> ownerString
+  )
 }

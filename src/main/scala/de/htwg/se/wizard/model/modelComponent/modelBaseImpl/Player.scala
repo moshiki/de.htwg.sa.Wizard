@@ -73,4 +73,8 @@ object Player {
 
     player.copy(playerCards = playerCards)
   }
+
+  import play.api.libs.json._
+  //implicit val playerReads: Reads[Player] = Json.reads[Player]
+  implicit val playerWrites: OWrites[Player] = Json.writes[Player]
 }

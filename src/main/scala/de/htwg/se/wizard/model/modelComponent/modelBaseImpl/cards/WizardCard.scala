@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
 
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
+import play.api.libs.json.{JsValue, Json}
 
 import scala.xml.Elem
 
@@ -31,4 +32,11 @@ case class WizardCard(owner: Option[Player] = None) extends Card(owner) {
 
     this.copy(owner = owner)
   }
+
+  def ownerString: String = if (owner.isDefined) owner.get.name else "None"
+
+  override def toJson: JsValue = Json.obj(
+    "type" -> "Wizard",
+    "owner" -> ownerString
+  )
 }

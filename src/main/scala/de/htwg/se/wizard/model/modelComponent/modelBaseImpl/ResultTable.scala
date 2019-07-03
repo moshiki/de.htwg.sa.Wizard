@@ -67,4 +67,8 @@ object ResultTable {
     val vector = Vector.fill(roundsToPlay, numberOfPlayers)(0)
     ResultTable(roundsToPlay, numberOfPlayers, vector)
   }
+
+  import play.api.libs.json._
+  implicit val resultTableWrites: OWrites[ResultTable] = Json.writes[ResultTable]
+  implicit val resultTableReads: Reads[ResultTable] = Json.reads[ResultTable]
 }
