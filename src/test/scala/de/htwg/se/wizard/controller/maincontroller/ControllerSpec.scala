@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.controller.maincontroller
 
 import de.htwg.se.wizard.model.fileIOComponent.FileIOXML.FileIO
+import de.htwg.se.wizard.model.modelComponent
 import de.htwg.se.wizard.model.modelComponent.cards._
 import de.htwg.se.wizard.model.modelComponent.{Player, ResultTable, RoundManager}
 import de.htwg.se.wizard.util.Observer
@@ -63,56 +64,56 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "returns the current players number" in {
-      controller.roundManager = controller.roundManager.copy(currentPlayer = 0)
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(currentPlayer = 0)
       controller.getCurrentPlayerNumber should be(0)
     }
 
     "returns true if game asks for players predictions" in {
-      controller.roundManager = controller.roundManager.copy(predictionMode = true)
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(predictionMode = true)
       controller.predictionMode should be(true)
     }
 
     "returns the name of a player" in {
-      controller.roundManager = controller.roundManager.copy(players = List(Player("test")), currentPlayer = 0)
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(players = List(Player("test")), currentPlayer = 0)
       controller.getCurrentPlayerString should be("test")
     }
 
     "returns the current players prediction" in {
-      controller.roundManager = controller.roundManager.copy(predictionPerRound = List(5),
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(predictionPerRound = List(5),
         players = List(Player("test")), currentPlayer = 0)
       controller.getPlayerPrediction should be(5)
     }
 
     "returns the current players amount of stitches" in {
-      controller.roundManager = controller.roundManager.copy(stitchesPerRound = Map("test" -> 2),
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(stitchesPerRound = Map("test" -> 2),
         players = List(Player("test")), currentPlayer = 0)
       controller.getCurrentAmountOfStitches should be(2)
     }
 
     "return the current round" in {
-      controller.roundManager = controller.roundManager.copy(currentRound = 20)
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(currentRound = 20)
       controller.currentRound should be(20)
     }
 
     "convert the already played cards to a list of strings" in {
-      controller.roundManager = controller.roundManager.copy(playedCards = List(WizardCard(), JesterCard()))
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(playedCards = List(WizardCard(), JesterCard()))
       controller.playedCardsAsString should be(List(WizardCard().toString(), JesterCard().toString()))
     }
 
     "convert the current players cards to a list of strings" in {
       val player = Player("player", Some(List(JesterCard(), WizardCard())))
-      controller.roundManager = controller.roundManager.copy(players = List(player), currentPlayer = 0)
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(players = List(player), currentPlayer = 0)
       controller.currentPlayersCards should be(List(JesterCard().toString(), WizardCard().toString()))
     }
 
     "return a string representation of the top card on the shuffled card stack" in {
-      controller.roundManager = controller.roundManager.copy(shuffledCardStack = List(DefaultCard("blue", 2), WizardCard()))
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(shuffledCardStack = List(DefaultCard("blue", 2), WizardCard()))
       controller.topOfStackCardString should be(DefaultCard("blue", 2).toString)
     }
 
     "return a list with all players string representations" in {
       val playerList = List(Player("P1"), Player("P2"))
-      controller.roundManager = controller.roundManager.copy(players = playerList, currentPlayer = 0)
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(players = playerList, currentPlayer = 0)
       controller.playersAsStringList should be(List("P1", "P2"))
     }
 
@@ -190,7 +191,7 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "return the same result array stored in ResultTable" in {
-      controller.resultArray should be(controller.roundManager.resultTable.toAnyArray)
+      controller.resultArray should be(controller.roundManager.asInstanceOf[modelComponent.RoundManager].resultTable.toAnyArray)
     }
   }
 
@@ -208,7 +209,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
     "adds a player correctly" in {
       state.evaluate("Name")
-      controller.roundManager.players.contains(Player("Name")) should be(true)
+      controller.roundManager.asInstanceOf[modelComponent.RoundManager].players.contains(Player("Name")) should be(true)
     }
 
     "reads in stitches per round" in {
@@ -216,8 +217,8 @@ class ControllerSpec extends WordSpec with Matchers {
         shuffledCardStack = List(DefaultCard("blue", 2), WizardCard(), WizardCard(), WizardCard()))
       state.evaluate("Name3")
       controller.roundManager.numberOfPlayers should be(3)
-      controller.roundManager.players.size should be(3)
-      controller.roundManager.cleanMap should be(Map("Name3" -> 0))
+      controller.roundManager.asInstanceOf[modelComponent.RoundManager].players.size should be(3)
+      controller.roundManager.asInstanceOf[modelComponent.RoundManager].cleanMap should be(Map("Name3" -> 0))
     }
 
     "set predictionMode true" in {
@@ -244,13 +245,13 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "update player prediction" in {
-      controller.roundManager = controller.roundManager.copy(predictionMode = true, players = List(Player("Name1"), Player("Name2"), Player("Name3")))
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(predictionMode = true, players = List(Player("Name1"), Player("Name2"), Player("Name3")))
       controller.eval("1")
-      controller.roundManager.predictionPerRound should be(List(1))
+      controller.roundManager.asInstanceOf[modelComponent.RoundManager].predictionPerRound should be(List(1))
     }
 
     "stay to prediction mode" in {
-      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 3, numberOfRounds = 20, predictionMode = true,
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(numberOfPlayers = 3, numberOfRounds = 20, predictionMode = true,
        shuffledCardStack = List(DefaultCard("blue", 2), WizardCard(), WizardCard(), WizardCard()), players = Nil)
       controller.roundManager = controller.roundManager.addPlayer("1")
       controller.roundManager = controller.roundManager.addPlayer("2")
@@ -261,22 +262,22 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "play card correctly" in {
-      controller.roundManager = controller.roundManager.copy(predictionMode = false, numberOfPlayers = 2,
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(predictionMode = false, numberOfPlayers = 2,
         players = Nil, currentPlayer = 0, currentRound = 1, predictionPerRound = List(0, 0))
       controller.roundManager = controller.roundManager.addPlayer("1")
       controller.roundManager = controller.roundManager.addPlayer("2")
-      controller.roundManager = controller.roundManager.copy(
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(
         players = List(Player("1", playerCards = Some(List(WizardCard(owner = Some(Player("1")))))),
           Player("2", playerCards = Some(Nil))))
       controller.eval("1")
 
-      controller.roundManager.playedCards should not be Nil
+      controller.roundManager.asInstanceOf[modelComponent.RoundManager].playedCards should not be Nil
     }
 
     "gets current state as string" in {
       val player = Player("Name2", Some(List(JesterCard())))
       val cardStack = List[Card](JesterCard(), WizardCard())
-      controller.roundManager = controller.roundManager.copy(shuffledCardStack = cardStack, predictionMode = true,
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(shuffledCardStack = cardStack, predictionMode = true,
         players = List(Player("Name1"), player, Player("Name3")), currentPlayer = 1, numberOfPlayers = 3, currentRound = 1)
       val card = player.playerCards.get
       controller.getCurrentStateAsString should startWith(
@@ -288,7 +289,7 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "trigger the next state in controller" in {
-      controller.roundManager = controller.roundManager.copy(numberOfPlayers = 2, numberOfRounds = 1,
+      controller.roundManager = controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(numberOfPlayers = 2, numberOfRounds = 1,
         currentRound = 1, currentPlayer = 1, players = List(Player("1"), Player("2")))
       val oldState = controller.state
       controller.eval("1")

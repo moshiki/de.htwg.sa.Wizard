@@ -1,5 +1,6 @@
 package de.htwg.se.wizard.controller.maincontroller
 
+import de.htwg.se.wizard.model.modelComponent
 import de.htwg.se.wizard.model.modelComponent.{ResultTable, RoundManager}
 import org.scalatest.{Matchers, WordSpec}
 
@@ -14,9 +15,9 @@ class EvalStepSpec extends WordSpec with Matchers {
     }
 
     "restore the previous state and save the current one" in {
-      val oldState = (controller.roundManager.copy(), controller.state)
+      val oldState = (controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(), controller.state)
       controller.state = InGameState(controller)
-      val newState = (controller.roundManager.copy(), controller.state)
+      val newState = (controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(), controller.state)
       evalStep.undoStep()
       evalStep.memento should be(newState)
       controller.roundManager should be(oldState._1)
@@ -24,7 +25,7 @@ class EvalStepSpec extends WordSpec with Matchers {
     }
 
     "revert the undo command" in {
-      val afterUndoState = (controller.roundManager.copy(), controller.state)
+      val afterUndoState = (controller.roundManager.asInstanceOf[modelComponent.RoundManager].copy(), controller.state)
       val beforeUndoState = evalStep.memento
       evalStep.redoStep()
       evalStep.memento should be(afterUndoState)

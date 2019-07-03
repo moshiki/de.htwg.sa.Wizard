@@ -202,6 +202,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   override def fromXML(node: scala.xml.Node): RoundManager = {
+    println(node)
     val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
     val numberOfRounds = (node \ "numberOfRounds").text.toInt
 
