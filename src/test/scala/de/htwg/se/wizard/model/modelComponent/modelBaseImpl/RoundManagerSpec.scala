@@ -3,6 +3,7 @@ package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards._
 import org.scalatest.{Matchers, WordSpec}
+import play.api.libs.json.Json
 
 class RoundManagerSpec extends WordSpec with Matchers {
   "A Round Manager" when {
@@ -17,10 +18,19 @@ class RoundManagerSpec extends WordSpec with Matchers {
       }
 
       "is able to store itself in an xml representation and restore successfully" in {
-        val rm = roundManager.addPlayer("P").copy(predictionPerRound = List(0, 1))
+        val stitchesPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0)
+        val rm = roundManager.addPlayer("P").copy(predictionPerRound = List(0, 1), cleanMap = stitchesPerRound)
         val xml = rm.toXML
         val roundManager2 = roundManager.fromXML(xml)
         roundManager2 should be(rm)
+      }
+
+      "is able to store itself in a json representation and restore successfully" in {
+        val stitchesPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0)
+        val rm = roundManager.addPlayer("P").copy(predictionPerRound = List(0, 1), cleanMap = stitchesPerRound)
+        val json = Json.toJson(rm)
+        val rm2 = json.validate[RoundManager].asOpt.get
+        rm2 should be(rm)
       }
     }
   }

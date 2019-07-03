@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
 import org.scalatest.{Matchers, WordSpec}
+import play.api.libs.json.Json
 
 class ResultTableSpec extends WordSpec with Matchers {
   "A ResultTable" should {
@@ -47,6 +48,12 @@ class ResultTableSpec extends WordSpec with Matchers {
       val xml = table.toXML
       val newTable = table.fromXML(xml)
       newTable should be(table)
+    }
+
+    "be able to store itself in a json representation and restore successfully" in {
+      val json = Json.toJson(table)
+      val table2 = json.validate[ResultTable].asOpt.get
+      table2 should be(table)
     }
   }
 }

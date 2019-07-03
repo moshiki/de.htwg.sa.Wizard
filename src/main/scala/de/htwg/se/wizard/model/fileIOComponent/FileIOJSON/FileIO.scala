@@ -8,7 +8,7 @@ import play.api.libs.json.Json
 
 import scala.io.Source
 
-class FileIO extends FileIOInterface{
+case class FileIO() extends FileIOInterface{
   override def load(modelInterface: ModelInterface): (String, ModelInterface) = {
     val source = Source.fromFile("WizardSaveGame.json")
     val string = source.getLines.mkString

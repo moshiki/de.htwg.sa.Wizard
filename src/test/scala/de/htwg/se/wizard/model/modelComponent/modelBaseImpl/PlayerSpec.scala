@@ -2,6 +2,7 @@ package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards.{Card, JesterCard, WizardCard}
 import org.scalatest.{Matchers, WordSpec}
+import play.api.libs.json.Json
 
 class PlayerSpec extends WordSpec with Matchers {
 
@@ -18,6 +19,12 @@ class PlayerSpec extends WordSpec with Matchers {
         val xml = player.toXML
         val newPlayer = Player.fromXML(xml)
         newPlayer should be(player)
+      }
+
+      "is able to store itself in a json representation and restore successfully" in {
+        val json = Json.toJson(player)
+        val player2 = json.validate[Player].asOpt.get
+        player2 should be(player)
       }
 
       "has no cards" in {
@@ -53,6 +60,12 @@ class PlayerSpec extends WordSpec with Matchers {
         val xml = player.toXML
         val newPlayer = Player.fromXML(xml)
         newPlayer should be(player)
+      }
+
+      "is able to store itself in a json representation and restore successfully" in {
+        val json = Json.toJson(player)
+        val player2 = json.validate[Player].asOpt.get
+        player2 should be(player)
       }
     }
   }

@@ -29,6 +29,11 @@ class DefaultCardSpec extends WordSpec with Matchers {
         val newCard = defaultCard.fromXML(xml)
         newCard should be(defaultCard)
       }
+      "is able to store itself in a json representation and restore successfully" in {
+        val json = defaultCard.toJson
+        val newCard = defaultCard.fromJson(json)
+        newCard should be(defaultCard)
+      }
     }
 
     "is a blue DefaultCard of value 2 with owner 'TestPlayer" should {
@@ -42,6 +47,11 @@ class DefaultCardSpec extends WordSpec with Matchers {
       "is able to store itself in an xml representation and restore successfully" in {
         val xml = defCardWithOwner.toXML
         val newCard = defCardWithOwner.fromXML(xml)
+        newCard should be(defCardWithOwner)
+      }
+      "is able to store itself in a json representation and restore successfully" in {
+        val json = defCardWithOwner.toJson
+        val newCard = defCardWithOwner.fromJson(json)
         newCard should be(defCardWithOwner)
       }
     }

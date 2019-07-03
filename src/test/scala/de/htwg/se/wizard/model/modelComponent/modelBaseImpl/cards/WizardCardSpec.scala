@@ -26,6 +26,12 @@ class WizardCardSpec extends WordSpec with Matchers {
         val newCard = wizardCard.fromXML(xml)
         newCard should be(wizardCard)
       }
+
+      "is able to store itself in a json representation and restore successfully" in {
+        val json = wizardCard.toJson
+        val newCard = wizardCard.fromJson(json)
+        newCard should be(wizardCard)
+      }
     }
 
     "is a WizardCard with owner 'TestPlayer'" should {
@@ -39,6 +45,12 @@ class WizardCardSpec extends WordSpec with Matchers {
       "is able to store itself in an xml representation and restore successfully" in {
         val xml = wizardCardWithOwner.toXML
         val newCard = wizardCardWithOwner.fromXML(xml)
+        newCard should be(wizardCardWithOwner)
+      }
+
+      "is able to store itself in a json representation and restore successfully" in {
+        val json = wizardCardWithOwner.toJson
+        val newCard = wizardCardWithOwner.fromJson(json)
         newCard should be(wizardCardWithOwner)
       }
     }
