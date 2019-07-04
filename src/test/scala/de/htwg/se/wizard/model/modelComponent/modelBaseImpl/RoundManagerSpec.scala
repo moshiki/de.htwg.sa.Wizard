@@ -19,7 +19,8 @@ class RoundManagerSpec extends WordSpec with Matchers {
 
       "is able to store itself in an xml representation and restore successfully" in {
         val stitchesPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0)
-        val rm = roundManager.addPlayer("P").copy(predictionPerRound = List(0, 1), cleanMap = stitchesPerRound)
+        var rm = roundManager.addPlayer("P").copy(predictionPerRound = List(0, 1), cleanMap = stitchesPerRound)
+        rm = rm.copy(playedCards = List(WizardCard(), JesterCard()))
         val xml = rm.toXML
         val roundManager2 = roundManager.fromXML(xml)
         roundManager2 should be(rm)
