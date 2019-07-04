@@ -22,6 +22,10 @@ class WelcomePanel(controller: ControllerInterface) extends BoxPanel(Orientation
     font = myFont
   }
 
+  val loadButton: Button = new Button("Continue Game...") {
+    font = myFont
+  }
+
   contents += new FlowPanel() {
     contents += new Label {
       private val temp = new ImageIcon("src/main/resources/wizard_logo.png").getImage
@@ -42,14 +46,20 @@ class WelcomePanel(controller: ControllerInterface) extends BoxPanel(Orientation
     contents += fivePlayerButton
   }
 
+  contents += new FlowPanel() {
+    contents += loadButton
+  }
+
   listenTo(threePlayerButton)
   listenTo(fourPlayerButton)
   listenTo(fivePlayerButton)
+  listenTo(loadButton)
 
 
   reactions += {
     case ButtonClicked(`threePlayerButton`) => controller.eval("3")
     case ButtonClicked(`fourPlayerButton`) => controller.eval("4")
     case ButtonClicked(`fivePlayerButton`) => controller.eval("5")
+    case ButtonClicked(`loadButton`) => controller.load()
   }
 }

@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.aview.gui
 
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
-import javax.swing.{BorderFactory, ImageIcon}
+import javax.swing.{BorderFactory, ImageIcon, JOptionPane}
 
 import scala.swing._
 import Swing._
@@ -11,8 +11,8 @@ import scala.swing.event.{ButtonClicked, Key, KeyPressed, MouseClicked}
 class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
   val currentPlayer: String = controller.getCurrentPlayerString
 
-  if (controller.predictionMode) preferredSize = new Dimension(1000, 720)
-  else preferredSize = new Dimension(1000, 840)
+  if (controller.predictionMode) preferredSize = new Dimension(1000, 760)
+  else preferredSize = new Dimension(1000, 880)
   border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)
 
@@ -154,4 +154,22 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
       contents = new Table(controller.resultArray, controller.playersAsStringList)
     }
   }
+
+
+  contents += new FlowPanel() {
+    val saveButton: Button = new Button("Save current progress...") {
+      font = myFont
+    }
+
+    contents += saveButton
+
+    listenTo(saveButton)
+
+    reactions += {
+      case ButtonClicked(`saveButton`) =>
+        controller.save()
+        JOptionPane.showMessageDialog(null, "Saving was successful.")
+    }
+  }
+
 }
