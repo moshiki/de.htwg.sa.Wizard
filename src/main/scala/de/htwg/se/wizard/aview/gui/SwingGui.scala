@@ -2,6 +2,7 @@ package de.htwg.se.wizard.aview.gui
 
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import de.htwg.se.wizard.util.Observer
+import javax.swing.WindowConstants
 
 import scala.swing._
 
@@ -12,7 +13,7 @@ class SwingGui(controller: ControllerInterface) extends Frame with Observer {
 
   contents = new WelcomePanel(controller)
 
-  peer.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE)
+  peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
   visible = true
   centerOnScreen()
   resizable = false

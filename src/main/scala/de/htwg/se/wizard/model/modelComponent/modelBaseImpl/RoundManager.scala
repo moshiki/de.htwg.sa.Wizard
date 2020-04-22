@@ -40,10 +40,10 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def playCard(selectedCard: Int): RoundManager = {
     val player = players(currentPlayer)
-    val currentPlayersCards = player.getPlayerCards.get.to[ListBuffer]
+    val currentPlayersCards = player.getPlayerCards.get.to(ListBuffer)
     val playedCard = currentPlayersCards.remove(selectedCard - 1)
 
-    val newPlayers = players.to[ListBuffer]
+    val newPlayers = players to ListBuffer
     newPlayers.update(currentPlayer, player.assignCards(Some(currentPlayersCards.toList)))
 
     this.copy(playedCards = playedCard :: playedCards, players = newPlayers.toList)
@@ -52,8 +52,8 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def cardDistribution: RoundManager = {
     if (players.head.getPlayerCards.isDefined && players.head.getPlayerCards.get.nonEmpty) return this
-    val stack = shuffledCardStack.to[ListBuffer]
-    val newPlayers = players.to[ListBuffer]
+    val stack = shuffledCardStack to ListBuffer
+    val newPlayers = players to ListBuffer
 
     for (i <- players.indices) {
       var list = List[Card]()

@@ -3,7 +3,7 @@ package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 object RoundStrategy {
 
   abstract class RoundStrategy() {
-    def strategy(numberOfPlayers: Int)
+    def strategy(numberOfPlayers: Int): Unit
 
     def strategy3Players(): RoundManager
 
