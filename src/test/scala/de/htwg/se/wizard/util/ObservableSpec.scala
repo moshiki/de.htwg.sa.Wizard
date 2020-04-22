@@ -1,26 +1,20 @@
 package de.htwg.se.wizard.util
 
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class ObservableSpec extends AnyWordSpec with Matchers{
+class ObservableSpec extends AnyWordSpec with Matchers with MockFactory {
   "An Observable" should {
     val observable = new Observable
-    val observer = new Observer { // wontfix
-      var updated: Boolean = false
-
-      def isUpdated: Boolean = updated
-
-      override def update(): Unit = updated = true
-    }
+    val observer = stub[Observer]
     "add an Observer" in {
       observable.add(observer)
       observable.subscribers should contain(observer)
     }
     "notify an Observer" in {
-      observer.isUpdated should be(false)
       observable.notifyObservers()
-      observer.isUpdated should be(true)
+      (observer.update _).verify().once()
     }
     "remove an Observer" in {
       observable.remove(observer)

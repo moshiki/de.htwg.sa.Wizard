@@ -15,18 +15,12 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     val resultTable = ResultTable.initializeTable(20, 3)
     val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager, fileIOStub)
-    val observer = new Observer { // wontfix
-      var updated: Boolean = false
-
-      def isUpdated: Boolean = updated
-
-      override def update(): Unit = updated = true
-    }
+    val observer = stub[Observer]
 
     controller.add(observer)
     "notify its observer after evaluating an input string" in {
       controller.eval("4")
-      observer.updated should be(true)
+      (observer.update _).verify().once
     }
 
     "gets the correct string depending of the current state" in {
