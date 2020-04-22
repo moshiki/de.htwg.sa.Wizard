@@ -1,17 +1,19 @@
 package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
-import de.htwg.se.wizard.controller.controllerComponent._
-import de.htwg.se.wizard.model.modelComponent
+import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
+import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, ResultTable, RoundManager}
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards._
 import de.htwg.se.wizard.util.Observer
 import org.scalatest.{Matchers, WordSpec}
+import org.scalamock.scalatest.MockFactory
 
-class ControllerSpec extends WordSpec with Matchers {
+class ControllerSpec extends WordSpec with Matchers with MockFactory {
   "A Controller" when {
+    val fileIOStub = stub[FileIOInterface]
     val resultTable = ResultTable.initializeTable(20, 3)
     val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val controller = new Controller(roundManager, fileIOStub)
     val observer = new Observer { // wontfix
       var updated: Boolean = false
 
@@ -19,6 +21,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
       override def update(): Unit = updated = true
     }
+
     controller.add(observer)
     "notify its observer after evaluating an input string" in {
       controller.eval("4")
@@ -118,19 +121,31 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "save and restore the whole game" in {
-      val roundManager = RoundManager.Builder().build()
-      val controller = new Controller(roundManager)
+      val roundManagerStub = stub[ModelInterface]
+      val fileIOMock = mock[FileIOInterface]
+      fileIOMock.save _ expects("PreSetupState", roundManagerStub)
+      fileIOMock.load _ expects roundManagerStub returning("PreSetupState",roundManagerStub)
+      val controller = new Controller(roundManagerStub, fileIOMock)
       controller.save()
       controller.load()
+      controller.state should be(PreSetupState(controller))
+      controller.roundManager should be(roundManagerStub)
     }
 
     "save and restore the whole game with all four possible controller states" in {
-      val roundManager = RoundManager.Builder().build()
-      val controller = new Controller(roundManager)
+      val roundManagerStub = stub[ModelInterface]
+      val fileIOMock = mock[FileIOInterface]
+      fileIOMock.save _ expects("PreSetupState", roundManagerStub)
+      fileIOMock.load _ expects roundManagerStub returning("PreSetupState",roundManagerStub)
+
+      val controller = new Controller(roundManagerStub, fileIOMock)
       var state = controller.state
       controller.save()
       controller.load()
       controller.state should be(state)
+
+      fileIOMock.save _ expects("SetupState", roundManagerStub)
+      fileIOMock.load _ expects roundManagerStub returning("SetupState",roundManagerStub)
 
       state = SetupState(controller)
       controller.state = state
@@ -138,11 +153,17 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.load()
       controller.state should be(state)
 
+      fileIOMock.save _ expects("InGameState", roundManagerStub)
+      fileIOMock.load _ expects roundManagerStub returning("InGameState",roundManagerStub)
+
       state = InGameState(controller)
       controller.state = state
       controller.save()
       controller.load()
       controller.state should be(state)
+
+      fileIOMock.save _ expects("GameOverState", roundManagerStub)
+      fileIOMock.load _ expects roundManagerStub returning("GameOverState",roundManagerStub)
 
       state = GameOverState(controller)
       controller.state = state
@@ -153,9 +174,10 @@ class ControllerSpec extends WordSpec with Matchers {
   }
 
   "A preSetupState" when {
+    val fileIOStub = stub[FileIOInterface]
     val resultTable = ResultTable.initializeTable(20, 3)
     val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val controller = new Controller(roundManager, fileIOStub)
     val state = PreSetupState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       val old = roundManager
@@ -195,9 +217,10 @@ class ControllerSpec extends WordSpec with Matchers {
   }
 
   "A SetupState" when {
+    val fileIOStub = stub[FileIOInterface]
     val resultTable = ResultTable.initializeTable(20, 3)
     val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val controller = new Controller(roundManager, fileIOStub)
     val state = SetupState(controller)
 
     "does nothing when theres no input" in {
@@ -234,9 +257,10 @@ class ControllerSpec extends WordSpec with Matchers {
   }
 
   "A InGameState" when {
+    val fileIOStub = stub[FileIOInterface]
     val resultTable = ResultTable.initializeTable(20, 3)
     val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val controller = new Controller(roundManager, fileIOStub)
     controller.state = InGameState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       controller.eval("AAA")
@@ -297,9 +321,10 @@ class ControllerSpec extends WordSpec with Matchers {
   }
 
   "A GameOverState" should {
+    val fileIOStub = stub[FileIOInterface]
     val resultTable = ResultTable.initializeTable(20, 3)
     val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val controller = new Controller(roundManager, fileIOStub)
     val state = GameOverState(controller)
     "do nothing when evaluating" in {
       state.evaluate("5")

@@ -7,8 +7,8 @@ import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import de.htwg.se.wizard.util.UndoManager
 
-class Controller @Inject()(var roundManager: ModelInterface) extends ControllerInterface {
-  val fileIOInterface: FileIOInterface = Guice.createInjector(new WizardModule).getInstance(classOf[FileIOInterface])
+class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: FileIOInterface) extends ControllerInterface {
+  //val fileIOInterface: FileIOInterface = Guice.createInjector(new WizardModule).getInstance(classOf[FileIOInterface])
 
   val undoManager = new UndoManager
 

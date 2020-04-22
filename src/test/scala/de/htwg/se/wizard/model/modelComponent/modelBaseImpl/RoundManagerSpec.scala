@@ -1,16 +1,19 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
 import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards._
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.{Matchers, WordSpec}
 import play.api.libs.json.Json
 
-class RoundManagerSpec extends WordSpec with Matchers {
+class RoundManagerSpec extends WordSpec with Matchers with MockFactory {
   "A Round Manager" when {
     "new" should {
+      val fileIOStub = stub[FileIOInterface]
       val resultTable = ResultTable.initializeTable(20, 3)
       val roundManager = RoundManager(resultTable = resultTable)
-      val controller = new Controller(roundManager)
+      val controller = new Controller(roundManager, fileIOStub)
       "set the number of players correctly" in {
         controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3)
         controller.roundManager.checkNumberOfPlayers(3)
@@ -36,9 +39,10 @@ class RoundManagerSpec extends WordSpec with Matchers {
     }
   }
   "controller is in setup mode" should {
+    val fileIOStub = stub[FileIOInterface]
     val resultTable = ResultTable.initializeTable(20, 3)
     val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val controller = new Controller(roundManager, fileIOStub)
     "ask for next player's name correctly" in {
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayer = 1)
       controller.roundManager.getSetupStrings should be("Player 1, please enter your name:")
@@ -74,9 +78,10 @@ class RoundManagerSpec extends WordSpec with Matchers {
   }
 
   "controller is in game mode" should {
+    val fileIOStub = stub[FileIOInterface]
     val resultTable = ResultTable.initializeTable(20, 3)
     val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager)
+    val controller = new Controller(roundManager, fileIOStub)
 
     "should ask player for his prediction if Prediction list is empty" in {
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,

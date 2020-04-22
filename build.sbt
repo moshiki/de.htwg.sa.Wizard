@@ -8,6 +8,7 @@ trapExit := false
 
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.1.1"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.1" % Test
+libraryDependencies += "org.scalamock" %% "scalamock" % "4.4.0" % Test
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "2.1.1"
 
