@@ -3,9 +3,9 @@ package de.htwg.se.wizard.aview.gui
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import javax.swing.{BorderFactory, ImageIcon, JOptionPane}
 
-import scala.swing._
-import Swing._
 import scala.collection.immutable
+import scala.swing.Swing._
+import scala.swing._
 import scala.swing.event.{ButtonClicked, Key, KeyPressed, MouseClicked}
 
 class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
@@ -79,7 +79,6 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
         contents = new FlowPanel() {
           val playerCards: List[String] = controller.currentPlayersCards
           val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
-            val index: Int = i
             private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
             private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
             icon = new ImageIcon(resize)

@@ -43,7 +43,7 @@ trait ModelInterface {
 
   def saveCleanMap: ModelInterface
 
-  def setPredictionMode: ModelInterface
+  def setPredictionMode(): ModelInterface
 
   def cardDistribution: ModelInterface
 

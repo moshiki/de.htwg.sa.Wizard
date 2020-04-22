@@ -8,11 +8,11 @@ bin/
 
 # Intellij
 .idea/
-target/
+# target/
 
 # Maven
 log/
-target/
+# target/
 
 # Gradle
 .gradle/

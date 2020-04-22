@@ -1,7 +1,6 @@
 package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
-import com.google.inject.{Guice, Inject}
-import de.htwg.se.wizard.WizardModule
+import com.google.inject.Inject
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
@@ -130,7 +129,7 @@ case class SetupState(controller: Controller) extends ControllerState {
     if (controller.roundManager.createdPlayers == controller.roundManager.numberOfPlayers) {
       controller.roundManager = controller.roundManager.saveCleanMap
 
-      controller.roundManager = controller.roundManager.setPredictionMode
+      controller.roundManager = controller.roundManager.setPredictionMode()
       controller.roundManager = controller.roundManager.cardDistribution
       controller.nextState()
     }
@@ -158,7 +157,7 @@ case class InGameState(controller: Controller) extends ControllerState {
     }
 
     if (controller.roundManager.recordedPredictions < controller.roundManager.numberOfPlayers) {
-      controller.roundManager = controller.roundManager.setPredictionMode
+      controller.roundManager = controller.roundManager.setPredictionMode()
       controller.roundManager = controller.roundManager.cardDistribution
     } else {
       controller.roundManager = controller.roundManager.unsetPredictionMode

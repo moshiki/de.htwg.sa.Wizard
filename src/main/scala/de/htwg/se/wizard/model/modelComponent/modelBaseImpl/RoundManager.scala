@@ -241,7 +241,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def saveCleanMap: ModelInterface = this.copy(cleanMap = stitchesPerRound)
 
-  override def setPredictionMode: ModelInterface = this.copy(predictionMode = true)
+  override def setPredictionMode(): ModelInterface = this.copy(predictionMode = true)
 
   override def recordedPredictions: Int = predictionPerRound.size
 
