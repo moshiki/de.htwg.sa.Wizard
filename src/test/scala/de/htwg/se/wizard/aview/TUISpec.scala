@@ -5,9 +5,10 @@ import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Contr
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{ResultTable, RoundManager}
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class TUISpec extends WordSpec with Matchers with MockFactory {
+class TUISpec extends AnyWordSpec with Matchers with MockFactory {
   "A Wizard Tui" should {
     val fileIOStub = stub[FileIOInterface]
     val controller = new Controller(RoundManager(numberOfPlayers = 3, resultTable = ResultTable.initializeTable()), fileIOStub)

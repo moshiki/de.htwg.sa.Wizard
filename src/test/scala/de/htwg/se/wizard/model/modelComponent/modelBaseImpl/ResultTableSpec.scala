@@ -1,9 +1,10 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.Json
 
-class ResultTableSpec extends WordSpec with Matchers {
+class ResultTableSpec extends AnyWordSpec with Matchers {
   "A ResultTable" should {
     val table = ResultTable.initializeTable(20, 3)
     "set ResultTable correctly" in {

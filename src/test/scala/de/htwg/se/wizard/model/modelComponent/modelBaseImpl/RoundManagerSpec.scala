@@ -4,10 +4,11 @@ import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Contr
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards._
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.Json
 
-class RoundManagerSpec extends WordSpec with Matchers with MockFactory {
+class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
   "A Round Manager" when {
     "new" should {
       val fileIOStub = stub[FileIOInterface]

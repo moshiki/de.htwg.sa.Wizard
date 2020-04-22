@@ -1,9 +1,10 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
 
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class WizardCardSpec extends WordSpec with Matchers {
+class WizardCardSpec extends AnyWordSpec with Matchers {
   "A WizardCard" when {
     "is a WizardCard without owner" should {
       val wizardCard = WizardCard()

@@ -1,8 +1,9 @@
 package de.htwg.se.wizard.util
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class UndoManagerSpec extends WordSpec with Matchers {
+class UndoManagerSpec extends AnyWordSpec with Matchers {
       "An UndoManager" should {
         val undoManager = new UndoManager
 

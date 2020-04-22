@@ -3,9 +3,10 @@ package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{ResultTable, RoundManager}
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class EvalStepSpec extends WordSpec with Matchers with MockFactory {
+class EvalStepSpec extends AnyWordSpec with Matchers with MockFactory {
   "An EvalStep" when {
     val fileIOStub = stub[FileIOInterface]
     val controller = new Controller(RoundManager(resultTable = ResultTable.initializeTable()), fileIOStub)

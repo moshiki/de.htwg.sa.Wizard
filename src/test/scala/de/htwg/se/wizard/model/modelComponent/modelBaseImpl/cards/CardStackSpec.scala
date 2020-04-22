@@ -1,9 +1,10 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
 
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class CardStackSpec extends WordSpec with Matchers {
+class CardStackSpec extends AnyWordSpec with Matchers {
   "An initial CardStack" should {
     val cardStack = CardStack.initialize
     "contain 60 cards" in {

@@ -1,9 +1,10 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
 
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class DefaultCardSpec extends WordSpec with Matchers {
+class DefaultCardSpec extends AnyWordSpec with Matchers {
   "A Card" when {
     "is a blue DefaultCard of value 2 without owner" should {
       val defaultCard = DefaultCard("blue", 2)

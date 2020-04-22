@@ -1,8 +1,9 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class RoundStrategySpec extends WordSpec with Matchers{
+class RoundStrategySpec extends AnyWordSpec with Matchers{
   "A RoundStrategy" when {
     "should set rounds based on players input" should {
       val roundManager1 = RoundStrategy.execute(3)

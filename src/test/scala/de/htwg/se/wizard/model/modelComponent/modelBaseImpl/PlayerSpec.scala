@@ -1,10 +1,11 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards.{Card, JesterCard, WizardCard}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.Json
 
-class PlayerSpec extends WordSpec with Matchers {
+class PlayerSpec extends AnyWordSpec with Matchers {
 
   "A Player" when {
     "new" should {

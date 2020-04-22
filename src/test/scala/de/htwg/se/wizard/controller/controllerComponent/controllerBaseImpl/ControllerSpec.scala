@@ -2,13 +2,14 @@ package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, ResultTable, RoundManager}
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards._
+import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, ResultTable, RoundManager}
 import de.htwg.se.wizard.util.Observer
-import org.scalatest.{Matchers, WordSpec}
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class ControllerSpec extends WordSpec with Matchers with MockFactory {
+class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
   "A Controller" when {
     val fileIOStub = stub[FileIOInterface]
     val resultTable = ResultTable.initializeTable(20, 3)

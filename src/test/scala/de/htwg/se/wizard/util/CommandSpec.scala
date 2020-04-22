@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.util
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 
 class incrCommand extends Command {
@@ -16,7 +17,7 @@ class incrCommand extends Command {
 
 
 
-class CommandSpec extends  WordSpec with Matchers {
+class CommandSpec extends  AnyWordSpec with Matchers {
   "A Command" should {
 
     "have a do step" in {

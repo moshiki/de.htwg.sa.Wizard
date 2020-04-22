@@ -1,15 +1,15 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.se.wizard.controller.controllerComponent._
-import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.{Controller, GameOverState, InGameState, PreSetupState, SetupState}
+import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl._
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, ResultTable, RoundManager}
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards.{CardStack, WizardCard}
+import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, ResultTable, RoundManager}
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class SwingGuiSpec extends WordSpec with Matchers with MockFactory {
-  val fileIOStub = stub[FileIOInterface]
+class SwingGuiSpec extends AnyWordSpec with Matchers with MockFactory {
+  val fileIOStub: FileIOInterface = stub[FileIOInterface]
   val controller = new Controller(RoundManager(resultTable = ResultTable.initializeTable(),
      shuffledCardStack = CardStack.shuffleCards(CardStack.initialize)), fileIOStub)
   "A SwingGuiSpec" should {
