@@ -13,6 +13,7 @@ trait ControllerInterface extends Observable {
 
   def load(): Unit
 
+  // TODO: Mehr Scala Style
   def getCurrentStateAsString: String
 
   def controllerStateAsString: String

@@ -4,6 +4,7 @@ import play.api.libs.json.JsValue
 
 import scala.xml.Elem
 
+// TODO: Mehr Scala Style
 trait ModelInterface {
   def toXML: Elem
 

@@ -8,7 +8,7 @@ object CardStack {
   val initialize: List[Card] = {
     val wizards = List.fill(4)(Card.apply("wizard"))
     val jesters = List.fill(4)(Card.apply("jester"))
-    val normals = for {
+    val normals = for { // TODO: Als eine Zeile
       color <- List("red", "blue", "yellow", "green")
       number <- 1 to 13
     } yield DefaultCard(color, number)
@@ -16,9 +16,7 @@ object CardStack {
     wizards ::: jesters ::: normals
   }
 
-  def shuffleCards(a: List[Card]): List[Card] = {
-    Random.shuffle(a)
-  }
+  def shuffleCards(a: List[Card]): List[Card] = Random.shuffle(a)
 
   def getPlayerOfHighestCard(cardList: List[Card], color: Option[String]): Player = {
     var actualColor = ""

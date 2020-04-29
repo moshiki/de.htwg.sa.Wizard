@@ -13,19 +13,19 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
     points.toArray map(innerVector => innerVector.toArray[Any])
   }
 
-  override def toString: String = {
+  override def toString: String = { // TODO: Package AsciiTable verwenden
     val horizontalBar = "#" + ("##############" * numberOfPlayers)
 
     def oneLine(line: Int) = points(line).mkString("#      ", "      #      ", "      #")
 
     var returnString = "#"
-    for (i <- 1 to numberOfPlayers) {
+    for (i <- 1 to numberOfPlayers) { // TODO
       returnString += "  Player  " + i + "  #"
     }
 
     returnString += "\n"
 
-    for (i <- 0 until roundsToPlay) {
+    for (i <- 0 until roundsToPlay) { // TODO
       returnString += horizontalBar + "\n"
       returnString += oneLine(i) + "\n"
     }
@@ -52,7 +52,7 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
     val table = ResultTable.initializeTable(roundsToPlay, numberOfPlayers)
     var vector = table.points
 
-    for(i <- vector.indices) {
+    for(i <- vector.indices) { // TODO: Rekursiv
       for (j <- vector(i).indices) {
         vector = vector.updated(i, vector(i).updated(j,pointList(i * j + j)))
       }

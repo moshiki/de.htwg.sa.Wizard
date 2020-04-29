@@ -7,6 +7,7 @@ import play.api.libs.json.{JsValue, Json}
 import scala.collection.mutable.ListBuffer
 import scala.xml.Elem
 
+// TODO: Getter und mehr Scala-Style
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
                         shuffledCardStack: List[Card] = CardStack.shuffleCards(CardStack.initialize),
@@ -55,7 +56,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val stack = shuffledCardStack to ListBuffer
     val newPlayers = players to ListBuffer
 
-    for (i <- players.indices) {
+    for (i <- players.indices) { // TODO: Rekursiv
       var list = List[Card]()
       for (_ <- 1 to currentRound) {
         val card = stack.remove(0)
@@ -78,10 +79,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     "Player " + currentPlayer + ", please enter your name:"
   }
 
-  def nextPlayerSetup: Int = {
-    if (currentPlayer < numberOfPlayers) currentPlayer + 1
-    else 0
-  }
+  def nextPlayerSetup: Int = if (currentPlayer < numberOfPlayers) currentPlayer + 1 else 0
 
   override def getPlayerStateStrings: String = {
     if (currentRound == numberOfRounds && currentPlayer == 0) {
@@ -112,7 +110,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
 
   override def nextPlayer: RoundManager = {
-    if (currentPlayer < numberOfPlayers - 1) this.copy(currentPlayer = currentPlayer + 1)
+    if (currentPlayer < numberOfPlayers - 1) copy(currentPlayer = currentPlayer + 1)
     else {
       var newRoundManager = this
       if (!predictionMode) newRoundManager = stitchInThisCycle
@@ -139,7 +137,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   def pointsForRound(): ResultTable = {
     var table = resultTable
-    for (i <- players.indices) {
+    for (i <- players.indices) { // TODO: Eventuell Datenstruktur anpassen
       table = table.updatePoints(currentRound, i,
         RoundManager.calcPoints(predictionPerRound(i), stitchesPerRound(players(i).getName)))
     }

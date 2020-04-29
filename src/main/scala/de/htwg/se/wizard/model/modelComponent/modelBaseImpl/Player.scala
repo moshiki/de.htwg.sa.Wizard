@@ -8,7 +8,7 @@ import scala.xml.Elem
 case class Player(name: String, playerCards: Option[List[Card]] = None) {
   override def toString: String = name
 
-  def getPlayerCards: Option[List[Card]] = {
+  def getPlayerCards: Option[List[Card]] = { // TODO: remove getter
     playerCards
   }
 
@@ -16,7 +16,7 @@ case class Player(name: String, playerCards: Option[List[Card]] = None) {
     this.copy(playerCards = cards)
   }
 
-   def getName: String = {
+   def getName: String = { // TODO: remove getter
     name
   }
 
@@ -34,24 +34,17 @@ case class Player(name: String, playerCards: Option[List[Card]] = None) {
 }
 
 object Player {
-  def checkNumberOfPlayers(number: Int): Boolean = {
-    if (number < 3 || number > 5) return false
-    true
-  }
+  def checkNumberOfPlayers(number: Int): Boolean = number < 3 || number > 5
 
 
-  def playerTurn(player: Player, round: Int): String = {
-
+  def playerTurn(player: Player, round: Int): String = { // TODO: '''
     val cards = player.getPlayerCards.get
-
-
     val firstString = "Round " + round + " - Player: " + player.getName
     val secondString = "Select one of the following cards:"
-
     firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
   }
 
-  def playerPrediction(player: Player, round: Int, trump: Option[String]): String = {
+  def playerPrediction(player: Player, round: Int, trump: Option[String]): String = { // TODO: '''
     val firstString = "Round " + round + " - Player: " + player.getName
     val secondString = "Trump Color: " + trump.getOrElse("None")
     val thirdString = "Your Cards: " + "{ " + player.getPlayerCards.get.mkString(", ") + " }"

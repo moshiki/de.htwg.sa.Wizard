@@ -42,6 +42,8 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
     }
   }
 
+  // TODO: Mehr Scala Style (also ohne get)
+
   override def getCurrentPlayerNumber: Int = roundManager.getCurrentPlayerNumber
 
   override def getCurrentPlayerString: String = roundManager.getCurrentPlayerString
