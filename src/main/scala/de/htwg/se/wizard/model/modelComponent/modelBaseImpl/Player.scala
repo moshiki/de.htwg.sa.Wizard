@@ -34,8 +34,7 @@ case class Player(name: String, playerCards: Option[List[Card]] = None) {
 }
 
 object Player {
-  def checkNumberOfPlayers(number: Int): Boolean = number < 3 || number > 5
-
+  def checkNumberOfPlayers(number: Int): Boolean = number >= 3 && number <= 5
 
   def playerTurn(player: Player, round: Int): String = { // TODO: '''
     val cards = player.getPlayerCards.get
