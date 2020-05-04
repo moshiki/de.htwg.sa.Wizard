@@ -64,11 +64,8 @@ case class RoundManager(numberOfPlayers: Int = 0,
     if (currentRound == numberOfRounds && currentPlayer == 0) {
       return "\nGame Over! Press 'q' to quit.\n" + resultTable.toString
     }
-    if (predictionPerRound.size < numberOfPlayers) { // TODO
-      var out = "\n"
-      if (currentPlayer == 0) out += resultTable.toString + "\n"
-      out += Player.playerPrediction(players(currentPlayer), currentRound, trumpColor)
-      out
+    if (predictionPerRound.size < numberOfPlayers) {
+      "\n" + {if (currentPlayer == 0) resultTable.toString + "\n" else ""} + Player.playerPrediction(players(currentPlayer), currentRound, trumpColor)
     } else {
       Player.playerTurn(players(currentPlayer), currentRound)
     }
@@ -91,8 +88,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   override def nextPlayer: RoundManager = {
     if (currentPlayer < numberOfPlayers - 1) copy(currentPlayer = currentPlayer + 1)
     else {
-      var newRoundManager = this
-      if (!predictionMode) newRoundManager = trickInThisCycle
+      val newRoundManager = if (!predictionMode) trickInThisCycle else this
       newRoundManager.copy(currentPlayer = 0)
     }
   }
@@ -122,11 +118,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     table
   }
 
-  def mapToXMLList(map: Map[String, Int]): List[Elem] = {
-    var list = List.empty[Elem]
-    map.foreach(kv => list = <entry><player>{kv._1}</player><trick>{kv._2}</trick></entry> :: list)
-    list
-  }
+  def mapToXMLList(map: Map[String, Int]): List[Elem] = map.map(kv => <entry><player>{kv._1}</player><trick>{kv._2}</trick></entry>).toList
 
   override def toXML: Elem = {
     <RoundManager>
