@@ -22,7 +22,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         resultTable: ResultTable) extends ModelInterface {
   val initialCardStack: List[Card] = CardStack.initialize
 
-  override def checkNumberOfPlayers(number: Int): Boolean = {
+  override def isNumberOfPlayersValid(number: Int): Boolean = {
     Player.checkNumberOfPlayers(number)
   }
 
@@ -75,13 +75,13 @@ case class RoundManager(numberOfPlayers: Int = 0,
     this.copy(predictionPerRound = predictionPerRound ::: List(input))
   }
 
-  override def getSetupStrings: String = {
+  override def setupStrings: String = {
     "Player " + currentPlayer + ", please enter your name:"
   }
 
   def nextPlayerSetup: Int = if (currentPlayer < numberOfPlayers) currentPlayer + 1 else 0
 
-  override def getPlayerStateStrings: String = {
+  override def playerStateStrings: String = {
     if (currentRound == numberOfRounds && currentPlayer == 0) {
       return "\nGame Over! Press 'q' to quit.\n" + resultTable.toString
     }
@@ -215,17 +215,17 @@ case class RoundManager(numberOfPlayers: Int = 0,
     )
   }
 
-  override def getCurrentPlayerNumber: Int = currentPlayer
+  override def currentPlayerNumber: Int = currentPlayer
 
-  override def getCurrentPlayerString: String = players(currentPlayer).toString
+  override def currentPlayerString: String = players(currentPlayer).toString
 
-  override def getCurrentAmountOfStitches: Int = stitchesPerRound(getCurrentPlayerString)
+  override def currentAmountOfStitches: Int = stitchesPerRound(currentPlayerString)
 
-  override def getPlayerPrediction: Int = predictionPerRound(getCurrentPlayerNumber)
+  override def playerPrediction: Int = predictionPerRound(currentPlayerNumber)
 
   override def playedCardsAsString: List[String] = playedCards.map(card => card.toString)
 
-  override def currentPlayersCards: List[String] = players(getCurrentPlayerNumber).getPlayerCards.get.map(card => card.toString)
+  override def currentPlayersCards: List[String] = players(currentPlayerNumber).getPlayerCards.get.map(card => card.toString)
 
   override def topOfStackCardString: String = shuffledCardStack.head.toString
 
@@ -239,13 +239,13 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def saveCleanMap: ModelInterface = this.copy(cleanMap = stitchesPerRound)
 
-  override def setPredictionMode(): ModelInterface = this.copy(predictionMode = true)
+  override def invokePredictionMode(): ModelInterface = this.copy(predictionMode = true)
 
   override def recordedPredictions: Int = predictionPerRound.size
 
-  override def unsetPredictionMode: ModelInterface = this copy(predictionMode = false)
+  override def leavePredictionMode: ModelInterface = this copy(predictionMode = false)
 
-  override def setPlayersAndRounds(numberOfPlayer: Int): ModelInterface = RoundStrategy.execute(numberOfPlayer)
+  override def configurePlayersAndRounds(numberOfPlayer: Int): ModelInterface = RoundStrategy.execute(numberOfPlayer)
 
   override def toJson: JsValue = Json.toJson(this)
 

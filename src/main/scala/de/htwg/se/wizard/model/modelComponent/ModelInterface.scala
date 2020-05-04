@@ -4,19 +4,18 @@ import play.api.libs.json.JsValue
 
 import scala.xml.Elem
 
-// TODO: Mehr Scala Style
 trait ModelInterface {
   def toXML: Elem
 
   def fromXML(node: scala.xml.Node): ModelInterface
 
-  def getCurrentPlayerNumber: Int
+  def currentPlayerNumber: Int
 
-  def getCurrentPlayerString: String
+  def currentPlayerString: String
 
-  def getCurrentAmountOfStitches: Int
+  def currentAmountOfStitches: Int
 
-  def getPlayerPrediction: Int
+  def playerPrediction: Int
 
   def predictionMode: Boolean
 
@@ -32,7 +31,7 @@ trait ModelInterface {
 
   def resultArray: Array[Array[Any]]
 
-  def checkNumberOfPlayers(number: Int): Boolean
+  def isNumberOfPlayersValid(number: Int): Boolean
 
   def nextPlayerInSetup: ModelInterface
 
@@ -44,11 +43,11 @@ trait ModelInterface {
 
   def saveCleanMap: ModelInterface
 
-  def setPredictionMode(): ModelInterface
+  def invokePredictionMode(): ModelInterface
 
   def cardDistribution: ModelInterface
 
-  def getSetupStrings: String
+  def setupStrings: String
 
   def updatePlayerPrediction(input: Int): ModelInterface
 
@@ -62,11 +61,11 @@ trait ModelInterface {
 
   def recordedPredictions: Int
 
-  def unsetPredictionMode: ModelInterface
+  def leavePredictionMode: ModelInterface
 
-  def getPlayerStateStrings: String
+  def playerStateStrings: String
 
-  def setPlayersAndRounds(numberOfPlayer: Int): ModelInterface
+  def configurePlayersAndRounds(numberOfPlayer: Int): ModelInterface
 
   def toJson: JsValue
 

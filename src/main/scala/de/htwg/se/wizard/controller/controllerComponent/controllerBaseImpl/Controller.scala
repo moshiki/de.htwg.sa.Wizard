@@ -44,13 +44,13 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
 
   // TODO: Mehr Scala Style (also ohne get)
 
-  override def getCurrentPlayerNumber: Int = roundManager.getCurrentPlayerNumber
+  override def getCurrentPlayerNumber: Int = roundManager.currentPlayerNumber
 
-  override def getCurrentPlayerString: String = roundManager.getCurrentPlayerString
+  override def getCurrentPlayerString: String = roundManager.currentPlayerString
 
-  override def getCurrentAmountOfStitches: Int = roundManager.getCurrentAmountOfStitches
+  override def getCurrentAmountOfStitches: Int = roundManager.currentAmountOfStitches
 
-  override def getPlayerPrediction: Int = roundManager.getPlayerPrediction
+  override def getPlayerPrediction: Int = roundManager.playerPrediction
 
   override def predictionMode: Boolean = roundManager.predictionMode
 
@@ -108,8 +108,8 @@ case class PreSetupState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     val number = Controller.toInt(input)
     if (number.isEmpty) return
-    if (!controller.roundManager.checkNumberOfPlayers(number.get)) return
-    controller.roundManager = controller.roundManager.setPlayersAndRounds(number.get)
+    if (!controller.roundManager.isNumberOfPlayersValid(number.get)) return
+    controller.roundManager = controller.roundManager.configurePlayersAndRounds(number.get)
     controller.nextState()
 
     controller.roundManager = controller.roundManager.nextPlayerInSetup
@@ -131,13 +131,13 @@ case class SetupState(controller: Controller) extends ControllerState {
     if (controller.roundManager.createdPlayers == controller.roundManager.numberOfPlayers) {
       controller.roundManager = controller.roundManager.saveCleanMap
 
-      controller.roundManager = controller.roundManager.setPredictionMode()
+      controller.roundManager = controller.roundManager.invokePredictionMode()
       controller.roundManager = controller.roundManager.cardDistribution
       controller.nextState()
     }
   }
 
-  override def getCurrentStateAsString: String = controller.roundManager.getSetupStrings
+  override def getCurrentStateAsString: String = controller.roundManager.setupStrings
 
   override def nextState: ControllerState = InGameState(controller)
 }
@@ -153,20 +153,20 @@ case class InGameState(controller: Controller) extends ControllerState {
     controller.roundManager = controller.roundManager.nextPlayer
     if (!controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.nextRound
     if (controller.roundManager.currentRound == controller.roundManager.numberOfRounds &&
-      controller.roundManager.getCurrentPlayerNumber == 0) {
+      controller.roundManager.currentPlayerNumber == 0) {
       controller.nextState()
       return
     }
 
     if (controller.roundManager.recordedPredictions < controller.roundManager.numberOfPlayers) {
-      controller.roundManager = controller.roundManager.setPredictionMode()
+      controller.roundManager = controller.roundManager.invokePredictionMode()
       controller.roundManager = controller.roundManager.cardDistribution
     } else {
-      controller.roundManager = controller.roundManager.unsetPredictionMode
+      controller.roundManager = controller.roundManager.leavePredictionMode
     }
   }
 
-  override def getCurrentStateAsString: String = controller.roundManager.getPlayerStateStrings
+  override def getCurrentStateAsString: String = controller.roundManager.playerStateStrings
 
   override def nextState: ControllerState = GameOverState(controller)
 }
