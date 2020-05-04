@@ -26,11 +26,11 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
     table.render()
   }
 
-  def toXML: Elem = { // TODO: for mit map ersetzen. Erstes map wird zu flatmap
+  def toXML: Elem = {
     <ResultTable>
       <roundsToPlay>{roundsToPlay}</roundsToPlay>
       <numberOfPlayers>{numberOfPlayers}</numberOfPlayers>
-      <points>{points.map(vector => for (i <- vector.indices) yield <point>{vector(i)}</point>)}</points>
+      <points>{points.flatMap(vector => vector.map(point => <point>{point}</point>))}</points>
     </ResultTable>
   }
 
