@@ -1,5 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
+import de.vandermeer.asciitable.AsciiTable
+
 import scala.xml.{Elem, Node}
 
 case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) {
@@ -13,25 +15,15 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
     points.toArray map(innerVector => innerVector.toArray[Any])
   }
 
-  override def toString: String = { // TODO: Package AsciiTable verwenden
-    val horizontalBar = "#" + ("##############" * numberOfPlayers)
-
-    def oneLine(line: Int) = points(line).mkString("#      ", "      #      ", "      #")
-
-    var returnString = "#"
-    for (i <- 1 to numberOfPlayers) { // TODO
-      returnString += "  Player  " + i + "  #"
-    }
-
-    returnString += "\n"
-
-    for (i <- 0 until roundsToPlay) { // TODO
-      returnString += horizontalBar + "\n"
-      returnString += oneLine(i) + "\n"
-    }
-
-    returnString += horizontalBar
-    returnString
+  override def toString: String = {
+    import scala.jdk.CollectionConverters._
+    val tableHeader = 1 to numberOfPlayers map("Player " + _)
+    val table = new AsciiTable()
+    table.addRule()
+    table addRow tableHeader.asJava
+    table.addRule()
+    points foreach { pointsPerRound => table addRow pointsPerRound.asJava; table.addRule()}
+    table.render()
   }
 
   def toXML: Elem = {
