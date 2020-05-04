@@ -7,7 +7,6 @@ import play.api.libs.json.{JsValue, Json}
 import scala.collection.mutable.ListBuffer
 import scala.xml.Elem
 
-// TODO: Getter und mehr Scala-Style
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
                         shuffledCardStack: List[Card] = CardStack.shuffleCards(CardStack.initialize),
@@ -27,27 +26,21 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   override def addPlayer(name: String): RoundManager = {
-
     val newPlayer = Player(name)
     val oldPlayerList = this.players
     if (oldPlayerList contains newPlayer) return this
     val newPlayerList = oldPlayerList ::: List(newPlayer)
-
-    var newTricksPerRound = collection.mutable.Map() ++ tricksPerRound
-    newTricksPerRound += name -> 0
-
-    this.copy(players = newPlayerList, tricksPerRound = newTricksPerRound.toMap)
+    val newTricksPerRound = collection.mutable.Map() ++ tricksPerRound += name -> 0
+    copy(players = newPlayerList, tricksPerRound = newTricksPerRound.toMap)
   }
 
   override def playCard(selectedCard: Int): RoundManager = {
     val player = players(currentPlayer)
     val currentPlayersCards = player.getPlayerCards.get.to(ListBuffer)
     val playedCard = currentPlayersCards.remove(selectedCard - 1)
-
     val newPlayers = players to ListBuffer
     newPlayers.update(currentPlayer, player.assignCards(Some(currentPlayersCards.toList)))
-
-    this.copy(playedCards = playedCard :: playedCards, players = newPlayers.toList)
+    copy(playedCards = playedCard :: playedCards, players = newPlayers.toList)
   }
 
 
@@ -67,17 +60,12 @@ case class RoundManager(numberOfPlayers: Int = 0,
       val newPlayer = players(i).assignCards(Some(list))
       newPlayers.update(i, newPlayer)
     }
-
-    this.copy(shuffledCardStack = stack.toList, players = newPlayers.toList)
+    copy(shuffledCardStack = stack.toList, players = newPlayers.toList)
   }
 
-  override def updatePlayerPrediction(input: Int): RoundManager = {
-    this.copy(predictionPerRound = predictionPerRound ::: List(input))
-  }
+  override def updatePlayerPrediction(input: Int): RoundManager = copy(predictionPerRound = predictionPerRound ::: List(input))
 
-  override def setupStrings: String = {
-    "Player " + currentPlayer + ", please enter your name:"
-  }
+  override def setupStrings: String = "Player " + currentPlayer + ", please enter your name:"
 
   def nextPlayerSetup: Int = if (currentPlayer < numberOfPlayers) currentPlayer + 1 else 0
 
@@ -85,7 +73,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     if (currentRound == numberOfRounds && currentPlayer == 0) {
       return "\nGame Over! Press 'q' to quit.\n" + resultTable.toString
     }
-    if (predictionPerRound.size < numberOfPlayers) {
+    if (predictionPerRound.size < numberOfPlayers) { // TODO
       var out = "\n"
       if (currentPlayer == 0) out += resultTable.toString + "\n"
       out += Player.playerPrediction(players(currentPlayer), currentRound, trumpColor)
@@ -97,7 +85,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def nextRound: RoundManager = {
     if (currentPlayer == 0 && currentRound != numberOfRounds && players.last.getPlayerCards.get.isEmpty) {
-      this.copy(
+      copy(
         resultTable = pointsForRound(),
         shuffledCardStack = CardStack.shuffleCards(initialCardStack),
         predictionPerRound = Nil,
@@ -140,7 +128,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
       table = table.updatePoints(currentRound, i,
         RoundManager.calcPoints(predictionPerRound(i), tricksPerRound(players(i).getName)))
     }
-
     table
   }
 
