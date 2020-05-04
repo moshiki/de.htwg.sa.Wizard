@@ -136,7 +136,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       <players>{players map(player => player.toXML)}</players>
       <currentPlayer>{currentPlayer}</currentPlayer>
       <currentRound>{currentRound}</currentRound>
-      <predictionPerRound>{for (i <- predictionPerRound.indices) yield <prediction>{predictionPerRound(i)}</prediction>}</predictionPerRound>
+      <predictionPerRound>{predictionPerRound.map(prediction => <prediction>{prediction}</prediction>)}</predictionPerRound>
       <tricksPerRound>{mapToXMLList(tricksPerRound)}</tricksPerRound>
       <playedCards>{playedCards.map(card => card.toXML)}</playedCards>
       <predictionMode>{predictionMode}</predictionMode>
@@ -157,14 +157,12 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val predictionPerRoundNode = (node \ "predictionPerRound").head.child
     val predictionPerRound = predictionPerRoundNode.map(node => (node \\ "prediction").text.toInt)
     val tricksPerRoundNode = (node \ "tricksPerRound") \ "entry"
-    var tricksPerRound = Map.empty[String, Int]
-    tricksPerRoundNode.reverse.foreach(node => tricksPerRound = tricksPerRound + ((node \ "player").text -> (node \ "trick").text.toInt))
+    val tricksPerRound = tricksPerRoundNode.reverse.map(node => (node \ "player").text -> (node \ "trick").text.toInt).toMap
     val playedCardsNode = (node \ "playedCards").head.child
     val playedCards = playedCardsNode.map(node => Card.fromXML(node))
     val predictionMode = (node \ "predictionMode").text.toBoolean
     val cleanMapNode = (node \ "cleanMap") \ "entry"
-    var cleanMap = Map.empty[String, Int]
-    cleanMapNode.reverse.foreach(node => cleanMap = cleanMap + ((node \ "player").text -> (node \ "trick").text.toInt))
+    val cleanMap = cleanMapNode.reverse.map(node => (node \ "player").text -> (node \ "trick").text.toInt).toMap
     val resultTable = this.resultTable.fromXML((node \ "resultTable").head.child.head)
     copy(
       numberOfPlayers = numberOfPlayers,
