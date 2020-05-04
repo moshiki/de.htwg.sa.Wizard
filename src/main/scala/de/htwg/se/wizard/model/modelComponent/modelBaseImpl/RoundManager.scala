@@ -21,9 +21,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         resultTable: ResultTable) extends ModelInterface {
   val initialCardStack: List[Card] = CardStack.initialize
 
-  override def isNumberOfPlayersValid(number: Int): Boolean = {
-    Player.checkNumberOfPlayers(number)
-  }
+  override def isNumberOfPlayersValid(number: Int): Boolean = Player.checkNumberOfPlayers(number)
 
   override def addPlayer(name: String): RoundManager = {
     val newPlayer = Player(name)
@@ -46,21 +44,14 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def cardDistribution: RoundManager = {
     if (players.head.getPlayerCards.isDefined && players.head.getPlayerCards.get.nonEmpty) return this
-    val stack = shuffledCardStack to ListBuffer
-    val newPlayers = players to ListBuffer
-
-    for (i <- players.indices) { // TODO: Rekursiv
-      var list = List[Card]()
-      for (_ <- 1 to currentRound) {
-        val card = stack.remove(0)
-        val typ = Card.setOwner(card, players(i))
-        list = list ::: List[Card](typ)
-      }
-
-      val newPlayer = players(i).assignCards(Some(list))
-      newPlayers.update(i, newPlayer)
-    }
-    copy(shuffledCardStack = stack.toList, players = newPlayers.toList)
+    val playersWithCards = players map(player => {
+      val playerNumber = players.indexOf(player)
+      val cardsForPlayer = shuffledCardStack.slice(playerNumber * currentRound, playerNumber * currentRound + currentRound)
+      val assignedCards = cardsForPlayer.map(card => Card.setOwner(card, player))
+      player.assignCards(Some(assignedCards))
+    })
+    val newShuffledCardStack = shuffledCardStack.splitAt((numberOfPlayers - 1) * currentRound + 1)._2
+    copy(shuffledCardStack = newShuffledCardStack, players = playersWithCards)
   }
 
   override def updatePlayerPrediction(input: Int): RoundManager = copy(predictionPerRound = predictionPerRound ::: List(input))
@@ -124,9 +115,9 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   def pointsForRound(): ResultTable = {
     var table = resultTable
-    for (i <- players.indices) { // TODO: Eventuell Datenstruktur anpassen
-      table = table.updatePoints(currentRound, i,
-        RoundManager.calcPoints(predictionPerRound(i), tricksPerRound(players(i).getName)))
+    for (playerWhosePointsGetCalculated <- players.indices) {
+      table = table.updatePoints(currentRound, playerWhosePointsGetCalculated,
+        RoundManager.calcPoints(predictionPerRound(playerWhosePointsGetCalculated), tricksPerRound(players(playerWhosePointsGetCalculated).getName)))
     }
     table
   }

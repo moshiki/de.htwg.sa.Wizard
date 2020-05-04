@@ -234,13 +234,21 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "assign cards if no cards assigned or make no changes to already assigned cards when in prediction mode" in {
       var roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, predictionMode = true, players = Nil)
-      roundManager = roundManager.copy(shuffledCardStack = List(WizardCard(), WizardCard(), WizardCard()), currentRound = 1)
+      val shuffledStack = CardStack.shuffleCards(CardStack.initialize)
+      val expectedShuffledStack = shuffledStack.splitAt(3)._2
+      roundManager = roundManager.copy(shuffledCardStack = shuffledStack, currentRound = 1)
       roundManager = roundManager.addPlayer("P1")
       roundManager = roundManager.addPlayer("P2")
       roundManager = roundManager.addPlayer("P3")
 
       roundManager = roundManager.cardDistribution
-      roundManager.players.head.getPlayerCards.size should be(1)
+      roundManager.players.head.getPlayerCards.get.size should be(1)
+      roundManager.players.head.getPlayerCards.get.head.ownerName should be(roundManager.players.head.name)
+      roundManager.players(1).getPlayerCards.get.size should be(1)
+      roundManager.players(1).getPlayerCards.get.head.ownerName should be(roundManager.players(1).name)
+      roundManager.players(2).getPlayerCards.get.size should be(1)
+      roundManager.players(2).getPlayerCards.get.head.ownerName should be(roundManager.players(2).name)
+      roundManager.shuffledCardStack should be(expectedShuffledStack)
 
       val newRoundManager = roundManager.cardDistribution
       newRoundManager should be(roundManager)

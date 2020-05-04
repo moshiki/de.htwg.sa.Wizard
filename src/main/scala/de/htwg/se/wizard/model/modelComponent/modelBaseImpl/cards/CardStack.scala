@@ -19,8 +19,10 @@ object CardStack {
   def shuffleCards(a: List[Card]): List[Card] = Random.shuffle(a)
 
   def getPlayerOfHighestCard(cardList: List[Card], color: Option[String]): Player = {
-    var actualColor = ""
-    if (color.isDefined) actualColor = color.get
+    val actualColor = color match {
+      case Some(color) => color
+      case _ => ""
+    }
     val wizardCards = cardList.filter(card => card.isWizard).map(card => card.asInstanceOf[WizardCard])
     val defaultCards = cardList.filterNot(card => card.isWizard || card.isJester)
       .map(card => card.asInstanceOf[DefaultCard]).sortWith(_ > _)
