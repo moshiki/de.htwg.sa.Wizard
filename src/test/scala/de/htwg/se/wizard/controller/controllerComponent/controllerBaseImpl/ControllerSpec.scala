@@ -83,7 +83,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "returns the current players amount of stitches" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(stitchesPerRound = Map("test" -> 2),
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(tricksPerRound = Map("test" -> 2),
         players = List(Player("test")), currentPlayer = 0)
       controller.getCurrentAmountOfStitches should be(2)
     }

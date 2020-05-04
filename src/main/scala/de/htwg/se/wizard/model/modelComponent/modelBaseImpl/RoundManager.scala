@@ -15,7 +15,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         currentPlayer: Int = 0,
                         currentRound: Int = 1,
                         predictionPerRound: List[Int] = Nil,
-                        stitchesPerRound: Map[String, Int] = Map.empty[String, Int],
+                        tricksPerRound: Map[String, Int] = Map.empty[String, Int],
                         playedCards: List[Card] = Nil,
                         predictionMode: Boolean = true,
                         cleanMap: Map[String, Int] = Map.empty[String, Int],
@@ -33,10 +33,10 @@ case class RoundManager(numberOfPlayers: Int = 0,
     if (oldPlayerList contains newPlayer) return this
     val newPlayerList = oldPlayerList ::: List(newPlayer)
 
-    var newStitchesPerRound = collection.mutable.Map() ++ stitchesPerRound
-    newStitchesPerRound += name -> 0
+    var newTricksPerRound = collection.mutable.Map() ++ tricksPerRound
+    newTricksPerRound += name -> 0
 
-    this.copy(players = newPlayerList, stitchesPerRound = newStitchesPerRound.toMap)
+    this.copy(players = newPlayerList, tricksPerRound = newTricksPerRound.toMap)
   }
 
   override def playCard(selectedCard: Int): RoundManager = {
@@ -101,7 +101,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
         resultTable = pointsForRound(),
         shuffledCardStack = CardStack.shuffleCards(initialCardStack),
         predictionPerRound = Nil,
-        stitchesPerRound = cleanMap,
+        tricksPerRound = cleanMap,
         currentRound = currentRound + 1
       )
     }
@@ -113,7 +113,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     if (currentPlayer < numberOfPlayers - 1) copy(currentPlayer = currentPlayer + 1)
     else {
       var newRoundManager = this
-      if (!predictionMode) newRoundManager = stitchInThisCycle
+      if (!predictionMode) newRoundManager = trickInThisCycle
       newRoundManager.copy(currentPlayer = 0)
     }
   }
@@ -127,19 +127,18 @@ case class RoundManager(numberOfPlayers: Int = 0,
     }
   }
 
-  def stitchInThisCycle: RoundManager = {
-    val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
-    //val stitchPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
-    val mutMap = collection.mutable.Map() ++ stitchesPerRound
-    mutMap.put(stitchPlayer.getName, mutMap(stitchPlayer.getName) + 1)
-    this.copy(stitchesPerRound = mutMap.toMap, playedCards = Nil)
+  def trickInThisCycle: RoundManager = {
+    val trickPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
+    val mutMap = collection.mutable.Map() ++ tricksPerRound
+    mutMap.put(trickPlayer.getName, mutMap(trickPlayer.getName) + 1)
+    this.copy(tricksPerRound = mutMap.toMap, playedCards = Nil)
   }
 
   def pointsForRound(): ResultTable = {
     var table = resultTable
     for (i <- players.indices) { // TODO: Eventuell Datenstruktur anpassen
       table = table.updatePoints(currentRound, i,
-        RoundManager.calcPoints(predictionPerRound(i), stitchesPerRound(players(i).getName)))
+        RoundManager.calcPoints(predictionPerRound(i), tricksPerRound(players(i).getName)))
     }
 
     table
@@ -160,7 +159,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       <currentPlayer>{currentPlayer}</currentPlayer>
       <currentRound>{currentRound}</currentRound>
       <predictionPerRound>{for (i <- predictionPerRound.indices) yield <prediction>{predictionPerRound(i)}</prediction>}</predictionPerRound>
-      <stitchesPerRound>{mapToXMLList(stitchesPerRound)}</stitchesPerRound>
+      <tricksPerRound>{mapToXMLList(tricksPerRound)}</tricksPerRound>
       <playedCards>{playedCards.map(card => card.toXML)}</playedCards>
       <predictionMode>{predictionMode}</predictionMode>
       <cleanMap>{mapToXMLList(cleanMap)}</cleanMap>
@@ -171,35 +170,25 @@ case class RoundManager(numberOfPlayers: Int = 0,
   override def fromXML(node: scala.xml.Node): RoundManager = {
     val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
     val numberOfRounds = (node \ "numberOfRounds").text.toInt
-
     val shuffledCardStackNode = (node \ "shuffledCardStack").head.child
     val shuffledCardStack = shuffledCardStackNode.map(node => Card.fromXML(node))
-
     val playersNode = (node \ "players").head.child
     val players = playersNode.map(node => Player.fromXML(node))
-
     val currentPlayer = (node \ "currentPlayer").text.toInt
     val currentRound = (node \ "currentRound").text.toInt
-
     val predictionPerRoundNode = (node \ "predictionPerRound").head.child
     val predictionPerRound = predictionPerRoundNode.map(node => (node \\ "prediction").text.toInt)
-
-    val stitchesPerRoundNode = (node \ "stitchesPerRound") \ "entry"
-    var stitchesPerRound = Map.empty[String, Int]
-    stitchesPerRoundNode.reverse.foreach(node => stitchesPerRound = stitchesPerRound + ((node \ "player").text -> (node \ "trick").text.toInt))
-
+    val tricksPerRoundNode = (node \ "tricksPerRound") \ "entry"
+    var tricksPerRound = Map.empty[String, Int]
+    tricksPerRoundNode.reverse.foreach(node => tricksPerRound = tricksPerRound + ((node \ "player").text -> (node \ "trick").text.toInt))
     val playedCardsNode = (node \ "playedCards").head.child
     val playedCards = playedCardsNode.map(node => Card.fromXML(node))
-
     val predictionMode = (node \ "predictionMode").text.toBoolean
-
     val cleanMapNode = (node \ "cleanMap") \ "entry"
     var cleanMap = Map.empty[String, Int]
     cleanMapNode.reverse.foreach(node => cleanMap = cleanMap + ((node \ "player").text -> (node \ "trick").text.toInt))
-
     val resultTable = this.resultTable.fromXML((node \ "resultTable").head.child.head)
-
-    this.copy(
+    copy(
       numberOfPlayers = numberOfPlayers,
       numberOfRounds = numberOfRounds,
       shuffledCardStack = shuffledCardStack.toList,
@@ -207,7 +196,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       currentPlayer = currentPlayer,
       currentRound = currentRound,
       predictionPerRound = predictionPerRound.toList,
-      stitchesPerRound = stitchesPerRound,
+      tricksPerRound = tricksPerRound,
       playedCards = playedCards.toList,
       predictionMode = predictionMode,
       cleanMap = cleanMap,
@@ -219,7 +208,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def currentPlayerString: String = players(currentPlayer).toString
 
-  override def currentAmountOfStitches: Int = stitchesPerRound(currentPlayerString)
+  override def currentAmountOfTricks: Int = tricksPerRound(currentPlayerString)
 
   override def playerPrediction: Int = predictionPerRound(currentPlayerNumber)
 
@@ -237,7 +226,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def createdPlayers: Int = players.size
 
-  override def saveCleanMap: ModelInterface = this.copy(cleanMap = stitchesPerRound)
+  override def saveCleanMap: ModelInterface = this.copy(cleanMap = tricksPerRound)
 
   override def invokePredictionMode(): ModelInterface = this.copy(predictionMode = true)
 
@@ -253,16 +242,16 @@ case class RoundManager(numberOfPlayers: Int = 0,
 }
 
 object RoundManager {
-  def calcPoints(playerPrediction: Int, stitches: Int): Int = {
+  def calcPoints(playerPrediction: Int, tricks: Int): Int = {
     var points = 0
-    for (_ <- 1 to stitches) points += 10
-    if (playerPrediction == stitches) {
+    for (_ <- 1 to tricks) points += 10
+    if (playerPrediction == tricks) {
       points += 20
     }
-    if (playerPrediction < stitches) for (_ <- playerPrediction until stitches) {
+    if (playerPrediction < tricks) for (_ <- playerPrediction until tricks) {
       points -= 10
     }
-    if (playerPrediction > stitches) for (_ <- stitches until playerPrediction) {
+    if (playerPrediction > tricks) for (_ <- tricks until playerPrediction) {
       points -= 10
     }
     points

@@ -13,7 +13,7 @@ trait ModelInterface {
 
   def currentPlayerString: String
 
-  def currentAmountOfStitches: Int
+  def currentAmountOfTricks: Int
 
   def playerPrediction: Int
 

@@ -48,7 +48,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
 
   override def getCurrentPlayerString: String = roundManager.currentPlayerString
 
-  override def getCurrentAmountOfStitches: Int = roundManager.currentAmountOfStitches
+  override def getCurrentAmountOfStitches: Int = roundManager.currentAmountOfTricks
 
   override def getPlayerPrediction: Int = roundManager.playerPrediction
 

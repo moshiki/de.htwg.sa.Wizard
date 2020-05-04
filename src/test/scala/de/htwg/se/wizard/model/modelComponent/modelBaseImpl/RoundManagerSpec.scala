@@ -104,7 +104,7 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       roundManager = roundManager.addPlayer("1")
 
       roundManager = roundManager.nextPlayer
-      roundManager.stitchesPerRound("1") should be(1)
+      roundManager.tricksPerRound("1") should be(1)
     }
 
     "move to next round" in {
@@ -150,10 +150,10 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val card2 = Card.setOwner(WizardCard(), player2)
       val card3 = Card.setOwner(DefaultCard("blue", 3), player3)
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(playedCards = List[Card](card1, card2, card3),
-        stitchesPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].stitchInThisCycle
+        tricksPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].trickInThisCycle
       controller.roundManager.asInstanceOf[RoundManager].playedCards should be(Nil)
-      controller.roundManager.asInstanceOf[RoundManager].stitchesPerRound should be(Map("name2" -> 2, "name1" -> 0, "name3" -> 0))
+      controller.roundManager.asInstanceOf[RoundManager].tricksPerRound should be(Map("name2" -> 2, "name1" -> 0, "name3" -> 0))
 
     }
 
