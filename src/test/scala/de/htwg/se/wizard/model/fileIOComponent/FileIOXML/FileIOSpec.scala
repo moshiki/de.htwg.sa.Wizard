@@ -8,7 +8,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class FileIOSpec extends AnyWordSpec with Matchers{
   "An XML File IO" should {
     "save and restore the whole game" in {
-      val roundManager = RoundManager.Builder().build()
+      val roundManager = RoundManager.Builder().withNumberOfPlayers(3).withNumberOfRounds(3).build()
       val fileIO = FileIO()
       val controller = new Controller(roundManager, fileIO)
       fileIO.save(controller.controllerStateAsString, roundManager)

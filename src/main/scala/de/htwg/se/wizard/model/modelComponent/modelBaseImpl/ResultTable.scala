@@ -26,7 +26,7 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
     table.render()
   }
 
-  def toXML: Elem = {
+  def toXML: Elem = { // TODO: for mit map ersetzen. Erstes map wird zu flatmap
     <ResultTable>
       <roundsToPlay>{roundsToPlay}</roundsToPlay>
       <numberOfPlayers>{numberOfPlayers}</numberOfPlayers>
@@ -37,20 +37,18 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
   def fromXML(node: Node): ResultTable = {
     val roundsToPlay = (node \ "roundsToPlay").text.trim.toInt
     val numberOfPlayers = (node \ "numberOfPlayers").text.trim.toInt
-
     val points = (node \ "points").head.child
     val pointList = points.map(node => (node \\ "point").text.toInt)
-
-    val table = ResultTable.initializeTable(roundsToPlay, numberOfPlayers)
-    var vector = table.points
-
-    for(i <- vector.indices) { // TODO: Rekursiv
-      for (j <- vector(i).indices) {
-        vector = vector.updated(i, vector(i).updated(j,pointList(i * j + j)))
+    val newTable = ResultTable.initializeTable(roundsToPlay, numberOfPlayers)
+    def buildVector (splitAt: Int, seq: Seq[Int], vector: Vector[Vector[Int]]): Vector[Vector[Int]] = vector ++ {
+        seq.length match {
+          case len if len > splitAt =>
+            val split = seq.splitAt(splitAt)
+            buildVector(splitAt, split._2, Vector(split._1.toVector))
+          case _ => Vector(seq.toVector)
+        }
       }
-    }
-
-    table.copy(points = vector)
+    newTable.copy(points = buildVector(numberOfPlayers, pointList.toList, Vector()))
   }
 }
 
