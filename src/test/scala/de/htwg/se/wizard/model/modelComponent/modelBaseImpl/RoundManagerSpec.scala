@@ -177,10 +177,9 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 0, currentRound = 1, numberOfPlayers = 3,
         players = List(player1, player2, player3), predictionPerRound = List(), shuffledCardStack = List(DefaultCard("blue", 3)))
       controller.roundManager.playerStateStrings should startWith(
-        s"""
-          |┌──────────────────────────┬─────────────────────────┬─────────────────────────┐
-          |│Player 1                  │Player 2                 │Player 3                 │
-          |├──────────────────────────┼─────────────────────────┼─────────────────────────┤""".stripMargin)
+        s"""┌──────────────────────────┬─────────────────────────┬─────────────────────────┐
+           |│Player 1                  │Player 2                 │Player 3                 │
+           |├──────────────────────────┼─────────────────────────┼─────────────────────────┤""".stripMargin)
     }
 
     "trigger the next state and return game over when game is over and resultTable" in {

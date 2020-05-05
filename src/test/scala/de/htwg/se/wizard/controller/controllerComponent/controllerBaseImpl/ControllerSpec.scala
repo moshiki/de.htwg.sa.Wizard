@@ -298,7 +298,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(shuffledCardStack = cardStack, predictionMode = true,
         players = List(Player("Name1"), player, Player("Name3")), currentPlayerNumber = 1, numberOfPlayers = 3, currentRound = 1)
       val card = player.playerCards.get
-      controller.currentStateAsString should startWith(
+      controller.currentStateAsString should be(
         s"""Round 1 - Player: Name2
            |Trump Color: None
            |Your Cards: { ${card.mkString} }

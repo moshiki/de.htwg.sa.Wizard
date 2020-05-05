@@ -65,7 +65,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       return "\nGame Over! Press 'q' to quit.\n" + resultTable.toString
     }
     if (predictionPerRound.size < numberOfPlayers) {
-      "\n" + {if (currentPlayerNumber == 0) resultTable.toString + "\n" else ""} + Player.playerPrediction(players(currentPlayerNumber), currentRound, trumpColor)
+      {if (currentPlayerNumber == 0) resultTable.toString + "\n" else ""} + Player.playerPrediction(players(currentPlayerNumber), currentRound, trumpColor)
     } else {
       Player.playerTurn(players(currentPlayerNumber), currentRound)
     }
