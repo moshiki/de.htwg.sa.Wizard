@@ -34,7 +34,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def playCard(selectedCard: Int): RoundManager = {
     val player = players(currentPlayerNumber)
-    val currentPlayersCards = player.getPlayerCards.get.to(ListBuffer)
+    val currentPlayersCards = player.playerCards.get.to(ListBuffer)
     val playedCard = currentPlayersCards.remove(selectedCard - 1)
     val newPlayers = players to ListBuffer
     newPlayers.update(currentPlayerNumber, player.assignCards(Some(currentPlayersCards.toList)))
@@ -43,7 +43,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
 
   override def cardDistribution: RoundManager = {
-    if (players.head.getPlayerCards.isDefined && players.head.getPlayerCards.get.nonEmpty) return this
+    if (players.head.playerCards.isDefined && players.head.playerCards.get.nonEmpty) return this
     val playersWithCards = players map(player => {
       val playerNumber = players.indexOf(player)
       val cardsForPlayer = shuffledCardStack.slice(playerNumber * currentRound, playerNumber * currentRound + currentRound)
@@ -72,7 +72,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   override def nextRound: RoundManager = {
-    if (currentPlayerNumber == 0 && currentRound != numberOfRounds && players.last.getPlayerCards.get.isEmpty) {
+    if (currentPlayerNumber == 0 && currentRound != numberOfRounds && players.last.playerCards.get.isEmpty) {
       copy(
         resultTable = pointsForRound(),
         shuffledCardStack = CardStack.shuffleCards(initialCardStack),
@@ -105,7 +105,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   def trickInThisCycle: RoundManager = {
     val trickPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
     val mutMap = collection.mutable.Map() ++ tricksPerRound
-    mutMap.put(trickPlayer.getName, mutMap(trickPlayer.getName) + 1)
+    mutMap.put(trickPlayer.name, mutMap(trickPlayer.name) + 1)
     this.copy(tricksPerRound = mutMap.toMap, playedCards = Nil)
   }
 
@@ -113,7 +113,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     var table = resultTable
     for (playerWhosePointsGetCalculated <- players.indices) {
       table = table.updatePoints(currentRound, playerWhosePointsGetCalculated,
-        RoundManager.calcPoints(predictionPerRound(playerWhosePointsGetCalculated), tricksPerRound(players(playerWhosePointsGetCalculated).getName)))
+        RoundManager.calcPoints(predictionPerRound(playerWhosePointsGetCalculated), tricksPerRound(players(playerWhosePointsGetCalculated).name)))
     }
     table
   }
@@ -172,8 +172,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
     )
   }
 
-  //override def currentPlayerNumber: Int = currentPlayer
-
   override def currentPlayerString: String = players(currentPlayerNumber).toString
 
   override def currentAmountOfTricks: Int = tricksPerRound(currentPlayerString)
@@ -182,7 +180,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def playedCardsAsString: List[String] = playedCards.map(card => card.toString)
 
-  override def currentPlayersCards: List[String] = players(currentPlayerNumber).getPlayerCards.get.map(card => card.toString)
+  override def currentPlayersCards: List[String] = players(currentPlayerNumber).playerCards.get.map(card => card.toString)
 
   override def topOfStackCardString: String = shuffledCardStack.head.toString
 

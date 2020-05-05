@@ -16,7 +16,7 @@ abstract class Card(owner: Option[Player]) {
   def hasOwner: Boolean = owner.isDefined
 
   def ownerName: String = owner match {
-    case Some(player) => player.getName
+    case Some(player) => player.name
     case _ => "unknown"
   }
 

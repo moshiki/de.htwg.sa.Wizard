@@ -242,12 +242,12 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       roundManager = roundManager.addPlayer("P3")
 
       roundManager = roundManager.cardDistribution
-      roundManager.players.head.getPlayerCards.get.size should be(1)
-      roundManager.players.head.getPlayerCards.get.head.ownerName should be(roundManager.players.head.name)
-      roundManager.players(1).getPlayerCards.get.size should be(1)
-      roundManager.players(1).getPlayerCards.get.head.ownerName should be(roundManager.players(1).name)
-      roundManager.players(2).getPlayerCards.get.size should be(1)
-      roundManager.players(2).getPlayerCards.get.head.ownerName should be(roundManager.players(2).name)
+      roundManager.players.head.playerCards.get.size should be(1)
+      roundManager.players.head.playerCards.get.head.ownerName should be(roundManager.players.head.name)
+      roundManager.players(1).playerCards.get.size should be(1)
+      roundManager.players(1).playerCards.get.head.ownerName should be(roundManager.players(1).name)
+      roundManager.players(2).playerCards.get.size should be(1)
+      roundManager.players(2).playerCards.get.head.ownerName should be(roundManager.players(2).name)
       roundManager.shuffledCardStack should be(expectedShuffledStack)
 
       val newRoundManager = roundManager.cardDistribution

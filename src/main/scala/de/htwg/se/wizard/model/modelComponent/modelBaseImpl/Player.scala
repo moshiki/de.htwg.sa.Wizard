@@ -8,17 +8,17 @@ import scala.xml.Elem
 case class Player(name: String, playerCards: Option[List[Card]] = None) {
   override def toString: String = name
 
-  def getPlayerCards: Option[List[Card]] = { // TODO: remove getter
+ /* def getPlayerCards: Option[List[Card]] = { // TODO: remove getter
     playerCards
-  }
+  }*/
 
    def assignCards(cards: Option[List[Card]]): Player = {
     this.copy(playerCards = cards)
   }
 
-   def getName: String = { // TODO: remove getter
+  /* def getName: String = { // TODO: remove getter
     name
-  }
+  }*/
 
    def toXML: Elem = {
     <Player>
@@ -37,16 +37,16 @@ object Player {
   def checkNumberOfPlayers(number: Int): Boolean = number >= 3 && number <= 5
 
   def playerTurn(player: Player, round: Int): String = { // TODO: '''
-    val cards = player.getPlayerCards.get
-    val firstString = "Round " + round + " - Player: " + player.getName
+    val cards = player.playerCards.get
+    val firstString = "Round " + round + " - Player: " + player.name
     val secondString = "Select one of the following cards:"
     firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
   }
 
   def playerPrediction(player: Player, round: Int, trump: Option[String]): String = { // TODO: '''
-    val firstString = "Round " + round + " - Player: " + player.getName
+    val firstString = "Round " + round + " - Player: " + player.name
     val secondString = "Trump Color: " + trump.getOrElse("None")
-    val thirdString = "Your Cards: " + "{ " + player.getPlayerCards.get.mkString(", ") + " }"
+    val thirdString = "Your Cards: " + "{ " + player.playerCards.get.mkString(", ") + " }"
     val string = "Guess your amount of tricks: "
     firstString + "\n" + secondString + "\n" + thirdString + "\n" + string
   }
