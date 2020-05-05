@@ -15,7 +15,7 @@ object CardStack {
 
   def shuffleCards(a: List[Card]): List[Card] = Random.shuffle(a)
 
-  def getPlayerOfHighestCard(cardList: List[Card], color: Option[String]): Player = {
+  def playerOfHighestCard(cardList: List[Card], color: Option[String]): Player = {
     val actualColor = color match {
       case Some(color) => color
       case _ => ""

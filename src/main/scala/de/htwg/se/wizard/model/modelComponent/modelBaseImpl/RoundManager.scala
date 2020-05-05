@@ -103,7 +103,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def trickInThisCycle: RoundManager = {
-    val trickPlayer = CardStack.getPlayerOfHighestCard(playedCards.reverse, trumpColor)
+    val trickPlayer = CardStack.playerOfHighestCard(playedCards.reverse, trumpColor)
     val mutMap = collection.mutable.Map() ++ tricksPerRound
     mutMap.put(trickPlayer.name, mutMap(trickPlayer.name) + 1)
     this.copy(tricksPerRound = mutMap.toMap, playedCards = Nil)
