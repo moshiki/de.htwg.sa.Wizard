@@ -95,13 +95,13 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "convert the already played cards to a list of strings" in {
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(playedCards = List(WizardCard(), JesterCard()))
-      controller.playedCardsAsString should be(List(WizardCard().toString(), JesterCard().toString()))
+      controller.playedCardsAsString should be(List(WizardCard().toString, JesterCard().toString))
     }
 
     "convert the current players cards to a list of strings" in {
       val player = Player("player", Some(List(JesterCard(), WizardCard())))
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(player), currentPlayerNumber = 0)
-      controller.currentPlayersCards should be(List(JesterCard().toString(), WizardCard().toString()))
+      controller.currentPlayersCards should be(List(JesterCard().toString, WizardCard().toString))
     }
 
     "return a string representation of the top card on the shuffled card stack" in {

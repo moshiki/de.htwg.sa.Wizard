@@ -20,9 +20,7 @@ abstract class Card(owner: Option[Player]) {
     case _ => "unknown"
   }
 
-  def getStringRep: String
-
-  override def toString: String = "cards/" + getStringRep
+  def toString: String
 
   def toXML: Elem
 

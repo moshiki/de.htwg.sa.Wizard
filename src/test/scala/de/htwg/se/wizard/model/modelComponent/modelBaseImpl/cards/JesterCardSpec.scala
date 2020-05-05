@@ -63,7 +63,7 @@ class JesterCardSpec extends AnyWordSpec with Matchers {
     "has the right String representation" should {
       val jesterCard = JesterCard()
       "Have a nice String representation" in {
-        jesterCard.toString should be("cards/Jester")
+        jesterCard.toString should be("Jester")
       }
     }
   }

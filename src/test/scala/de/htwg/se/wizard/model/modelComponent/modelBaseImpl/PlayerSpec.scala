@@ -39,7 +39,7 @@ class PlayerSpec extends AnyWordSpec with Matchers {
         Player.playerTurn(player1, 1) should startWith(
           """Round 1 - Player: TestPlayer
             |Select one of the following cards:
-            |{ cards/Jester }""".stripMargin
+            |{ Jester }""".stripMargin
         )
       }
 
@@ -50,7 +50,7 @@ class PlayerSpec extends AnyWordSpec with Matchers {
         Player.playerPrediction(player1, 1, Some("blue")) should startWith(
           """Round 1 - Player: TestPlayer
             |Trump Color: blue
-            |Your Cards: { cards/Jester }
+            |Your Cards: { Jester }
             |Guess your amount of tricks: """.stripMargin)
       }
     }

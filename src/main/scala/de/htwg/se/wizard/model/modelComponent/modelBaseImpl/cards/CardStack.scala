@@ -8,7 +8,7 @@ object CardStack {
   val initialize: List[Card] = {
     val wizards = List.fill(4)(Card.apply("wizard"))
     val jesters = List.fill(4)(Card.apply("jester"))
-    val normals = for { // TODO: Als eine Zeile
+    val normals = for { // TODO: Als eine Zeile - bisher keine Lösung gefunden
       color <- List("red", "blue", "yellow", "green")
       number <- 1 to 13
     } yield DefaultCard(color, number)

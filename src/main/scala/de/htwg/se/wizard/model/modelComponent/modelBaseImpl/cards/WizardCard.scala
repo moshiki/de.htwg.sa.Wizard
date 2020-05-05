@@ -12,7 +12,7 @@ case class WizardCard(owner: Option[Player] = None) extends Card(owner) {
 
   def isJester: Boolean = false
 
-  override def getStringRep: String = "Wizard"
+  override def toString: String = "Wizard"
 
   override def toXML: Elem = {
     <WizardCard>
