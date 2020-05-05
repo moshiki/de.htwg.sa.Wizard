@@ -8,12 +8,9 @@ object CardStack {
   val initialize: List[Card] = {
     val wizards = List.fill(4)(Card.apply("wizard"))
     val jesters = List.fill(4)(Card.apply("jester"))
-    val normals = for { // TODO: Als eine Zeile - bisher keine Lösung gefunden
-      color <- List("red", "blue", "yellow", "green")
-      number <- 1 to 13
-    } yield DefaultCard(color, number)
-
-    wizards ::: jesters ::: normals
+    val colors = List("red", "blue", "yellow", "green")
+    val normals = 1 to 13 flatMap(number => colors.map(color => DefaultCard(color, number)))
+    wizards ::: jesters ::: normals.toList
   }
 
   def shuffleCards(a: List[Card]): List[Card] = Random.shuffle(a)
