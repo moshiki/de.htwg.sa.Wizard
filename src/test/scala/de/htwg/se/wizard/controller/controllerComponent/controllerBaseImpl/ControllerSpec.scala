@@ -25,7 +25,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "gets the correct string depending of the current state" in {
       controller.state = PreSetupState(controller)
-      controller.getCurrentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
+      controller.currentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
     }
 
     "switches to the next state correctly" in {
@@ -62,8 +62,8 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "returns the current players number" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayer = 0)
-      controller.getCurrentPlayerNumber should be(0)
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 0)
+      controller.currentPlayerNumber should be(0)
     }
 
     "returns true if game asks for players predictions" in {
@@ -72,20 +72,20 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "returns the name of a player" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(Player("test")), currentPlayer = 0)
-      controller.getCurrentPlayerString should be("test")
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(Player("test")), currentPlayerNumber = 0)
+      controller.currentPlayerString should be("test")
     }
 
     "returns the current players prediction" in {
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(predictionPerRound = List(5),
-        players = List(Player("test")), currentPlayer = 0)
-      controller.getPlayerPrediction should be(5)
+        players = List(Player("test")), currentPlayerNumber = 0)
+      controller.playerPrediction should be(5)
     }
 
     "returns the current players amount of stitches" in {
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(tricksPerRound = Map("test" -> 2),
-        players = List(Player("test")), currentPlayer = 0)
-      controller.getCurrentAmountOfStitches should be(2)
+        players = List(Player("test")), currentPlayerNumber = 0)
+      controller.currentAmountOfStitches should be(2)
     }
 
     "return the current round" in {
@@ -100,7 +100,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "convert the current players cards to a list of strings" in {
       val player = Player("player", Some(List(JesterCard(), WizardCard())))
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(player), currentPlayer = 0)
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(player), currentPlayerNumber = 0)
       controller.currentPlayersCards should be(List(JesterCard().toString(), WizardCard().toString()))
     }
 
@@ -111,7 +111,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "return a list with all players string representations" in {
       val playerList = List(Player("P1"), Player("P2"))
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = playerList, currentPlayer = 0)
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = playerList, currentPlayerNumber = 0)
       controller.playersAsStringList should be(List("P1", "P2"))
     }
 
@@ -198,7 +198,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "return the correct state string" in {
-      state.getCurrentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
+      state.currentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
     }
 
 
@@ -243,7 +243,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "return the correct state string" in {
-      state.getCurrentStateAsString should be("Player 1, please enter your name:")
+      state.currentStateAsString should be("Player 1, please enter your name:")
     }
 
     "return the correct next state" in {
@@ -281,7 +281,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "play card correctly" in {
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(predictionMode = false, numberOfPlayers = 2,
-        players = Nil, currentPlayer = 0, currentRound = 1, predictionPerRound = List(0, 0))
+        players = Nil, currentPlayerNumber = 0, currentRound = 1, predictionPerRound = List(0, 0))
       controller.roundManager = controller.roundManager.addPlayer("1")
       controller.roundManager = controller.roundManager.addPlayer("2")
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(
@@ -296,9 +296,9 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val player = Player("Name2", Some(List(JesterCard())))
       val cardStack = List[Card](JesterCard(), WizardCard())
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(shuffledCardStack = cardStack, predictionMode = true,
-        players = List(Player("Name1"), player, Player("Name3")), currentPlayer = 1, numberOfPlayers = 3, currentRound = 1)
+        players = List(Player("Name1"), player, Player("Name3")), currentPlayerNumber = 1, numberOfPlayers = 3, currentRound = 1)
       val card = player.playerCards.get
-      controller.getCurrentStateAsString should startWith(
+      controller.currentStateAsString should startWith(
         "\n" + "Round 1 - Player: Name2" + "\n" +
           "Trump Color: None" + "\n" +
           "Your Cards: " + "{ " + card.mkString + " }" + "\n" +
@@ -308,7 +308,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "trigger the next state in controller" in {
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 2, numberOfRounds = 1,
-        currentRound = 1, currentPlayer = 1, players = List(Player("1"), Player("2")))
+        currentRound = 1, currentPlayerNumber = 1, players = List(Player("1"), Player("2")))
       val oldState = controller.state
       controller.eval("1")
       controller.state should be(oldState.nextState)
@@ -325,7 +325,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       state.evaluate("5")
     }
     "return the correct state string" in {
-      state.getCurrentStateAsString should be("\nGame Over! Press 'q' to quit.")
+      state.currentStateAsString should be("\nGame Over! Press 'q' to quit.")
 
     }
     "return itself as the next state" in {

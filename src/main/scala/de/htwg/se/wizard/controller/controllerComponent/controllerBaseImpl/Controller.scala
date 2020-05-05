@@ -31,7 +31,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
     notifyObservers()
   }
 
-  override def getCurrentStateAsString: String = state.getCurrentStateAsString
+  override def currentStateAsString: String = state.currentStateAsString
 
   override def controllerStateAsString: String = {
     state match {
@@ -42,15 +42,13 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
     }
   }
 
-  // TODO: Mehr Scala Style (also ohne get)
+  override def currentPlayerNumber: Int = roundManager.currentPlayerNumber
 
-  override def getCurrentPlayerNumber: Int = roundManager.currentPlayerNumber
+  override def currentPlayerString: String = roundManager.currentPlayerString
 
-  override def getCurrentPlayerString: String = roundManager.currentPlayerString
+  override def currentAmountOfStitches: Int = roundManager.currentAmountOfTricks
 
-  override def getCurrentAmountOfStitches: Int = roundManager.currentAmountOfTricks
-
-  override def getPlayerPrediction: Int = roundManager.playerPrediction
+  override def playerPrediction: Int = roundManager.playerPrediction
 
   override def predictionMode: Boolean = roundManager.predictionMode
 
@@ -98,7 +96,7 @@ object Controller {
 trait ControllerState {
   def evaluate(input: String): Unit
 
-  def getCurrentStateAsString: String
+  def currentStateAsString: String
 
   def nextState: ControllerState
 }
@@ -115,7 +113,7 @@ case class PreSetupState(controller: Controller) extends ControllerState {
     controller.roundManager = controller.roundManager.nextPlayerInSetup
   }
 
-  override def getCurrentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
+  override def currentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
 
   override def nextState: ControllerState = SetupState(controller)
 }
@@ -137,7 +135,7 @@ case class SetupState(controller: Controller) extends ControllerState {
     }
   }
 
-  override def getCurrentStateAsString: String = controller.roundManager.setupStrings
+  override def currentStateAsString: String = controller.roundManager.setupStrings
 
   override def nextState: ControllerState = InGameState(controller)
 }
@@ -166,7 +164,7 @@ case class InGameState(controller: Controller) extends ControllerState {
     }
   }
 
-  override def getCurrentStateAsString: String = controller.roundManager.playerStateStrings
+  override def currentStateAsString: String = controller.roundManager.playerStateStrings
 
   override def nextState: ControllerState = GameOverState(controller)
 }
@@ -175,7 +173,7 @@ case class InGameState(controller: Controller) extends ControllerState {
 case class GameOverState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = ()
 
-  override def getCurrentStateAsString: String = "\nGame Over! Press 'q' to quit."
+  override def currentStateAsString: String = "\nGame Over! Press 'q' to quit."
 
   override def nextState: ControllerState = this
 }

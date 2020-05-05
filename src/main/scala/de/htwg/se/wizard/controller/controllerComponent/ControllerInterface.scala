@@ -13,18 +13,17 @@ trait ControllerInterface extends Observable {
 
   def load(): Unit
 
-  // TODO: Mehr Scala Style
-  def getCurrentStateAsString: String
+  def currentStateAsString: String
 
   def controllerStateAsString: String
 
-  def getCurrentPlayerNumber: Int
+  def currentPlayerNumber: Int
 
-  def getCurrentPlayerString: String
+  def currentPlayerString: String
 
-  def getCurrentAmountOfStitches: Int
+  def currentAmountOfStitches: Int
 
-  def getPlayerPrediction: Int
+  def playerPrediction: Int
 
   def predictionMode: Boolean
 

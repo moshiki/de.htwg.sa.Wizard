@@ -11,7 +11,7 @@ class PlayerSetupPanel(controller: ControllerInterface) extends BoxPanel(Orienta
   border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)
 
-  val currentPlayer: Int = controller.getCurrentPlayerNumber
+  val currentPlayer: Int = controller.currentPlayerNumber
   val nameTextBox: TextField = new TextField() {
     listenTo(keys)
     reactions += {

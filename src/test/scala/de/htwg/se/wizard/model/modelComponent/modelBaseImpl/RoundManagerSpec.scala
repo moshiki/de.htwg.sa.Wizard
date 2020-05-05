@@ -45,21 +45,21 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
     val roundManager = RoundManager(resultTable = resultTable)
     val controller = new Controller(roundManager, fileIOStub)
     "ask for next player's name correctly" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayer = 1)
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 1)
       controller.roundManager.setupStrings should be("Player 1, please enter your name:")
     }
 
     "get the next player correctly" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayer = 1, numberOfPlayers = 3)
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 1, numberOfPlayers = 3)
       controller.roundManager.asInstanceOf[RoundManager].nextPlayerSetup should be(2)
     }
 
     "increment the player count up to the number provided by the user" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayer = 2, numberOfPlayers = 3)
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 2, numberOfPlayers = 3)
       controller.roundManager.asInstanceOf[RoundManager].nextPlayerSetup should be(3)
     }
     "reset the player count when there's no next player" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayer = 3, numberOfPlayers = 3)
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 3, numberOfPlayers = 3)
       controller.roundManager.asInstanceOf[RoundManager].nextPlayerSetup should be(0)
     }
 
@@ -85,7 +85,7 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
     val controller = new Controller(roundManager, fileIOStub)
 
     "should ask player for his prediction if Prediction list is empty" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, currentPlayerNumber = 1, currentRound = 1,
         players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true,
         shuffledCardStack = List(DefaultCard("blue", 2), WizardCard(), JesterCard(), WizardCard()))
       controller.roundManager = controller.roundManager.cardDistribution
@@ -111,7 +111,7 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val player1 = Player("name1")
       val player2 = Player("name2")
       val player3 = Player("name3", playerCards = Some(Nil))
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayer = 0, numberOfPlayers = 3,
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 0, numberOfPlayers = 3,
         currentRound = 1, numberOfRounds = 20)
       controller.roundManager = controller.roundManager.addPlayer("name1")
       controller.roundManager = controller.roundManager.addPlayer("name2")
@@ -124,7 +124,7 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "not increase the current round when its not correct to do so" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, currentPlayer = 1, currentRound = 1,
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, currentPlayerNumber = 1, currentRound = 1,
         players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
       controller.roundManager.nextRound
       controller.roundManager.currentRound should be(1)
@@ -161,7 +161,7 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val player1 = Player("name1", Some(List(JesterCard())))
       val player2 = Player("name2", Some(List(WizardCard())))
       val player3 = Player("name3", Some(List(DefaultCard("blue", 3))))
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayer = 1, currentRound = 2, numberOfPlayers = 3,
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 1, currentRound = 2, numberOfPlayers = 3,
         players = List(player1, player2, player3), predictionPerRound = List(1, 2, 0))
       controller.roundManager.playerStateStrings should be(
         "Round 2 - Player: name2" + "\n" +
@@ -174,7 +174,7 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val player1 = Player("name1", Some(List(JesterCard())))
       val player2 = Player("name2", Some(List(WizardCard())))
       val player3 = Player("name3", Some(List(DefaultCard("blue", 3))))
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayer = 0, currentRound = 1, numberOfPlayers = 3,
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 0, currentRound = 1, numberOfPlayers = 3,
         players = List(player1, player2, player3), predictionPerRound = List(), shuffledCardStack = List(DefaultCard("blue", 3)))
       controller.roundManager.playerStateStrings should startWith(
         """
@@ -184,7 +184,7 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "trigger the next state and return game over when game is over and resultTable" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, currentPlayer = 0, currentRound = 20, numberOfRounds = 20)
+      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, currentPlayerNumber = 0, currentRound = 20, numberOfRounds = 20)
       controller.roundManager.playerStateStrings should be(
         "\nGame Over! Press 'q' to quit.\n" +
           """┌──────────────────────────┬─────────────────────────┬─────────────────────────┐

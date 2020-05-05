@@ -9,7 +9,7 @@ import scala.swing._
 import scala.swing.event.{ButtonClicked, Key, KeyPressed, MouseClicked}
 
 class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.Vertical) {
-  val currentPlayer: String = controller.getCurrentPlayerString
+  val currentPlayer: String = controller.currentPlayerString
 
   if (controller.predictionMode) preferredSize = new Dimension(1000, 760)
   else preferredSize = new Dimension(1000, 880)
@@ -20,8 +20,8 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
   contents += new BoxPanel(Orientation.Horizontal) {
     if (!controller.predictionMode) {
       contents += new Label("Player: " + currentPlayer + " - Tricks: " +
-        controller.getCurrentAmountOfStitches + " (Prediction: " +
-        controller.getPlayerPrediction + ")") {
+        controller.currentAmountOfStitches + " (Prediction: " +
+        controller.playerPrediction + ")") {
         font = myFont
       }
     } else {

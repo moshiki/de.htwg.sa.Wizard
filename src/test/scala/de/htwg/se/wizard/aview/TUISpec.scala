@@ -44,7 +44,7 @@ class TUISpec extends AnyWordSpec with Matchers with MockFactory {
 
     "should let the controller evaluate the input" in {
       tui.processInput("3")
-      controller.getCurrentStateAsString should be("Player 1, please enter your name:")
+      controller.currentStateAsString should be("Player 1, please enter your name:")
     }
   }
 }
