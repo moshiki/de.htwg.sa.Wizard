@@ -28,11 +28,11 @@ case class Player(name: String, playerCards: Option[List[Card]] = None) {
 object Player {
   def checkNumberOfPlayers(number: Int): Boolean = number >= 3 && number <= 5
 
-  def playerTurn(player: Player, round: Int): String = { // TODO: '''
+  def playerTurn(player: Player, round: Int): String = {
     val cards = player.playerCards.get
-    val firstString = "Round " + round + " - Player: " + player.name
-    val secondString = "Select one of the following cards:"
-    firstString + "\n" + secondString + "\n" + "{ " + cards.mkString(", ") + " }"
+    s"""Round ${round} - Player: ${player.name}
+      |Select one of the following cards:
+      |{ ${cards.mkString(", ")} }""".stripMargin
   }
 
   def playerPrediction(player: Player, round: Int, trump: Option[String]): String = { // TODO: '''

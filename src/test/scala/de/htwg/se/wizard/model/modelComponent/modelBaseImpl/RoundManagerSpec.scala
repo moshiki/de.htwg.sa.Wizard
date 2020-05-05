@@ -164,9 +164,9 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 1, currentRound = 2, numberOfPlayers = 3,
         players = List(player1, player2, player3), predictionPerRound = List(1, 2, 0))
       controller.roundManager.playerStateStrings should be(
-        "Round 2 - Player: name2" + "\n" +
-          "Select one of the following cards:" + "\n" +
-          "{ " + player2.playerCards.get.mkString + " }"
+        s"""Round 2 - Player: name2
+            |Select one of the following cards:
+            |{ ${player2.playerCards.get.mkString} }""".stripMargin
       )
     }
 
