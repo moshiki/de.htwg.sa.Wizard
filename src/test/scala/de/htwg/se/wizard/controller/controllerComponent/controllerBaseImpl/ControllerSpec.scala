@@ -299,10 +299,10 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
         players = List(Player("Name1"), player, Player("Name3")), currentPlayerNumber = 1, numberOfPlayers = 3, currentRound = 1)
       val card = player.playerCards.get
       controller.currentStateAsString should startWith(
-        "\n" + "Round 1 - Player: Name2" + "\n" +
-          "Trump Color: None" + "\n" +
-          "Your Cards: " + "{ " + card.mkString + " }" + "\n" +
-          "Guess your amount of tricks: "
+        s"""Round 1 - Player: Name2
+           |Trump Color: None
+           |Your Cards: { ${card.mkString} }
+           |Guess your amount of tricks: """.stripMargin
       )
     }
 

@@ -30,17 +30,16 @@ object Player {
 
   def playerTurn(player: Player, round: Int): String = {
     val cards = player.playerCards.get
-    s"""Round ${round} - Player: ${player.name}
+    s"""Round $round - Player: ${player.name}
       |Select one of the following cards:
       |{ ${cards.mkString(", ")} }""".stripMargin
   }
 
-  def playerPrediction(player: Player, round: Int, trump: Option[String]): String = { // TODO: '''
-    val firstString = "Round " + round + " - Player: " + player.name
-    val secondString = "Trump Color: " + trump.getOrElse("None")
-    val thirdString = "Your Cards: " + "{ " + player.playerCards.get.mkString(", ") + " }"
-    val string = "Guess your amount of tricks: "
-    firstString + "\n" + secondString + "\n" + thirdString + "\n" + string
+  def playerPrediction(player: Player, round: Int, trump: Option[String]): String = {
+    s"""Round $round - Player: ${player.name}
+       |Trump Color: ${trump.getOrElse("None")}
+       |Your Cards: { ${player.playerCards.get.mkString(", ")} }
+       |Guess your amount of tricks: """.stripMargin
   }
 
   def fromXML(node: scala.xml.Node): Player = {
