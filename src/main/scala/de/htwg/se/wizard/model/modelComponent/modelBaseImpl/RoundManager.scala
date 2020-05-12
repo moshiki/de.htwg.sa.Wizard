@@ -207,7 +207,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def toJson: JsValue = Json.toJson(this)
 
-  override def fromJson(jsValue: JsValue): RoundManager = jsValue.validate[RoundManager].asOpt.get
+  override def fromJson(jsValue: JsValue): RoundManager = jsValue.validate[RoundManager].get
 }
 
 object RoundManager {
