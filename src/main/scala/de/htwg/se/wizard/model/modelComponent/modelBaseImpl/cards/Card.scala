@@ -24,7 +24,10 @@ abstract class Card(owner: Option[Player]) {
 
   def toXML: Elem
 
-  def ownerString: String = if (owner.isDefined) owner.get.name else "None"
+  def ownerString: String = owner match {
+    case Some(player) => player.toString
+    case None => "None"
+  }
 
   def toJson: JsValue
 
@@ -64,13 +67,11 @@ object Card {
 
   implicit val cardReads: Reads[Card] = (json: JsValue) => {
     val cardType = (json \ "type").get.as[String]
-
     val card = cardType match {
       case "Wizard" => WizardCard().fromJson(json)
       case "Jester" => JesterCard().fromJson(json)
       case "Default" => DefaultCard("blue", 1).fromJson(json)
     }
-
     JsSuccess(card)
   }
 }

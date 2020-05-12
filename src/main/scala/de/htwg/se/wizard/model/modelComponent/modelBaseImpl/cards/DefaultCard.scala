@@ -32,22 +32,20 @@ case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
     <DefaultCard>
       <color>{color}</color>
       <number>{number}</number>
-      <owner>{if (owner.isDefined) owner.get.toXML
-      else "None"}</owner>
+      <owner>{owner match {
+        case Some(player) => player.toXML
+        case None => "None"
+      }}</owner>
     </DefaultCard>
   }
 
   def fromXML(node: scala.xml.Node): DefaultCard = {
     val color = (node \ "color").text.trim
-
     val number = (node \ "number").text.trim.toInt
-
-    var owner: Option[Player] = None
-    if ((node \ "owner" ).text.trim != "None") {
+    val owner = if ((node \ "owner" ).text.trim != "None") {
       val player = Player.fromXML((node \ "owner").head.child.filter(node => node.text.trim != "").head)
-      owner = Some(player)
-    }
-
+      Some(player)
+    } else None
     this.copy(color = color, number = number, owner = owner)
   }
 
@@ -61,10 +59,8 @@ case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
   override def fromJson(jsValue: JsValue): Card = {
     val color = (jsValue \ "color").get.as[String]
     val number = (jsValue \ "number").get.as[Int]
-    var owner: Option[Player] = None
     val ownerString = (jsValue \ "owner").get.as[String]
-    if (ownerString != "None") owner = Some(Player(ownerString))
-
+    val owner = if (ownerString != "None") Some(Player(ownerString)) else None
     this copy(color, number, owner)
   }
 }
