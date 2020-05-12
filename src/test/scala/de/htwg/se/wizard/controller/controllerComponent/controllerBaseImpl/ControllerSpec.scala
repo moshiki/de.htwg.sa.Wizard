@@ -101,7 +101,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "convert the current players cards to a list of strings" in {
-      val player = Player("player", Some(List(JesterCard(), WizardCard())))
+      val player = Player("player", List(JesterCard(), WizardCard()))
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(player), currentPlayerNumber = 0)
       controller.currentPlayersCards should be(List(JesterCard().toString, WizardCard().toString))
     }
@@ -287,19 +287,19 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       controller.roundManager = controller.roundManager.addPlayer("1")
       controller.roundManager = controller.roundManager.addPlayer("2")
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(
-        players = List(Player("1", playerCards = Some(List(WizardCard(owner = Some(Player("1")))))),
-          Player("2", playerCards = Some(Nil))))
+        players = List(Player("1", playerCards = List(WizardCard(owner = Some(Player("1"))))),
+          Player("2", playerCards = Nil)))
       controller.eval("1")
 
       controller.roundManager.asInstanceOf[RoundManager].playedCards should not be Nil
     }
 
     "gets current state as string" in {
-      val player = Player("Name2", Some(List(JesterCard())))
+      val player = Player("Name2", List(JesterCard()))
       val cardStack = List[Card](JesterCard(), WizardCard())
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(shuffledCardStack = cardStack, predictionMode = true,
         players = List(Player("Name1"), player, Player("Name3")), currentPlayerNumber = 1, numberOfPlayers = 3, currentRound = 1)
-      val card = player.playerCards.get
+      val card = player.playerCards
       controller.currentStateAsString should be(
         s"""Round 1 - Player: Name2
            |Trump Color: None

@@ -110,7 +110,7 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
     "move to next round" in {
       val player1 = Player("name1")
       val player2 = Player("name2")
-      val player3 = Player("name3", playerCards = Some(Nil))
+      val player3 = Player("name3", playerCards = Nil)
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 0, numberOfPlayers = 3,
         currentRound = 1, numberOfRounds = 20)
       controller.roundManager = controller.roundManager.addPlayer("name1")
@@ -158,22 +158,22 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "get correct string representation when it's players turn" in {
-      val player1 = Player("name1", Some(List(JesterCard())))
-      val player2 = Player("name2", Some(List(WizardCard())))
-      val player3 = Player("name3", Some(List(DefaultCard("blue", 3))))
+      val player1 = Player("name1", List(JesterCard()))
+      val player2 = Player("name2", List(WizardCard()))
+      val player3 = Player("name3", List(DefaultCard("blue", 3)))
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 1, currentRound = 2, numberOfPlayers = 3,
         players = List(player1, player2, player3), predictionPerRound = List(1, 2, 0))
       controller.roundManager.playerStateStrings should be(
         s"""Round 2 - Player: name2
             |Select one of the following cards:
-            |{ ${player2.playerCards.get.mkString} }""".stripMargin
+            |{ ${player2.playerCards.mkString} }""".stripMargin
       )
     }
 
     "print result table when player 1 is on turn" in {
-      val player1 = Player("name1", Some(List(JesterCard())))
-      val player2 = Player("name2", Some(List(WizardCard())))
-      val player3 = Player("name3", Some(List(DefaultCard("blue", 3))))
+      val player1 = Player("name1", List(JesterCard()))
+      val player2 = Player("name2", List(WizardCard()))
+      val player3 = Player("name3", List(DefaultCard("blue", 3)))
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 0, currentRound = 1, numberOfPlayers = 3,
         players = List(player1, player2, player3), predictionPerRound = List(), shuffledCardStack = List(DefaultCard("blue", 3)))
       controller.roundManager.playerStateStrings should startWith(
@@ -241,12 +241,12 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       roundManager = roundManager.addPlayer("P3")
 
       roundManager = roundManager.cardDistribution
-      roundManager.players.head.playerCards.get.size should be(1)
-      roundManager.players.head.playerCards.get.head.ownerName should be(roundManager.players.head.name)
-      roundManager.players(1).playerCards.get.size should be(1)
-      roundManager.players(1).playerCards.get.head.ownerName should be(roundManager.players(1).name)
-      roundManager.players(2).playerCards.get.size should be(1)
-      roundManager.players(2).playerCards.get.head.ownerName should be(roundManager.players(2).name)
+      roundManager.players.head.playerCards.size should be(1)
+      roundManager.players.head.playerCards.head.ownerName should be(roundManager.players.head.name)
+      roundManager.players(1).playerCards.size should be(1)
+      roundManager.players(1).playerCards.head.ownerName should be(roundManager.players(1).name)
+      roundManager.players(2).playerCards.size should be(1)
+      roundManager.players(2).playerCards.head.ownerName should be(roundManager.players(2).name)
       roundManager.shuffledCardStack should be(expectedShuffledStack)
 
       val newRoundManager = roundManager.cardDistribution

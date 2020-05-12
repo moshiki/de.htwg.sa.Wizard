@@ -26,7 +26,7 @@ class SwingGuiSpec extends AnyWordSpec with Matchers with MockFactory {
 
       "Controller is in InGameState" in {
         controller.state = InGameState(controller)
-        controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(Player("test", playerCards = Some(List(WizardCard())))))
+        controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(Player("test", playerCards = List(WizardCard()))))
         SwingGui.getPanel(controller).isInstanceOf[InGamePanel] should be(true)
       }
 

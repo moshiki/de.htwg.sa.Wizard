@@ -34,21 +34,21 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def playCard(selectedCard: Int): RoundManager = {
     val player = players(currentPlayerNumber)
-    val currentPlayersCards = player.playerCards.get.to(ListBuffer)
+    val currentPlayersCards = player.playerCards.to(ListBuffer)
     val playedCard = currentPlayersCards.remove(selectedCard - 1)
     val newPlayers = players to ListBuffer
-    newPlayers.update(currentPlayerNumber, player.assignCards(Some(currentPlayersCards.toList)))
+    newPlayers.update(currentPlayerNumber, player.assignCards(currentPlayersCards.toList))
     copy(playedCards = playedCard :: playedCards, players = newPlayers.toList)
   }
 
 
   override def cardDistribution: RoundManager = {
-    if (players.head.playerCards.isDefined && players.head.playerCards.get.nonEmpty) return this
+    if (players.head.playerCards.nonEmpty) return this
     val playersWithCards = players map(player => {
       val playerNumber = players.indexOf(player)
       val cardsForPlayer = shuffledCardStack.slice(playerNumber * currentRound, playerNumber * currentRound + currentRound)
       val assignedCards = cardsForPlayer.map(card => Card.setOwner(card, player))
-      player.assignCards(Some(assignedCards))
+      player.assignCards(assignedCards)
     })
     val newShuffledCardStack = shuffledCardStack.splitAt((numberOfPlayers - 1) * currentRound + 1)._2
     copy(shuffledCardStack = newShuffledCardStack, players = playersWithCards)
@@ -72,7 +72,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   override def nextRound: RoundManager = {
-    if (currentPlayerNumber == 0 && currentRound != numberOfRounds && players.last.playerCards.get.isEmpty) {
+    if (currentPlayerNumber == 0 && currentRound != numberOfRounds && players.last.playerCards.isEmpty) {
       copy(
         resultTable = pointsForRound(),
         shuffledCardStack = CardStack.shuffleCards(initialCardStack),
@@ -180,7 +180,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def playedCardsAsString: List[String] = playedCards.map(card => card.toString)
 
-  override def currentPlayersCards: List[String] = players(currentPlayerNumber).playerCards.get.map(card => card.toString)
+  override def currentPlayersCards: List[String] = players(currentPlayerNumber).playerCards.map(card => card.toString)
 
   override def topOfStackCardString: String = shuffledCardStack.head.toString
 
