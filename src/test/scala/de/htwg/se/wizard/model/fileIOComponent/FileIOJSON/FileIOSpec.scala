@@ -14,7 +14,8 @@ class FileIOSpec extends AnyWordSpec with Matchers{
       val controller = new Controller(roundManager, fileIO)
       fileIO.save(controller.controllerStateAsString, roundManager)
       val res = fileIO.load(roundManager)
-      res._2 == orig should be(true)
+      res.get._1 should be("PreSetupState")
+      res.get._2 == orig should be(true)
     }
   }
 }

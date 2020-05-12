@@ -71,13 +71,13 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
 
   override def load(): Unit = {
     val ret = fileIOInterface.load(roundManager)
-    state = ret._1 match {
+    state = ret.get._1 match {
       case "PreSetupState" => PreSetupState(this)
       case "SetupState" => SetupState(this)
       case "InGameState" => InGameState(this)
       case "GameOverState" => GameOverState(this)
     }
-    roundManager = ret._2
+    roundManager = ret.get._2
     notifyObservers()
   }
 }

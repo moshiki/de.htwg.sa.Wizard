@@ -2,8 +2,10 @@ package de.htwg.se.wizard.model.fileIOComponent
 
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 
-trait FileIOInterface {
-  def load(modelInterface: ModelInterface): (String, ModelInterface)
+import scala.util.Try
 
-  def save(controllerState: String, modelInterface: ModelInterface): Unit
+trait FileIOInterface {
+  def load(modelInterface: ModelInterface): Try[(String, ModelInterface)]
+
+  def save(controllerState: String, modelInterface: ModelInterface): Try[Unit]
 }

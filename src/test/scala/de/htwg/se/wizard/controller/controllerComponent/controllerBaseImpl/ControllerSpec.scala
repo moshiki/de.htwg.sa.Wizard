@@ -9,6 +9,8 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.util.Success
+
 class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
   "A Controller" when {
     val fileIOStub = stub[FileIOInterface]
@@ -119,7 +121,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val roundManagerStub = stub[ModelInterface]
       val fileIOMock = mock[FileIOInterface]
       fileIOMock.save _ expects("PreSetupState", roundManagerStub)
-      fileIOMock.load _ expects roundManagerStub returning("PreSetupState",roundManagerStub)
+      fileIOMock.load _ expects roundManagerStub returning Success("PreSetupState",roundManagerStub)
       val controller = new Controller(roundManagerStub, fileIOMock)
       controller.save()
       controller.load()
@@ -131,7 +133,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val roundManagerStub = stub[ModelInterface]
       val fileIOMock = mock[FileIOInterface]
       fileIOMock.save _ expects("PreSetupState", roundManagerStub)
-      fileIOMock.load _ expects roundManagerStub returning("PreSetupState",roundManagerStub)
+      fileIOMock.load _ expects roundManagerStub returning Success("PreSetupState",roundManagerStub)
 
       val controller = new Controller(roundManagerStub, fileIOMock)
       var state = controller.state
@@ -140,7 +142,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       controller.state should be(state)
 
       fileIOMock.save _ expects("SetupState", roundManagerStub)
-      fileIOMock.load _ expects roundManagerStub returning("SetupState",roundManagerStub)
+      fileIOMock.load _ expects roundManagerStub returning Success("SetupState",roundManagerStub)
 
       state = SetupState(controller)
       controller.state = state
@@ -149,7 +151,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       controller.state should be(state)
 
       fileIOMock.save _ expects("InGameState", roundManagerStub)
-      fileIOMock.load _ expects roundManagerStub returning("InGameState",roundManagerStub)
+      fileIOMock.load _ expects roundManagerStub returning Success("InGameState",roundManagerStub)
 
       state = InGameState(controller)
       controller.state = state
@@ -158,7 +160,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       controller.state should be(state)
 
       fileIOMock.save _ expects("GameOverState", roundManagerStub)
-      fileIOMock.load _ expects roundManagerStub returning("GameOverState",roundManagerStub)
+      fileIOMock.load _ expects roundManagerStub returning Success("GameOverState",roundManagerStub)
 
       state = GameOverState(controller)
       controller.state = state
