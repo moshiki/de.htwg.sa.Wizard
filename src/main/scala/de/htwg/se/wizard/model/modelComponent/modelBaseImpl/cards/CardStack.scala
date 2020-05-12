@@ -15,7 +15,7 @@ object CardStack {
 
   def shuffleCards(a: List[Card]): List[Card] = Random.shuffle(a)
 
-  def playerOfHighestCard(cardList: List[Card], color: Option[String]): Player = {
+  def playerOfHighestCard(cardList: List[Card], color: Option[String]): Option[Player] = {
     val actualColor = color match {
       case Some(color) => color
       case _ => ""
@@ -25,13 +25,13 @@ object CardStack {
       .map(card => card.asInstanceOf[DefaultCard]).sortWith(_ > _)
     val jesterCards = cardList.filter(card => card.isJester).map(card => card.asInstanceOf[JesterCard])
 
-    if (wizardCards.nonEmpty) wizardCards.head.owner.get
+    if (wizardCards.nonEmpty) wizardCards.head.owner
     else if (defaultCards.nonEmpty) {
       val highestNumber = defaultCards.head.number
       val cardsWithHighestNumberInNormalCards = defaultCards.filter(_.number == highestNumber)
       val highestCardMatchingTrumpColor = cardsWithHighestNumberInNormalCards.filter(_.color == actualColor)
-      if (highestCardMatchingTrumpColor.nonEmpty) highestCardMatchingTrumpColor.head.owner.get
-      else cardsWithHighestNumberInNormalCards.head.owner.get
-    } else jesterCards.head.owner.get
+      if (highestCardMatchingTrumpColor.nonEmpty) highestCardMatchingTrumpColor.head.owner
+      else cardsWithHighestNumberInNormalCards.head.owner
+    } else jesterCards.head.owner
   }
 }

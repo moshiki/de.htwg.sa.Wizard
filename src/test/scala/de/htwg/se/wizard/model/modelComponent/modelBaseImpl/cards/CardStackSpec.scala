@@ -79,27 +79,27 @@ class CardStackSpec extends AnyWordSpec with Matchers {
   "A CardStack that determines the owner of the highest card" when {
     "there are different default cards" in {
       val cardList = List(DefaultCard("blue", 12, Some(Player("Olaf"))), DefaultCard("red", 13, Some(Player("Tim"))))
-      CardStack.playerOfHighestCard(cardList, Some("green")) should be(Player("Tim"))
+      CardStack.playerOfHighestCard(cardList, Some("green")) should be(Some(Player("Tim")))
     }
     "there is a wizardCard in the stack" in {
       val cardList = List(WizardCard(Some(Player("Olaf"))), DefaultCard("red", 13, Some(Player("Tim"))))
-      CardStack.playerOfHighestCard(cardList, Some("green")) should be(Player("Olaf"))
+      CardStack.playerOfHighestCard(cardList, Some("green")) should be(Some(Player("Olaf")))
     }
     "there are only wizardCards in the stack" in {
       val cardList = List(WizardCard(Some(Player("Olaf"))), WizardCard(Some(Player("Tim"))))
-      CardStack.playerOfHighestCard(cardList, Some("green")) should be(Player("Olaf"))
+      CardStack.playerOfHighestCard(cardList, Some("green")) should be(Some(Player("Olaf")))
     }
     "there are two DefaultCards of same value" in {
       val cardList = List(DefaultCard("blue", 13, Some(Player("Olaf"))), DefaultCard("red", 13, Some(Player("Tim"))))
-      CardStack.playerOfHighestCard(cardList, Some("green")) should be(Player("Olaf"))
+      CardStack.playerOfHighestCard(cardList, Some("green")) should be(Some(Player("Olaf")))
     }
     "there are two cards of same value, but one is in the trump color" in {
       val cardList = List(DefaultCard("blue", 13, Some(Player("Olaf"))), DefaultCard("red", 13, Some(Player("Tim"))))
-      CardStack.playerOfHighestCard(cardList, Some("red")) should be(Player("Tim"))
+      CardStack.playerOfHighestCard(cardList, Some("red")) should be(Some(Player("Tim")))
     }
     "there are only jesterCards in the stack" in {
       val cardList = List(JesterCard(Some(Player("Olaf"))), JesterCard(Some(Player("Tim"))))
-      CardStack.playerOfHighestCard(cardList, Some("green")) should be(Player("Olaf"))
+      CardStack.playerOfHighestCard(cardList, Some("green")) should be(Some(Player("Olaf")))
     }
   }
 }
