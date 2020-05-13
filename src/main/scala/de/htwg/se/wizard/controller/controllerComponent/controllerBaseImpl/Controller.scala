@@ -10,7 +10,6 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   //val fileIOInterface: FileIOInterface = Guice.createInjector(new WizardModule).getInstance(classOf[FileIOInterface])
 
   val undoManager = new UndoManager
-
   var state: ControllerState = PreSetupState(this)
 
   def nextState(): Unit = state = state.nextState
@@ -71,6 +70,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
 
   override def load(): Unit = {
     val ret = fileIOInterface.load(roundManager)
+    if (ret.isFailure) return
     state = ret.get._1 match {
       case "PreSetupState" => PreSetupState(this)
       case "SetupState" => SetupState(this)
@@ -95,9 +95,7 @@ object Controller {
 
 trait ControllerState {
   def evaluate(input: String): Unit
-
   def currentStateAsString: String
-
   def nextState: ControllerState
 }
 
@@ -109,37 +107,27 @@ case class PreSetupState(controller: Controller) extends ControllerState {
     if (!controller.roundManager.isNumberOfPlayersValid(number.get)) return
     controller.roundManager = controller.roundManager.configurePlayersAndRounds(number.get)
     controller.nextState()
-
     controller.roundManager = controller.roundManager.nextPlayerInSetup
   }
-
   override def currentStateAsString: String = "Welcome to Wizard!\nPlease enter the number of Players[3-5]:"
-
   override def nextState: ControllerState = SetupState(controller)
 }
-
 
 case class SetupState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     if (input.isEmpty) return
-
     controller.roundManager = controller.roundManager.nextPlayerInSetup
-
     controller.roundManager = controller.roundManager.addPlayer(input)
     if (controller.roundManager.createdPlayers == controller.roundManager.numberOfPlayers) {
       controller.roundManager = controller.roundManager.saveCleanMap
-
       controller.roundManager = controller.roundManager.invokePredictionMode()
       controller.roundManager = controller.roundManager.cardDistribution
       controller.nextState()
     }
   }
-
   override def currentStateAsString: String = controller.roundManager.setupStrings
-
   override def nextState: ControllerState = InGameState(controller)
 }
-
 
 case class InGameState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
@@ -147,7 +135,6 @@ case class InGameState(controller: Controller) extends ControllerState {
     if (in.isEmpty) return
     if (controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.updatePlayerPrediction(in.get)
     else controller.roundManager = controller.roundManager.playCard(in.get)
-
     controller.roundManager = controller.roundManager.nextPlayer
     if (!controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.nextRound
     if (controller.roundManager.currentRound == controller.roundManager.numberOfRounds &&
@@ -155,7 +142,6 @@ case class InGameState(controller: Controller) extends ControllerState {
       controller.nextState()
       return
     }
-
     if (controller.roundManager.recordedPredictions < controller.roundManager.numberOfPlayers) {
       controller.roundManager = controller.roundManager.invokePredictionMode()
       controller.roundManager = controller.roundManager.cardDistribution
@@ -163,17 +149,12 @@ case class InGameState(controller: Controller) extends ControllerState {
       controller.roundManager = controller.roundManager.leavePredictionMode
     }
   }
-
   override def currentStateAsString: String = controller.roundManager.playerStateStrings
-
   override def nextState: ControllerState = GameOverState(controller)
 }
 
-
 case class GameOverState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = ()
-
   override def currentStateAsString: String = "\nGame Over! Press 'q' to quit."
-
   override def nextState: ControllerState = this
 }

@@ -16,7 +16,6 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
   border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   val myFont = new Font("Herculanum", java.awt.Font.PLAIN, 20)
 
-
   contents += new BoxPanel(Orientation.Horizontal) {
     if (!controller.predictionMode) {
       contents += new Label("Player: " + currentPlayer + " - Tricks: " +
@@ -29,7 +28,6 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
         font = myFont
       }
     }
-
     contents += HGlue
     contents += new Label("Round " + controller.currentRound) {
       font = myFont
@@ -48,7 +46,6 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
         font = myFont
       }
     }
-
     contents += HGlue
 
     contents += new Label("Trump Color") {
@@ -147,13 +144,11 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
     }
   }
 
-
   contents += new FlowPanel() {
     contents += new ScrollPane {
       contents = new Table(controller.resultArray, controller.playersAsStringList)
     }
   }
-
 
   contents += new FlowPanel() {
     val saveButton: Button = new Button("Save current progress...") {
@@ -170,5 +165,4 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
         JOptionPane.showMessageDialog(null, "Saving was successful.")
     }
   }
-
 }

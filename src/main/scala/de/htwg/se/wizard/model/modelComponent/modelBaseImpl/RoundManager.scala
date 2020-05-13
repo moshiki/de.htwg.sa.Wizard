@@ -84,7 +84,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
     else this
   }
 
-
   override def nextPlayer: RoundManager = {
     if (currentPlayerNumber < numberOfPlayers - 1) copy(currentPlayerNumber = currentPlayerNumber + 1)
     else {
@@ -92,7 +91,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
       newRoundManager.copy(currentPlayerNumber = 0)
     }
   }
-
 
   def trumpColor: Option[String] = {
     val topCard = shuffledCardStack.head
