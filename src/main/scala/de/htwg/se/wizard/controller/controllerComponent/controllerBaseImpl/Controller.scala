@@ -6,6 +6,8 @@ import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import de.htwg.se.wizard.util.UndoManager
 
+import scala.util.{Failure, Success}
+
 class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: FileIOInterface) extends ControllerInterface {
   //val fileIOInterface: FileIOInterface = Guice.createInjector(new WizardModule).getInstance(classOf[FileIOInterface])
 
@@ -70,14 +72,17 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
 
   override def load(): Unit = {
     val ret = fileIOInterface.load(roundManager)
-    if (ret.isFailure) return
-    state = ret.get._1 match {
+    val returnTuple = ret match {
+      case Failure(_) => return
+      case Success(stateTuple) => stateTuple
+    }
+    state = returnTuple._1 match {
       case "PreSetupState" => PreSetupState(this)
       case "SetupState" => SetupState(this)
       case "InGameState" => InGameState(this)
       case "GameOverState" => GameOverState(this)
     }
-    roundManager = ret.get._2
+    roundManager = returnTuple._2
     notifyObservers()
   }
 }
@@ -103,9 +108,12 @@ trait ControllerState {
 case class PreSetupState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     val number = Controller.toInt(input)
-    if (number.isEmpty) return
-    if (!controller.roundManager.isNumberOfPlayersValid(number.get)) return
-    controller.roundManager = controller.roundManager.configurePlayersAndRounds(number.get)
+    val actualNumber = number match {
+      case Some(number) => number
+      case None => return
+    }
+    if (!controller.roundManager.isNumberOfPlayersValid(actualNumber)) return
+    controller.roundManager = controller.roundManager.configurePlayersAndRounds(actualNumber)
     controller.nextState()
     controller.roundManager = controller.roundManager.nextPlayerInSetup
   }
@@ -132,9 +140,12 @@ case class SetupState(controller: Controller) extends ControllerState {
 case class InGameState(controller: Controller) extends ControllerState {
   override def evaluate(input: String): Unit = {
     val in = Controller.toInt(input)
-    if (in.isEmpty) return
-    if (controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.updatePlayerPrediction(in.get)
-    else controller.roundManager = controller.roundManager.playCard(in.get)
+    val convertedInput = in match {
+      case Some(number) => number
+      case None => return
+    }
+    if (controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.updatePlayerPrediction(convertedInput)
+    else controller.roundManager = controller.roundManager.playCard(convertedInput)
     controller.roundManager = controller.roundManager.nextPlayer
     if (!controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.nextRound
     if (controller.roundManager.currentRound == controller.roundManager.numberOfRounds &&
