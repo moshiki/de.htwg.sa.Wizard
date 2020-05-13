@@ -17,7 +17,7 @@ case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
 
   def isJester: Boolean = false
 
-  override def toString: String = color + "_" + number
+  override def toString: String = color + " " + number
 
   override def compare(that: DefaultCard): Int = this.number - that.number
 

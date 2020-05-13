@@ -62,7 +62,7 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
           val playedCards: List[String] = controller.playedCardsAsString
 
           val labelList: immutable.IndexedSeq[Label] = for (i <- playedCards.indices) yield new Label {
-            private val temp = new ImageIcon("src/main/resources/" + playedCards(i) + ".png").getImage
+            private val temp = new ImageIcon("src/main/resources/cards/" + playedCards(i) + ".png").getImage
             private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
             icon = new ImageIcon(resize)
           }
@@ -76,7 +76,7 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
         contents = new FlowPanel() {
           val playerCards: List[String] = controller.currentPlayersCards
           val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
-            private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
+            private val temp = new ImageIcon("src/main/resources/cards/" + playerCards(i) + ".png").getImage
             private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
             icon = new ImageIcon(resize)
           }
@@ -89,7 +89,7 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
     contents += HGlue
 
     contents += new Label {
-      private val temp = new ImageIcon("src/main/resources/" + controller.topOfStackCardString + ".png").getImage
+      private val temp = new ImageIcon("src/main/resources/cards/" + controller.topOfStackCardString + ".png").getImage
       private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
       icon = new ImageIcon(resize)
     }
@@ -130,7 +130,7 @@ class InGamePanel(controller: ControllerInterface) extends BoxPanel(Orientation.
         val playerCards: List[String] = controller.currentPlayersCards
         val labelList: immutable.IndexedSeq[Label] = for (i <- playerCards.indices) yield new Label {
           val index: Int = i
-          private val temp = new ImageIcon("src/main/resources/" + playerCards(i) + ".png").getImage
+          private val temp = new ImageIcon("src/main/resources/cards/" + playerCards(i) + ".png").getImage
           private val resize = temp.getScaledInstance(100, 133, java.awt.Image.SCALE_SMOOTH)
           icon = new ImageIcon(resize)
           listenTo(mouse.clicks)
