@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
 import com.google.inject.Inject
+import de.htwg.sa.wizard.model.resultTableComponent.ResultTableInterface
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
@@ -8,8 +9,9 @@ import de.htwg.se.wizard.util.UndoManager
 
 import scala.util.{Failure, Success}
 
-class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: FileIOInterface) extends ControllerInterface {
-  //val fileIOInterface: FileIOInterface = Guice.createInjector(new WizardModule).getInstance(classOf[FileIOInterface])
+class Controller @Inject()(var roundManager: ModelInterface,
+                           fileIOInterface: FileIOInterface,
+                           resultTableInterface: ResultTableInterface) extends ControllerInterface {
 
   val undoManager = new UndoManager
   var state: ControllerState = PreSetupState(this)
@@ -63,7 +65,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
 
   override def playersAsStringList: List[String] = roundManager.playersAsStringList
 
-  override def resultArray: Array[Array[Any]] = roundManager.resultArray
+  override def resultArray: Array[Array[Any]] = resultTableInterface.toAnyArray
 
   override def save(): Unit = {
     fileIOInterface.save(controllerStateAsString, roundManager)

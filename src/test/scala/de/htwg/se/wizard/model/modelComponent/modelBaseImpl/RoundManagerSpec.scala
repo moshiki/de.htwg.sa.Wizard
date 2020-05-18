@@ -1,7 +1,5 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards._
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
@@ -11,14 +9,11 @@ import play.api.libs.json.Json
 class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
   "A Round Manager" when {
     "new" should {
-      val fileIOStub = stub[FileIOInterface]
-      val resultTable = ResultTable.initializeTable(20, 3)
-      val roundManager = RoundManager(resultTable = resultTable)
-      val controller = new Controller(roundManager, fileIOStub)
+      val roundManager = RoundManager()
       "set the number of players correctly" in {
-        controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3)
-        controller.roundManager.isNumberOfPlayersValid(3)
-        controller.roundManager.numberOfPlayers should be(3)
+        val newRoundManager = roundManager.copy(numberOfPlayers = 3)
+        newRoundManager.isNumberOfPlayersValid(3)
+        newRoundManager.numberOfPlayers should be(3)
       }
 
       "is able to store itself in an xml representation and restore successfully" in {
@@ -39,67 +34,61 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       }
     }
   }
-  "controller is in setup mode" should {
-    val fileIOStub = stub[FileIOInterface]
-    val resultTable = ResultTable.initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager, fileIOStub)
+
     "ask for next player's name correctly" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 1)
-      controller.roundManager.setupStrings should be("Player 1, please enter your name:")
+      val roundManager = RoundManager(currentPlayerNumber = 1)
+      roundManager.setupStrings should be("Player 1, please enter your name:")
     }
 
     "get the next player correctly" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 1, numberOfPlayers = 3)
-      controller.roundManager.asInstanceOf[RoundManager].nextPlayerSetup should be(2)
+      val roundManager = RoundManager(currentPlayerNumber = 1, numberOfPlayers = 3)
+      roundManager.nextPlayerSetup should be(2)
     }
 
     "increment the player count up to the number provided by the user" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 2, numberOfPlayers = 3)
-      controller.roundManager.asInstanceOf[RoundManager].nextPlayerSetup should be(3)
+      val roundManager = RoundManager(currentPlayerNumber = 2, numberOfPlayers = 3)
+      roundManager.nextPlayerSetup should be(3)
     }
     "reset the player count when there's no next player" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 3, numberOfPlayers = 3)
-      controller.roundManager.asInstanceOf[RoundManager].nextPlayerSetup should be(0)
+      val roundManager = RoundManager(currentPlayerNumber = 3, numberOfPlayers = 3)
+      roundManager.nextPlayerSetup should be(0)
     }
 
     "add a player correctly to a list of all players" in {
-      controller.roundManager = controller.roundManager.addPlayer("Name")
-      controller.roundManager.asInstanceOf[RoundManager].players should be(List(Player("Name")))
+      val roundManager = RoundManager().addPlayer("Name")
+      roundManager.players should be(List(Player("Name")))
     }
 
     "dont add a player if his name got entered already" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = Nil)
-      controller.roundManager = controller.roundManager.addPlayer("P1")
-      val oldList = controller.roundManager.asInstanceOf[RoundManager].players
-      controller.roundManager = controller.roundManager.addPlayer("P1")
+      val expectedList = List(Player("P1"))
+      val roundManager = RoundManager(players = expectedList)
 
-      controller.roundManager.asInstanceOf[RoundManager].players should be(oldList)
+      val newRoundManager = roundManager.addPlayer("P1")
+      newRoundManager.players should be(expectedList)
     }
-  }
 
-  "controller is in game mode" should {
-    val fileIOStub = stub[FileIOInterface]
-    val resultTable = ResultTable.initializeTable(20, 3)
-    val roundManager = RoundManager(resultTable = resultTable)
-    val controller = new Controller(roundManager, fileIOStub)
+
+
 
     "should ask player for his prediction if Prediction list is empty" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, currentPlayerNumber = 1, currentRound = 1,
-        players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true,
+      // FIXME: No idea what this test is used for. Description does not match code.
+      // Probably does not need to be fixed after creation of modules.
+
+      val roundManager = RoundManager(numberOfPlayers = 3, currentPlayerNumber = 1,
+        players = List(Player("Name1"), Player("Name2"), Player("Name3")),
         shuffledCardStack = List(DefaultCard("blue", 2), WizardCard(), JesterCard(), WizardCard()))
-      controller.roundManager = controller.roundManager.cardDistribution
-      controller.roundManager.playerStateStrings
-      controller.roundManager.asInstanceOf[RoundManager].predictionPerRound.size should be(0)
+      val newRoundManager = roundManager.cardDistribution
+      newRoundManager.playerStateStrings // FIXME: not used value (see note from above)
+      newRoundManager.predictionPerRound.size should be(0)
     }
 
     "update predictionPerRound correctly" in {
-      controller.roundManager = controller.roundManager.updatePlayerPrediction(3)
-      controller.roundManager.asInstanceOf[RoundManager].predictionPerRound should be(List(3))
+      val roundManager = RoundManager().updatePlayerPrediction(3)
+      roundManager.predictionPerRound should be(List(3))
     }
 
     "store who played the highest card in the current cycle" in {
-      var roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = Nil, numberOfPlayers = 1, predictionMode = false,
+      var roundManager = RoundManager(players = Nil, numberOfPlayers = 1, predictionMode = false,
         playedCards = List(WizardCard(Some(Player("1")))))
       roundManager = roundManager.addPlayer("1")
 
@@ -111,23 +100,21 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val player1 = Player("name1")
       val player2 = Player("name2")
       val player3 = Player("name3", playerCards = Nil)
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 0, numberOfPlayers = 3,
-        currentRound = 1, numberOfRounds = 20)
-      controller.roundManager = controller.roundManager.addPlayer("name1")
+      val roundManager = RoundManager(numberOfPlayers = 3, numberOfRounds = 20,
+        players = List(player1, player2, player3), predictionPerRound = List(0, 0, 0))
+      /*controller.roundManager = controller.roundManager.addPlayer("name1")
       controller.roundManager = controller.roundManager.addPlayer("name2")
-      controller.roundManager = controller.roundManager.addPlayer("name3")
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(player1, player2, player3),
-        predictionPerRound = List(0, 0, 0))
+      controller.roundManager = controller.roundManager.addPlayer("name3")*/
 
-      controller.roundManager = controller.roundManager.nextRound
-      controller.roundManager.currentRound should be(2)
+      val newRoundManager = roundManager.nextRound
+      newRoundManager.currentRound should be(2)
     }
 
     "not increase the current round when its not correct to do so" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, currentPlayerNumber = 1, currentRound = 1,
-        players = List(Player("Name1"), Player("Name2"), Player("Name3")), predictionMode = true)
-      controller.roundManager.nextRound
-      controller.roundManager.currentRound should be(1)
+      val roundManager = RoundManager(numberOfPlayers = 3, currentPlayerNumber = 1,
+        players = List(Player("Name1"), Player("Name2"), Player("Name3")))
+      val newRoundManager = roundManager.nextRound
+      newRoundManager.currentRound should be(1)
     }
 
     "calculate points when player prediction was correct" in {
@@ -149,11 +136,11 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val card1 = Card.setOwner(JesterCard(), player1)
       val card2 = Card.setOwner(WizardCard(), player2)
       val card3 = Card.setOwner(DefaultCard("blue", 3), player3)
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(playedCards = List[Card](card1, card2, card3),
+      val roundManager = RoundManager(playedCards = List[Card](card1, card2, card3),
         tricksPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].trickInThisCycle
-      controller.roundManager.asInstanceOf[RoundManager].playedCards should be(Nil)
-      controller.roundManager.asInstanceOf[RoundManager].tricksPerRound should be(Map("name2" -> 2, "name1" -> 0, "name3" -> 0))
+      val newRoundManager = roundManager.trickInThisCycle
+      newRoundManager.playedCards should be(Nil)
+      newRoundManager.tricksPerRound should be(Map("name2" -> 2, "name1" -> 0, "name3" -> 0))
 
     }
 
@@ -161,78 +148,23 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val player1 = Player("name1", List(JesterCard()))
       val player2 = Player("name2", List(WizardCard()))
       val player3 = Player("name3", List(DefaultCard("blue", 3)))
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 1, currentRound = 2, numberOfPlayers = 3,
+      val roundManager = RoundManager(currentPlayerNumber = 1, currentRound = 2, numberOfPlayers = 3,
         players = List(player1, player2, player3), predictionPerRound = List(1, 2, 0))
-      controller.roundManager.playerStateStrings should be(
+      roundManager.playerStateStrings should be(
         s"""Round 2 - Player: name2
             |Select one of the following cards:
             |{ ${player2.playerCards.mkString} }""".stripMargin
       )
     }
 
-    "print result table when player 1 is on turn" in {
-      val player1 = Player("name1", List(JesterCard()))
-      val player2 = Player("name2", List(WizardCard()))
-      val player3 = Player("name3", List(DefaultCard("blue", 3)))
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(currentPlayerNumber = 0, currentRound = 1, numberOfPlayers = 3,
-        players = List(player1, player2, player3), predictionPerRound = List(), shuffledCardStack = List(DefaultCard("blue", 3)))
-      controller.roundManager.playerStateStrings should startWith(
-        s"""┌──────────────────────────┬─────────────────────────┬─────────────────────────┐
-           |│Player 1                  │Player 2                 │Player 3                 │
-           |├──────────────────────────┼─────────────────────────┼─────────────────────────┤""".stripMargin)
-    }
-
     "trigger the next state and return game over when game is over and resultTable" in {
-      controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, currentPlayerNumber = 0, currentRound = 20, numberOfRounds = 20)
-      controller.roundManager.playerStateStrings should be(
-        "\nGame Over! Press 'q' to quit.\n" +
-          """┌──────────────────────────┬─────────────────────────┬─────────────────────────┐
-            |│Player 1                  │Player 2                 │Player 3                 │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│20                        │20                       │20                       │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |├──────────────────────────┼─────────────────────────┼─────────────────────────┤
-            |│0                         │0                        │0                        │
-            |└──────────────────────────┴─────────────────────────┴─────────────────────────┘""".stripMargin)
+      val roundManager = RoundManager(numberOfPlayers = 3, currentRound = 20, numberOfRounds = 20)
+      roundManager.playerStateStrings should be("\nGame Over! Press 'q' to quit.\n")
     }
 
     "assign cards if no cards assigned or make no changes to already assigned cards when in prediction mode" in {
-      var roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(numberOfPlayers = 3, predictionMode = true, players = Nil)
+      // TODO clean this one up (if not obsolete due to modularization)
+      var roundManager = RoundManager(numberOfPlayers = 3, players = Nil)
       val shuffledStack = CardStack.shuffleCards(CardStack.initialize)
       val expectedShuffledStack = shuffledStack.splitAt(3)._2
       roundManager = roundManager.copy(shuffledCardStack = shuffledStack, currentRound = 1)
@@ -252,5 +184,5 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val newRoundManager = roundManager.cardDistribution
       newRoundManager should be(roundManager)
     }
-  }
+
 }

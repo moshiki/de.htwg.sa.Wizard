@@ -1,12 +1,13 @@
-package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
+package de.htwg.sa.wizard.model.resultTableComponent.resultTableBaseImplementation
 
+import de.htwg.sa.wizard.model.resultTableComponent.ResultTableInterface
 import de.vandermeer.asciitable.AsciiTable
 
 import scala.xml.{Elem, Node}
 
-case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) {
+case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) extends ResultTableInterface {
 
-  def updatePoints(round: Int, player: Int, result: Int): ResultTable = {
+  def updatePoints(round: Int, player: Int, result: Int): ResultTableInterface = {
     if (round == 1) this.copy(points = points.updated(round - 1, points(round - 1).updated(player, result)))
     else this.copy(points = points.updated(round - 1, points(round - 1).updated(player, result + points(round - 2)(player))))
   }
@@ -34,7 +35,7 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
     </ResultTable>
   }
 
-  def fromXML(node: Node): ResultTable = {
+  def fromXML(node: Node): ResultTableInterface = {
     val roundsToPlay = (node \ "roundsToPlay").text.trim.toInt
     val numberOfPlayers = (node \ "numberOfPlayers").text.trim.toInt
     val points = (node \ "points").head.child

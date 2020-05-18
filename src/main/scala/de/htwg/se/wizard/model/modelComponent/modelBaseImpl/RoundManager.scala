@@ -17,8 +17,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         tricksPerRound: Map[String, Int] = Map.empty[String, Int],
                         playedCards: List[Card] = Nil,
                         predictionMode: Boolean = true,
-                        cleanMap: Map[String, Int] = Map.empty[String, Int],
-                        resultTable: ResultTable) extends ModelInterface {
+                        cleanMap: Map[String, Int] = Map.empty[String, Int]) extends ModelInterface {
   val initialCardStack: List[Card] = CardStack.initialize
 
   override def isNumberOfPlayersValid(number: Int): Boolean = Player.checkNumberOfPlayers(number)
@@ -62,10 +61,10 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def playerStateStrings: String = {
     if (currentRound == numberOfRounds && currentPlayerNumber == 0) {
-      return "\nGame Over! Press 'q' to quit.\n" + resultTable.toString
+      return "\nGame Over! Press 'q' to quit.\n"
     }
     if (predictionPerRound.size < numberOfPlayers) {
-      {if (currentPlayerNumber == 0) resultTable.toString + "\n" else ""} + Player.playerPrediction(players(currentPlayerNumber), currentRound, trumpColor)
+      Player.playerPrediction(players(currentPlayerNumber), currentRound, trumpColor)
     } else {
       Player.playerTurn(players(currentPlayerNumber), currentRound)
     }
@@ -74,7 +73,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
   override def nextRound: RoundManager = {
     if (currentPlayerNumber == 0 && currentRound != numberOfRounds && players.last.playerCards.isEmpty) {
       copy(
-        resultTable = pointsForRound(),
         shuffledCardStack = CardStack.shuffleCards(initialCardStack),
         predictionPerRound = Nil,
         tricksPerRound = cleanMap,
@@ -110,15 +108,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
     this.copy(tricksPerRound = mutMap.toMap, playedCards = Nil)
   }
 
-  def pointsForRound(): ResultTable = {
-    var table = resultTable
-    for (playerWhosePointsGetCalculated <- players.indices) {
-      table = table.updatePoints(currentRound, playerWhosePointsGetCalculated,
-        RoundManager.calcPoints(predictionPerRound(playerWhosePointsGetCalculated), tricksPerRound(players(playerWhosePointsGetCalculated).name)))
-    }
-    table
-  }
-
   def mapToXMLList(map: Map[String, Int]): List[Elem] = map.map(kv => <entry><player>{kv._1}</player><trick>{kv._2}</trick></entry>).toList
 
   override def toXML: Elem = {
@@ -134,7 +123,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
       <playedCards>{playedCards.map(card => card.toXML)}</playedCards>
       <predictionMode>{predictionMode}</predictionMode>
       <cleanMap>{mapToXMLList(cleanMap)}</cleanMap>
-      <resultTable>{resultTable.toXML}</resultTable>
     </RoundManager>
   }
 
@@ -156,7 +144,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val predictionMode = (node \ "predictionMode").text.toBoolean
     val cleanMapNode = (node \ "cleanMap") \ "entry"
     val cleanMap = cleanMapNode.reverse.map(node => (node \ "player").text -> (node \ "trick").text.toInt).toMap
-    val resultTable = this.resultTable.fromXML((node \ "resultTable").head.child.head)
     copy(
       numberOfPlayers = numberOfPlayers,
       numberOfRounds = numberOfRounds,
@@ -168,8 +155,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       tricksPerRound = tricksPerRound,
       playedCards = playedCards.toList,
       predictionMode = predictionMode,
-      cleanMap = cleanMap,
-      resultTable = resultTable
+      cleanMap = cleanMap
     )
   }
 
@@ -186,8 +172,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
   override def topOfStackCardString: String = shuffledCardStack.head.toString
 
   override def playersAsStringList: List[String] = players.map(player => player.toString)
-
-  override def resultArray: Array[Array[Any]] = resultTable.toAnyArray
 
   override def nextPlayerInSetup: ModelInterface = this.copy(currentPlayerNumber = nextPlayerSetup)
 
@@ -239,11 +223,7 @@ object RoundManager {
       this
     }
 
-    def build(): RoundManager = {
-      RoundManager(
-        numberOfPlayers, numberOfRounds,
-        resultTable = ResultTable.initializeTable(numberOfRounds, numberOfPlayers))
-    }
+    def build(): RoundManager = RoundManager(numberOfPlayers, numberOfRounds)
   }
 
   import play.api.libs.json._

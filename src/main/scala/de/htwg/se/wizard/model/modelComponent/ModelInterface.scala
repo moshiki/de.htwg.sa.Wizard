@@ -29,8 +29,6 @@ trait ModelInterface {
 
   def playersAsStringList: List[String]
 
-  def resultArray: Array[Array[Any]]
-
   def isNumberOfPlayersValid(number: Int): Boolean
 
   def nextPlayerInSetup: ModelInterface

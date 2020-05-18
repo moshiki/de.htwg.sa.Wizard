@@ -1,5 +1,6 @@
-package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
+package de.htwg.sa.wizard.model.resultTableComponent.resultTableBaseImplementation
 
+import de.htwg.sa.wizard.model.resultTableComponent.resultTableBaseImplementation
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.Json
@@ -15,12 +16,12 @@ class ResultTableSpec extends AnyWordSpec with Matchers {
     "update the result correctly in the first round" in {
 
       val newTable = table.updatePoints(1, 0, 10)
-      newTable.points(0)(0) should be(10)
+      newTable.asInstanceOf[resultTableBaseImplementation.ResultTable].points(0)(0) should be(10)
     }
 
     "update the result correctly in all future rounds" in {
       val newTable = table.updatePoints(2, 0, -20)
-      newTable.points(1)(0) should be(-20)
+      newTable.asInstanceOf[resultTableBaseImplementation.ResultTable].points(1)(0) should be(-20)
     }
 
     "have a nice string representation" in {
