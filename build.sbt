@@ -1,12 +1,12 @@
 import sbt.Keys.libraryDependencies
 
-name := "Wizard"
+//name := "Wizard"
 
-version := "0.13"
+ThisBuild / version := "0.13"
 
-scalaVersion := "2.13.2"
+ThisBuild / scalaVersion := "2.13.2"
 
-trapExit := false
+ThisBuild / trapExit := false
 
 val dependencies = Seq(
   "org.scalactic" %% "scalactic" % "3.1.1",
@@ -27,5 +27,12 @@ val dependencies = Seq(
   "de.vandermeer" % "asciitable" % "0.3.2",
 )
 
-libraryDependencies ++= dependencies
+lazy val root = (project in file(".")).settings(
+  name := "Wizard",
+  libraryDependencies ++= dependencies
+).aggregate(PlayerModule).dependsOn(PlayerModule)
 
+lazy val PlayerModule = project.settings(
+  name := "PlayerModule",
+  libraryDependencies ++= dependencies
+)
