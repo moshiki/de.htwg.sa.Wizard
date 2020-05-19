@@ -1,12 +1,14 @@
 package de.htwg.sa.wizard.model.cardComponent
 
-import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.{Card, DefaultCard, JesterCard, WizardCard}
+import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.{DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import play.api.libs.json.JsValue
 
 import scala.xml.{Elem, Node}
 
 trait CardInterface {
+
+  //ToDo: Abhängigkeit zu PlayerObjekt auflösen
   val owner: Option[Player]
   def hasColor: Boolean
   def isWizard: Boolean
@@ -28,6 +30,7 @@ object CardInterface {
     }
   }
 
+  //ToDo: Abhängigkeit zu PlayerObjekt auflösen
   def setOwner(card:CardInterface, player: Player): CardInterface = {
     if(card.isJester) card.asInstanceOf[JesterCard].copy(owner = Some(player))
     else if(card.isWizard) card.asInstanceOf[WizardCard].copy(owner = Some(player))
