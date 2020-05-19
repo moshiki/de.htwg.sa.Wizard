@@ -1,14 +1,15 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards.Card
+import de.htwg.sa.wizard.model.cardComponent.CardInterface
+import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.Card
 
 import scala.xml.Elem
 
 
-case class Player(name: String, playerCards: List[Card] = Nil) {
+case class Player(name: String, playerCards: List[CardInterface] = Nil) {
   override def toString: String = name
 
-  def assignCards(cards: List[Card]): Player = {
+  def assignCards(cards: List[CardInterface]): Player = {
     this.copy(playerCards = cards)
   }
 
@@ -45,7 +46,7 @@ object Player {
     val name = (node \ "name").text.trim
     val player = Player(name)
     val cards = (node \ "playerCards").head.child.filter(node => node.text.trim != "")
-    val playerCards = if (cards.text.trim != "None")  {cards.map(node => Card.fromXML(node)).toList} else Nil
+    val playerCards = if (cards.text.trim != "None")  {cards.map(node => CardInterface.fromXML(node)).toList} else Nil
     player.copy(playerCards = playerCards)
   }
 

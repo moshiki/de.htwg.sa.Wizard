@@ -1,4 +1,4 @@
-package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
+package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import org.scalatest.matchers.should.Matchers

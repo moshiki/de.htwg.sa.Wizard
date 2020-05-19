@@ -1,5 +1,6 @@
-package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
+package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 
+import de.htwg.sa.wizard.model.cardComponent.CardInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -60,7 +61,7 @@ class DefaultCardSpec extends AnyWordSpec with Matchers {
     "should set Owner correctly" in {
       val defCardWithoutOwner = DefaultCard("blue", 2)
       val testPlayer = Player("TestPlayer")
-      val cardWithOwner = Card.setOwner(defCardWithoutOwner, testPlayer)
+      val cardWithOwner = CardInterface.setOwner(defCardWithoutOwner, testPlayer)
       cardWithOwner.ownerName should be("TestPlayer")
     }
 

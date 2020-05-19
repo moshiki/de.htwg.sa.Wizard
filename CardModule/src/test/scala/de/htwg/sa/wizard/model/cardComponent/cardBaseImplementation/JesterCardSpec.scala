@@ -1,5 +1,6 @@
-package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
+package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 
+import de.htwg.sa.wizard.model.cardComponent.CardInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -56,7 +57,7 @@ class JesterCardSpec extends AnyWordSpec with Matchers {
     "should set Owner correctly" in {
       val jesterCardWithoutOwner = JesterCard()
       val testPlayer = Player("TestPlayer")
-      val cardWithOwner = Card.setOwner(jesterCardWithoutOwner, testPlayer)
+      val cardWithOwner = CardInterface.setOwner(jesterCardWithoutOwner, testPlayer)
       cardWithOwner.ownerName should be("TestPlayer")
     }
 

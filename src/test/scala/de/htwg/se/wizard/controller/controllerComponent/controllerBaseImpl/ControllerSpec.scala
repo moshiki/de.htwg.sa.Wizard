@@ -1,9 +1,9 @@
 package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
+import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.{Card, DefaultCard, JesterCard, WizardCard}
 import de.htwg.sa.wizard.model.resultTableComponent.ResultTableInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards._
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, RoundManager}
 import de.htwg.se.wizard.util.Observer
 import org.scalamock.scalatest.MockFactory

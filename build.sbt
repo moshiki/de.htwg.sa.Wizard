@@ -22,10 +22,15 @@ lazy val root = (project in file(".")).settings(
   libraryDependencies ++= commonDependencies,
   libraryDependencies += "com.google.inject" % "guice" % "4.2.2",
   libraryDependencies +="net.codingwell" %% "scala-guice" % "4.2.6",
-).aggregate(ResultTable).dependsOn(ResultTable) //% "compile->compile;test->test")
+).aggregate(ResultTable, CardModule).dependsOn(ResultTable, CardModule) //% "compile->compile;test->test")
 
 lazy val ResultTable = project.settings(
   name := "ResultTable",
   libraryDependencies ++= commonDependencies,
   libraryDependencies += "de.vandermeer" % "asciitable" % "0.3.2"
+)
+
+lazy val CardModule = project.settings(
+  name :=  "CardModule",
+  libraryDependencies ++= commonDependencies
 )

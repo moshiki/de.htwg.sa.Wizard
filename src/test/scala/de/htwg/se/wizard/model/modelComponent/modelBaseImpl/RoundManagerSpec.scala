@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards._
+import de.htwg.sa.wizard.model.cardComponent.CardInterface
+import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.{Card, CardStack, DefaultCard, JesterCard, WizardCard}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -133,10 +134,10 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val player1 = Player("name1")
       val player2 = Player("name2")
       val player3 = Player("name3")
-      val card1 = Card.setOwner(JesterCard(), player1)
-      val card2 = Card.setOwner(WizardCard(), player2)
-      val card3 = Card.setOwner(DefaultCard("blue", 3), player3)
-      val roundManager = RoundManager(playedCards = List[Card](card1, card2, card3),
+      val card1 = CardInterface.setOwner(JesterCard(), player1)
+      val card2 = CardInterface.setOwner(WizardCard(), player2)
+      val card3 = CardInterface.setOwner(DefaultCard("blue", 3), player3)
+      val roundManager = RoundManager(playedCards = List[CardInterface](card1, card2, card3),
         tricksPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
       val newRoundManager = roundManager.trickInThisCycle
       newRoundManager.playedCards should be(Nil)

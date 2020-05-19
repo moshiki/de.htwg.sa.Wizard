@@ -1,13 +1,13 @@
-package de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards
+package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 
-
+import de.htwg.sa.wizard.model.cardComponent.CardInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import play.api.libs.json.{JsValue, Json}
 
 import scala.xml.Elem
 
 case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
-  extends Card(owner) with Ordered[DefaultCard] {
+  extends Card(owner) with Ordered[DefaultCard] with CardInterface {
   require(number >= 1 && number <= 13)
   require(color == "blue" || color == "red" || color == "yellow" || color == "green")
 
@@ -56,7 +56,7 @@ case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
     "owner" -> ownerString
   )
 
-  override def fromJson(jsValue: JsValue): Card = {
+  override def fromJson(jsValue: JsValue): CardInterface = {
     val color = (jsValue \ "color").get.as[String]
     val number = (jsValue \ "number").get.as[Int]
     val ownerString = (jsValue \ "owner").get.as[String]

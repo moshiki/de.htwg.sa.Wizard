@@ -1,9 +1,9 @@
 package de.htwg.se.wizard.aview.gui
 
+import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.{CardStack, WizardCard}
 import de.htwg.sa.wizard.model.resultTableComponent.ResultTableInterface
 import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl._
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.cards.{CardStack, WizardCard}
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, RoundManager}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
