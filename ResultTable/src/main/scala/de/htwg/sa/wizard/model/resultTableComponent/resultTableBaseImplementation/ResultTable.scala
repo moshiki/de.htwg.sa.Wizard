@@ -2,6 +2,7 @@ package de.htwg.sa.wizard.model.resultTableComponent.resultTableBaseImplementati
 
 import de.htwg.sa.wizard.model.resultTableComponent.ResultTableInterface
 import de.vandermeer.asciitable.AsciiTable
+import play.api.libs.json.{JsValue, Json}
 
 import scala.xml.{Elem, Node}
 
@@ -51,6 +52,10 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
       }
     newTable.copy(points = buildVector(numberOfPlayers, pointList.toList, Vector()))
   }
+
+  override def toJson: JsValue = Json.toJson(this)
+
+  override def fromJson(jsValue: JsValue): ResultTableInterface = jsValue.validate[ResultTable].get
 }
 
 object ResultTable {

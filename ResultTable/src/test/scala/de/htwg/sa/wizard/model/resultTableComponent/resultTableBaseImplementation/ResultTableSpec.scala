@@ -55,8 +55,10 @@ class ResultTableSpec extends AnyWordSpec with Matchers {
 
     "be able to store itself in a json representation and restore successfully" in {
       val json = Json.toJson(table)
-      val table2 = json.validate[ResultTable].asOpt.get
-      table2 should be(table)
+      val restoredTable = json.validate[ResultTable].asOpt.get
+      restoredTable should be(table)
+      table.toJson should be(json)
+      table.fromJson(json) should be(restoredTable)
     }
   }
 }

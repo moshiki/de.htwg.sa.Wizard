@@ -1,5 +1,7 @@
 package de.htwg.sa.wizard.model.resultTableComponent
 
+import play.api.libs.json.JsValue
+
 import scala.xml.{Elem, Node}
 
 trait ResultTableInterface {
@@ -12,4 +14,8 @@ trait ResultTableInterface {
   def toXML: Elem
 
   def fromXML(node: Node): ResultTableInterface
+
+  def toJson: JsValue
+
+  def fromJson(jsValue: JsValue): ResultTableInterface
 }
