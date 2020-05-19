@@ -1,4 +1,4 @@
-package de.htwg.sa.wizard.model.fileIOComponent.fileIOJSON
+package de.htwg.sa.wizard.model.fileIOComponent.FileIOJSON
 
 import java.io.{File, PrintWriter}
 
