@@ -174,12 +174,11 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
   }
 
   "A preSetupState" when {
-    val expectedArray = new Array[Array[Any]](1)
+    val expectedArray = Array(Array(1.asInstanceOf[Any]))
     val fileIOStub = stub[FileIOInterface]
-    val resultTableStub = stub[ResultTableInterface]
-    (resultTableStub.toAnyArray _).when() returns expectedArray
+    val resultTableMock = mock[ResultTableInterface]
     val roundManager = RoundManager()
-    val controller = new Controller(roundManager, fileIOStub, resultTableStub)
+    val controller = new Controller(roundManager, fileIOStub, resultTableMock)
     val state = PreSetupState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       val old = roundManager
@@ -214,6 +213,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "return the same result array stored in ResultTable" in {
+      (resultTableMock.toAnyArray _).expects().returning(expectedArray)
       controller.resultArray should be(expectedArray)
     }
   }
@@ -326,7 +326,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     val fileIOStub = stub[FileIOInterface]
     val resultTableStub = stub[ResultTableInterface]
     val roundManager = RoundManager()
-    val controller = new Controller(roundManager, fileIOStub, stub[ResultTableInterface])
+    val controller = new Controller(roundManager, fileIOStub, resultTableStub)
     val state = GameOverState(controller)
     "do nothing when evaluating" in {
       state.evaluate("5")

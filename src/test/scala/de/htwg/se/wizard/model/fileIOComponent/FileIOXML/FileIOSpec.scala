@@ -12,10 +12,10 @@ class FileIOSpec extends AnyWordSpec with Matchers with MockFactory {
     "save and restore the whole game" in {
       val roundManager = RoundManager.Builder().withNumberOfPlayers(3).withNumberOfRounds(3).build()
       val resultTableStub = stub[ResultTableInterface]
-      val fileIOStub = stub[FileIO]
-      val controller = new Controller(roundManager, fileIOStub, resultTableStub)
-      fileIOStub.save(controller.controllerStateAsString, roundManager)
-      val res = fileIOStub.load(roundManager)
+      val fileIO = FileIO()
+      val controller = new Controller(roundManager, fileIO, resultTableStub)
+      fileIO.save(controller.controllerStateAsString, roundManager)
+      val res = fileIO.load(roundManager)
       res.get._1 should be("PreSetupState")
       res.get._2 should be(roundManager)
     }
