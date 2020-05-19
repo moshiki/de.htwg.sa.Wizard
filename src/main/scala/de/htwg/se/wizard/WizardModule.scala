@@ -8,7 +8,7 @@ import net.codingwell.scalaguice.ScalaModule
 
 class WizardModule extends AbstractModule with ScalaModule{
   override def configure(): Unit = {
-    bind[ModelInterface].to[RoundManager]
+    bind[ModelInterface].toInstance(RoundManager())
     bind[FileIOInterface].to[FileIOJSON.FileIO]
   }
 }
