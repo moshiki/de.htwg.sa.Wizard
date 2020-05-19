@@ -1,7 +1,6 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
 import de.htwg.sa.wizard.model.cardComponent.CardInterface
-import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.Card
 
 import scala.xml.Elem
 

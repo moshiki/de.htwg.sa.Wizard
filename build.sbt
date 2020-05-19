@@ -33,4 +33,4 @@ lazy val ResultTable = project.settings(
 lazy val CardModule = project.settings(
   name :=  "CardModule",
   libraryDependencies ++= commonDependencies
-)
+).dependsOn(PlayerModule)
