@@ -37,7 +37,7 @@ class FileIOSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "loading the Card Interface" should {
       "return the correct Card Interface in a success" in {
-        val path = "CardInterface/src/test/resources/CardInterface"
+        val path = "CardModule/src/test/resources/CardInterface"
         val expectedXML: Elem = <CardInterface>testData</CardInterface>
         val expectedCardInterface = stub[CardInterface]
         val cardInterfaceStub = stub[CardInterface]
