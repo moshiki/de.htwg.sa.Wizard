@@ -128,11 +128,10 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   override def fromXML(node: scala.xml.Node): RoundManager = {
-    val anyCard = WizardCard()
     val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
     val numberOfRounds = (node \ "numberOfRounds").text.toInt
     val shuffledCardStackNode = (node \ "shuffledCardStack").head.child
-    val shuffledCardStack = shuffledCardStackNode.map(node => anyCard.wizardFromXML(node))
+    val shuffledCardStack = shuffledCardStackNode.map(node => CardInterface(node.label).fromXML(node))
     val playersNode = (node \ "players").head.child
     val players = playersNode.map(node => Player.fromXML(node))
     val currentPlayer = (node \ "currentPlayer").text.toInt
@@ -142,7 +141,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val tricksPerRoundNode = (node \ "tricksPerRound") \ "entry"
     val tricksPerRound = tricksPerRoundNode.reverse.map(node => (node \ "player").text -> (node \ "trick").text.toInt).toMap
     val playedCardsNode = (node \ "playedCards").head.child
-    val playedCards = playedCardsNode.map(node => anyCard.wizardFromXML(node))
+    val playedCards = playedCardsNode.map(node => CardInterface(node.label).fromXML(node))
     val predictionMode = (node \ "predictionMode").text.toBoolean
     val cleanMapNode = (node \ "cleanMap") \ "entry"
     val cleanMap = cleanMapNode.reverse.map(node => (node \ "player").text -> (node \ "trick").text.toInt).toMap
