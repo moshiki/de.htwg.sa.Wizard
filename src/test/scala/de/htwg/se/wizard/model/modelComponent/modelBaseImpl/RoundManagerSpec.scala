@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import de.htwg.sa.wizard.model.cardComponent.CardInterface
-import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.{CardStack, DefaultCard, JesterCard, WizardCard}
+import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
+import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.{CardStack, DefaultCard, JesterCard, WizardCard}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

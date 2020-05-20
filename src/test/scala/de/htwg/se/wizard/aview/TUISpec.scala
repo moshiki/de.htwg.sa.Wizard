@@ -11,7 +11,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class TUISpec extends AnyWordSpec with Matchers with MockFactory {
   "A Wizard Tui" should {
     val fileIOStub = stub[FileIOInterface]
-    val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+    val resultTableControllerStub = stub[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
     val controller = new Controller(RoundManager(numberOfPlayers = 3), fileIOStub, resultTableControllerStub)
     val tui = new TUI(controller)
     "register itself in the controller" in {

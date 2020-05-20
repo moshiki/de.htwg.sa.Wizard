@@ -1,7 +1,6 @@
 package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
-import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.{Card, DefaultCard, JesterCard, WizardCard}
-import de.htwg.sa.wizard.model.resultTableComponent.ResultTableInterface
+import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.{Card, DefaultCard, JesterCard, WizardCard}
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, RoundManager}
@@ -15,7 +14,7 @@ import scala.util.Success
 class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFactory {
   "A Controller" when {
     val fileIOStub = stub[FileIOInterface]
-    val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+    val resultTableControllerStub = stub[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
     val roundManager = RoundManager()
     val controller = new Controller(roundManager, fileIOStub, resultTableControllerStub)
     val observer = stub[Observer]
@@ -120,7 +119,7 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
 
     "save and restore the whole game" in {
       val roundManagerStub = stub[ModelInterface]
-      val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+      val resultTableControllerStub = stub[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
       val fileIOMock = mock[FileIOInterface]
       fileIOMock.save _ expects("PreSetupState", roundManagerStub)
       fileIOMock.load _ expects roundManagerStub returning Success("PreSetupState",roundManagerStub)
@@ -133,7 +132,7 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
 
     "save and restore the whole game with all four possible controller states" in {
       val roundManagerStub = stub[ModelInterface]
-      val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+      val resultTableControllerStub = stub[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
       val fileIOMock = mock[FileIOInterface]
       fileIOMock.save _ expects("PreSetupState", roundManagerStub)
       fileIOMock.load _ expects roundManagerStub returning Success("PreSetupState",roundManagerStub)
@@ -176,7 +175,7 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
   "A preSetupState" when {
     val expectedArray = Array(Array(1.asInstanceOf[Any]))
     val fileIOStub = stub[FileIOInterface]
-    val resultTableControllerMock = mock[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+    val resultTableControllerMock = mock[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
     val roundManager = RoundManager()
     val controller = new Controller(roundManager, fileIOStub, resultTableControllerMock)
     val state = PreSetupState(controller)
@@ -222,7 +221,7 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
 
   "A SetupState" when {
     val fileIOStub = stub[FileIOInterface]
-    val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+    val resultTableControllerStub = stub[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
     val roundManager = RoundManager()
     val controller = new Controller(roundManager, fileIOStub, resultTableControllerStub)
     val state = SetupState(controller)
@@ -262,7 +261,7 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
 
   "A InGameState" when {
     val fileIOStub = stub[FileIOInterface]
-    val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+    val resultTableControllerStub = stub[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
     val roundManager = RoundManager()
     val controller = new Controller(roundManager, fileIOStub, resultTableControllerStub)
     controller.state = InGameState(controller)
@@ -326,7 +325,7 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
 
   "A GameOverState" should {
     val fileIOStub = stub[FileIOInterface]
-    val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+    val resultTableControllerStub = stub[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
     val roundManager = RoundManager()
     val controller = new Controller(roundManager, fileIOStub, resultTableControllerStub)
     val state = GameOverState(controller)

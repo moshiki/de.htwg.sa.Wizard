@@ -10,7 +10,7 @@ class FileIOSpec extends AnyWordSpec with Matchers with MockFactory {
   "An XML File IO" should {
     "save and restore the whole game" in {
       val roundManager = RoundManager.Builder().withNumberOfPlayers(3).withNumberOfRounds(3).build()
-      val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+      val resultTableControllerStub = stub[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
       val fileIO = FileIO()
       val controller = new Controller(roundManager, fileIO, resultTableControllerStub)
       fileIO.save(controller.controllerStateAsString, roundManager)

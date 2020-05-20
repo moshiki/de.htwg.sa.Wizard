@@ -9,7 +9,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class EvalStepSpec extends AnyWordSpec with Matchers with MockFactory {
   "An EvalStep" when {
     val fileIOStub = stub[FileIOInterface]
-    val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+    val resultTableControllerStub = stub[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
     val controller = new Controller(RoundManager(), fileIOStub, resultTableControllerStub)
     val evalStep = new EvalStep(controller)
     "saves the current controller's state and round manager" in {

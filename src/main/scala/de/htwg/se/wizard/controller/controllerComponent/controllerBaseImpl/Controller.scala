@@ -10,7 +10,7 @@ import scala.util.{Failure, Success}
 
 class Controller @Inject()(var roundManager: ModelInterface,
                            fileIOInterface: FileIOInterface,
-                           var resultTableController: de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface)
+                           var resultTableController: de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface)
   extends ControllerInterface {
 
   val undoManager = new UndoManager

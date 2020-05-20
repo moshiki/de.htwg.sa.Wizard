@@ -9,7 +9,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class FileIOSpec extends AnyWordSpec with Matchers with MockFactory{
   "A JSON FileIO" should {
     "save and restore the whole game" in {
-      val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+      val resultTableControllerStub = stub[de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface]
       val fileIO = FileIO()
       val roundManager = RoundManager.Builder().build()
       val orig = roundManager.copy()
