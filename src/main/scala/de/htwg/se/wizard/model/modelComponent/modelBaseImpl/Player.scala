@@ -42,15 +42,6 @@ object Player {
        |Guess your amount of tricks: """.stripMargin
   }
 
-/*  def fromXML(node: scala.xml.Node): Player = {
-    val anyCard = WizardCard()
-    val name = (node \ "name").text.trim
-    val player = Player(name)
-    val cards = (node \ "playerCards").head.child.filter(node => node.text.trim != "")
-    val playerCards = if (cards.text.trim != "None")  {cards.map(node => anyCard.wizardFromXML(node)).toList} else Nil
-    player.copy(playerCards = playerCards)
-  }*/
-
   def fromXML(node: scala.xml.Node): Player = {
     val name = (node \ "name").text.trim
     val player = Player(name)
