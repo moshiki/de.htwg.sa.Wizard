@@ -38,7 +38,7 @@ case class DefaultCard(color: String, number: Int, owner: Option[String] = None)
     </DefaultCard>
   }
 
-  def fromXML(node: scala.xml.Node): DefaultCard = {
+  def defaultFromXML(node: scala.xml.Node): DefaultCard = {
     val color = (node \ "color").text.trim
     val number = (node \ "number").text.trim.toInt
     val owner = if ((node \ "owner" ).text.trim != "None") {
@@ -60,4 +60,6 @@ case class DefaultCard(color: String, number: Int, owner: Option[String] = None)
     val owner = if (ownerString != "None") Some(ownerString) else None
     this copy(color, number, owner)
   }
+
+  override def setOwner(player: String): CardInterface = copy(owner = Some(player))
 }

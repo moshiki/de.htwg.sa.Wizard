@@ -19,6 +19,8 @@ trait CardInterface {
   def ownerString: String
   def toJson: JsValue
   def fromJson(jsValue: JsValue): CardInterface
+  def fromXML(node: Node): CardInterface
+  def setOwner(player: String): CardInterface
 }
 
 object CardInterface {
@@ -26,20 +28,6 @@ object CardInterface {
     card match {
       case "wizard" => WizardCard()
       case "jester" => JesterCard()
-    }
-  }
-
-  def setOwner(card:CardInterface, player: String): CardInterface = {
-    if(card.isJester) card.asInstanceOf[JesterCard].copy(owner = Some(player))
-    else if(card.isWizard) card.asInstanceOf[WizardCard].copy(owner = Some(player))
-    else card.asInstanceOf[DefaultCard].copy(owner = Some(player))
-  }
-
-  def fromXML(node: Node): CardInterface = {
-    node.label match {
-      case "WizardCard" => WizardCard().fromXML(node)
-      case "JesterCard" => JesterCard().fromXML(node)
-      case "DefaultCard" => DefaultCard("blue", 1).fromXML(node)
     }
   }
 

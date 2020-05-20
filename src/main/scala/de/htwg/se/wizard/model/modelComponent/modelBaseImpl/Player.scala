@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
 import de.htwg.sa.wizard.model.cardComponent.CardInterface
+import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.WizardCard
 
 import scala.xml.Elem
 
@@ -42,10 +43,11 @@ object Player {
   }
 
   def fromXML(node: scala.xml.Node): Player = {
+    val anyCard = WizardCard()
     val name = (node \ "name").text.trim
     val player = Player(name)
     val cards = (node \ "playerCards").head.child.filter(node => node.text.trim != "")
-    val playerCards = if (cards.text.trim != "None")  {cards.map(node => CardInterface.fromXML(node)).toList} else Nil
+    val playerCards = if (cards.text.trim != "None")  {cards.map(node => anyCard.wizardFromXML(node)).toList} else Nil
     player.copy(playerCards = playerCards)
   }
 

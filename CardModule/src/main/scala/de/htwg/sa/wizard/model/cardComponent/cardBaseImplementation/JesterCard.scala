@@ -23,7 +23,7 @@ case class JesterCard(owner: Option[String] = None) extends Card(owner) with Car
     </JesterCard>
   }
 
-  def fromXML(node: scala.xml.Node): JesterCard = {
+  def jesterFromXML(node: scala.xml.Node): JesterCard = {
     val owner = if ((node \ "owner" ).text.trim != "None") {
       Some((node \ "owner" ).text.trim)
     } else None
@@ -40,4 +40,6 @@ case class JesterCard(owner: Option[String] = None) extends Card(owner) with Car
     val owner = if (ownerString != "None") Some(ownerString) else None
     this copy owner
   }
+
+  override def setOwner(player: String): CardInterface = copy(owner = Some(player))
 }

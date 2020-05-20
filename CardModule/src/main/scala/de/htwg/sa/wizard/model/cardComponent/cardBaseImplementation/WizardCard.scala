@@ -23,7 +23,7 @@ case class WizardCard(owner: Option[String] = None) extends Card(owner) with Car
     </WizardCard>
   }
 
-  def fromXML(node: scala.xml.Node): WizardCard = {
+  def wizardFromXML(node: scala.xml.Node): WizardCard = {
     val owner = if ((node \ "owner" ).text.trim != "None") {
       //val playerName = Player.fromXML((node \ "owner").head.child.filter(node => node.text.trim != "").head)
       Some((node \ "owner" ).text.trim)
@@ -40,4 +40,6 @@ case class WizardCard(owner: Option[String] = None) extends Card(owner) with Car
     val owner = if (ownerString != "None") Some(ownerString) else None
     this copy owner
   }
+
+  override def setOwner(player: String): CardInterface = copy(owner = Some(player))
 }

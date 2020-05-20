@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.{Card, CardStack, DefaultCard}
-import de.htwg.sa.wizard.model.cardComponent.{CardInterface, CardStackInterface}
+import de.htwg.sa.wizard.model.cardComponent.CardInterface
+import de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation.{CardStack, DefaultCard, WizardCard}
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import play.api.libs.json.{JsValue, Json}
 
@@ -47,7 +47,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val playersWithCards = players map(player => {
       val playerNumber = players.indexOf(player)
       val cardsForPlayer = shuffledCardStack.slice(playerNumber * currentRound, playerNumber * currentRound + currentRound)
-      val assignedCards = cardsForPlayer.map(card => CardInterface.setOwner(card, player.name))
+      val assignedCards = cardsForPlayer.map(card => card.setOwner(player.name))
       player.assignCards(assignedCards)
     })
     val newShuffledCardStack = shuffledCardStack.splitAt((numberOfPlayers - 1) * currentRound + 1)._2
@@ -128,10 +128,11 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   override def fromXML(node: scala.xml.Node): RoundManager = {
+    val anyCard = WizardCard()
     val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
     val numberOfRounds = (node \ "numberOfRounds").text.toInt
     val shuffledCardStackNode = (node \ "shuffledCardStack").head.child
-    val shuffledCardStack = shuffledCardStackNode.map(node => CardInterface.fromXML(node))
+    val shuffledCardStack = shuffledCardStackNode.map(node => anyCard.wizardFromXML(node))
     val playersNode = (node \ "players").head.child
     val players = playersNode.map(node => Player.fromXML(node))
     val currentPlayer = (node \ "currentPlayer").text.toInt
@@ -141,7 +142,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val tricksPerRoundNode = (node \ "tricksPerRound") \ "entry"
     val tricksPerRound = tricksPerRoundNode.reverse.map(node => (node \ "player").text -> (node \ "trick").text.toInt).toMap
     val playedCardsNode = (node \ "playedCards").head.child
-    val playedCards = playedCardsNode.map(node => CardInterface.fromXML(node))
+    val playedCards = playedCardsNode.map(node => anyCard.wizardFromXML(node))
     val predictionMode = (node \ "predictionMode").text.toBoolean
     val cleanMapNode = (node \ "cleanMap") \ "entry"
     val cleanMap = cleanMapNode.reverse.map(node => (node \ "player").text -> (node \ "trick").text.toInt).toMap

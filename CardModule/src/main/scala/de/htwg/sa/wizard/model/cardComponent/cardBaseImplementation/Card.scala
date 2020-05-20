@@ -3,7 +3,7 @@ package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 import de.htwg.sa.wizard.model.cardComponent.CardInterface
 import play.api.libs.json.JsValue
 
-import scala.xml.Elem
+import scala.xml.{Elem, Node}
 
 
 abstract class Card(owner: Option[String]) extends CardInterface {
@@ -32,6 +32,16 @@ abstract class Card(owner: Option[String]) extends CardInterface {
   def toJson: JsValue
 
   def fromJson(jsValue: JsValue): CardInterface
+
+  def setOwner(player: String): CardInterface
+
+  def fromXML(node: Node): CardInterface = {
+    node.label match {
+      case "WizardCard" => WizardCard().wizardFromXML(node)
+      case "JesterCard" => JesterCard().jesterFromXML(node)
+      case "DefaultCard" => DefaultCard("blue", 1).defaultFromXML(node)
+    }
+  }
 }
 
 

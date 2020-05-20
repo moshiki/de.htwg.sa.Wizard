@@ -1,6 +1,5 @@
 package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 
-import de.htwg.sa.wizard.model.cardComponent.CardInterface
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -27,7 +26,7 @@ class DefaultCardSpec extends AnyWordSpec with Matchers {
       }
       "is able to store itself in an xml representation and restore successfully" in {
         val xml = defaultCard.toXML
-        val newCard = defaultCard.fromXML(xml)
+        val newCard = defaultCard.defaultFromXML(xml)
         newCard should be(defaultCard)
       }
       "is able to store itself in a json representation and restore successfully" in {
@@ -47,7 +46,7 @@ class DefaultCardSpec extends AnyWordSpec with Matchers {
       }
       "is able to store itself in an xml representation and restore successfully" in {
         val xml = defCardWithOwner.toXML
-        val newCard = defCardWithOwner.fromXML(xml)
+        val newCard = defCardWithOwner.defaultFromXML(xml)
         newCard should be(defCardWithOwner)
       }
       "is able to store itself in a json representation and restore successfully" in {
@@ -60,7 +59,7 @@ class DefaultCardSpec extends AnyWordSpec with Matchers {
     "should set Owner correctly" in {
       val defCardWithoutOwner = DefaultCard("blue", 2)
       val testPlayer = "TestPlayer"
-      val cardWithOwner = CardInterface.setOwner(defCardWithoutOwner, testPlayer)
+      val cardWithOwner = defCardWithoutOwner.setOwner(testPlayer)
       cardWithOwner.ownerName should be("TestPlayer")
     }
 

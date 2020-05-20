@@ -11,7 +11,7 @@ case class FileIO() extends FileIOInterface {
   override def load(cardInterface: CardInterface, path: String): Try[CardInterface] = {
     Try {
       val saveData = scala.xml.XML.loadFile(path + ".xml")
-      CardInterface.fromXML(saveData)
+      cardInterface.fromXML(saveData)
     }
   }
 
