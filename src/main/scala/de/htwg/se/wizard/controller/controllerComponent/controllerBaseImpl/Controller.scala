@@ -1,7 +1,6 @@
 package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
 import com.google.inject.Inject
-import de.htwg.sa.wizard.model.resultTableComponent.ResultTableInterface
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
@@ -11,10 +10,17 @@ import scala.util.{Failure, Success}
 
 class Controller @Inject()(var roundManager: ModelInterface,
                            fileIOInterface: FileIOInterface,
-                           resultTableInterface: ResultTableInterface) extends ControllerInterface {
+                           var resultTableController: de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface)
+  extends ControllerInterface {
 
   val undoManager = new UndoManager
   var state: ControllerState = PreSetupState(this)
+
+  def numberOfRounds(numberOfPlayers: Int): Int = numberOfPlayers match {
+    case 3 => 20
+    case 4 => 15
+    case 5 => 12
+  }
 
   def nextState(): Unit = state = state.nextState
 
@@ -65,8 +71,6 @@ class Controller @Inject()(var roundManager: ModelInterface,
 
   override def playersAsStringList: List[String] = roundManager.playersAsStringList
 
-  override def resultArray: Array[Array[Any]] = resultTableInterface.toAnyArray
-
   override def save(): Unit = {
     fileIOInterface.save(controllerStateAsString, roundManager)
     notifyObservers()
@@ -87,6 +91,8 @@ class Controller @Inject()(var roundManager: ModelInterface,
     roundManager = returnTuple._2
     notifyObservers()
   }
+
+  override def resultArray: Array[Array[Any]] = resultTableController.pointArrayForView
 }
 
 object Controller {
@@ -115,6 +121,7 @@ case class PreSetupState(controller: Controller) extends ControllerState {
       case None => return
     }
     if (!controller.roundManager.isNumberOfPlayersValid(actualNumber)) return
+    controller.resultTableController.initializeTable(controller.numberOfRounds(actualNumber), actualNumber)
     controller.roundManager = controller.roundManager.configurePlayersAndRounds(actualNumber)
     controller.nextState()
     controller.roundManager = controller.roundManager.nextPlayerInSetup
@@ -149,7 +156,12 @@ case class InGameState(controller: Controller) extends ControllerState {
     if (controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.updatePlayerPrediction(convertedInput)
     else controller.roundManager = controller.roundManager.playCard(convertedInput)
     controller.roundManager = controller.roundManager.nextPlayer
-    if (!controller.roundManager.predictionMode) controller.roundManager = controller.roundManager.nextRound
+    if (controller.roundManager.isTimeForNextRound) {
+      val pointsForThisRound = controller.roundManager.pointsForThisRound
+      val currentRound = controller.roundManager.currentRound
+      controller.resultTableController.updatePoints(currentRound, pointsForThisRound)
+      controller.roundManager = controller.roundManager.nextRound
+    }
     if (controller.roundManager.currentRound == controller.roundManager.numberOfRounds &&
       controller.roundManager.currentPlayerNumber == 0) {
       controller.nextState()

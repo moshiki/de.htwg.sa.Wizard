@@ -2,10 +2,14 @@ package de.htwg.sa.wizard.model.resultTableComponent.resultTableBaseImplementati
 
 import de.htwg.sa.wizard.model.resultTableComponent.ResultTableInterface
 import de.vandermeer.asciitable.AsciiTable
+import play.api.libs.json.{JsValue, Json}
 
 import scala.xml.{Elem, Node}
 
-case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points: Vector[Vector[Int]]) extends ResultTableInterface {
+case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6,
+                       points: Vector[Vector[Int]] = Vector(),
+                       playerNames: List[String] = Nil
+                      ) extends ResultTableInterface {
 
   def updatePoints(round: Int, player: Int, result: Int): ResultTableInterface = {
     if (round == 1) this.copy(points = points.updated(round - 1, points(round - 1).updated(player, result)))
@@ -40,7 +44,7 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
     val numberOfPlayers = (node \ "numberOfPlayers").text.trim.toInt
     val points = (node \ "points").head.child
     val pointList = points.map(node => (node \\ "point").text.toInt)
-    val newTable = ResultTable.initializeTable(roundsToPlay, numberOfPlayers)
+    val newTable = initializeTable(roundsToPlay, numberOfPlayers).asInstanceOf[ResultTable]
     def buildVector (splitAt: Int, seq: Seq[Int], vector: Vector[Vector[Int]]): Vector[Vector[Int]] = vector ++ {
         seq.length match {
           case len if len > splitAt =>
@@ -51,13 +55,22 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6, points:
       }
     newTable.copy(points = buildVector(numberOfPlayers, pointList.toList, Vector()))
   }
-}
 
-object ResultTable {
-  def initializeTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6): ResultTable = {
+  override def toJson: JsValue = Json.toJson(this)
+
+  override def fromJson(jsValue: JsValue): ResultTableInterface = jsValue.validate[ResultTable].get
+
+  override def initializeTable(roundsToPlay: Int, numberOfPlayers: Int): ResultTableInterface = {
     val vector = Vector.fill(roundsToPlay, numberOfPlayers)(0)
     ResultTable(roundsToPlay, numberOfPlayers, vector)
   }
+
+  override def storePlayerNames(playerNames: List[String]): ResultTableInterface = copy(playerNames = playerNames)
+
+  override def playerNameList: List[String] = playerNames
+}
+
+object ResultTable {
 
   import play.api.libs.json._
   implicit val resultTableWrites: OWrites[ResultTable] = Json.writes[ResultTable]

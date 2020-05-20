@@ -7,7 +7,7 @@ import play.api.libs.json.Json
 
 class ResultTableSpec extends AnyWordSpec with Matchers {
   "A ResultTable" should {
-    val table = ResultTable.initializeTable(20, 3)
+    val table = ResultTable().initializeTable(20, 3).asInstanceOf[ResultTable]
     "set ResultTable correctly" in {
       table.numberOfPlayers should be(3)
       table.roundsToPlay should be(20)
@@ -25,7 +25,7 @@ class ResultTableSpec extends AnyWordSpec with Matchers {
     }
 
     "have a nice string representation" in {
-      val printTable = ResultTable.initializeTable(2, 3)
+      val printTable = ResultTable().initializeTable(2, 3)
       val newPrintTable = printTable.updatePoints(1, 1, 5)
       newPrintTable.toString should be(
         """┌──────────────────────────┬─────────────────────────┬─────────────────────────┐
@@ -55,8 +55,10 @@ class ResultTableSpec extends AnyWordSpec with Matchers {
 
     "be able to store itself in a json representation and restore successfully" in {
       val json = Json.toJson(table)
-      val table2 = json.validate[ResultTable].asOpt.get
-      table2 should be(table)
+      val restoredTable = json.validate[ResultTable].asOpt.get
+      restoredTable should be(table)
+      table.toJson should be(json)
+      table.fromJson(json) should be(restoredTable)
     }
   }
 }

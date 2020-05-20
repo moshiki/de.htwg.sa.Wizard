@@ -191,6 +191,12 @@ case class RoundManager(numberOfPlayers: Int = 0,
   override def toJson: JsValue = Json.toJson(this)
 
   override def fromJson(jsValue: JsValue): RoundManager = jsValue.validate[RoundManager].get
+
+  override def isTimeForNextRound: Boolean = !predictionMode && currentPlayerNumber == 0 && currentRound != numberOfRounds && players.last.playerCards.isEmpty
+
+  override def pointsForThisRound: Vector[Int] = players.map(player => {
+    val playerIndex = players.indexOf(player)
+    RoundManager.calcPoints(predictionPerRound(playerIndex), tricksPerRound(player.name))}).toVector
 }
 
 object RoundManager {
