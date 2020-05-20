@@ -12,7 +12,7 @@ import scala.util.Try
 case class FileIO() extends FileIOInterface {
   override def load(resultTableInterface: ResultTableInterface, path: String): Try[ResultTableInterface] = {
     Try{
-      val source = Source.fromFile(path)
+      val source = Source.fromFile(path + ".json")
       val string = source.getLines().mkString
       source.close
       val json = Json.parse(string)
@@ -22,7 +22,7 @@ case class FileIO() extends FileIOInterface {
 
   override def save(resultTableInterface: ResultTableInterface, path: String): Try[Unit] = {
     Try{
-      val printWriter = new PrintWriter(new File(path))
+      val printWriter = new PrintWriter(new File(path + "json"))
       printWriter.write(Json.prettyPrint(resultTableInterface.toJson))
       printWriter.close()
     }

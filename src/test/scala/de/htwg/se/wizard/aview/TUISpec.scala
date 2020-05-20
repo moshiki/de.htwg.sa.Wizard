@@ -1,6 +1,5 @@
 package de.htwg.se.wizard.aview
 
-import de.htwg.sa.wizard.model.resultTableComponent.ResultTableInterface
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
@@ -12,8 +11,8 @@ import org.scalatest.wordspec.AnyWordSpec
 class TUISpec extends AnyWordSpec with Matchers with MockFactory {
   "A Wizard Tui" should {
     val fileIOStub = stub[FileIOInterface]
-    val resultTableStub = stub[ResultTableInterface]
-    val controller = new Controller(RoundManager(numberOfPlayers = 3), fileIOStub, resultTableStub)
+    val resultTableControllerStub = stub[de.htwg.sa.wizard.controller.controllerComponent.ResultTableControllerInterface]
+    val controller = new Controller(RoundManager(numberOfPlayers = 3), fileIOStub, resultTableControllerStub)
     val tui = new TUI(controller)
     "register itself in the controller" in {
         controller.subscribers.contains(tui) should be(true)

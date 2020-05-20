@@ -68,4 +68,8 @@ trait ModelInterface {
   def toJson: JsValue
 
   def fromJson(jsValue: JsValue): ModelInterface
+
+  def isTimeForNextRound: Boolean
+
+  def pointsForThisRound: Vector[Int]
 }

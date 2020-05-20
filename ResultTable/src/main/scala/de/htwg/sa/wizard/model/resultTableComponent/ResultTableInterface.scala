@@ -18,4 +18,10 @@ trait ResultTableInterface {
   def toJson: JsValue
 
   def fromJson(jsValue: JsValue): ResultTableInterface
+
+  def initializeTable(roundsToPlay: Int, numberOfPlayers: Int): ResultTableInterface
+
+  def storePlayerNames(playerNames: List[String]): ResultTableInterface
+
+  def playerNameList: List[String]
 }

@@ -18,7 +18,7 @@ class FileIOSpec extends AnyWordSpec with Matchers with MockFactory {
       val expectedJson = Json.obj("resultTableJson" -> "Test-Data")
       (resultTableStub.toJson _).when().returns(expectedJson)
       val fileIO = FileIO()
-      val path = "ResultTable.json"
+      val path = "ResultTable"
       val result = fileIO.save(resultTableStub, path)
 
       "ask the resultTable for its Json data" in {
@@ -41,7 +41,7 @@ class FileIOSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "loading the result table" should {
       "return the correct result table in a success" in {
-        val path = "ResultTable/src/test/resources/ResultTable.json"
+        val path = "ResultTable/src/test/resources/ResultTable"
         val expectedJson = Json.obj("resultTableJson" -> "Test-Data")
         val expectedResultTable = stub[ResultTableInterface]
         val resultTableStub = stub[ResultTableInterface]
