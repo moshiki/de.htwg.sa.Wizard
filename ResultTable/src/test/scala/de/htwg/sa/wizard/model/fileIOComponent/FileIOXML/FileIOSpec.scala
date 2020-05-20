@@ -16,7 +16,7 @@ class FileIOSpec extends AnyWordSpec with Matchers with MockFactory {
       val expectedXML: Elem = <ResultTable>testData</ResultTable>
       (resultTableStub.toXML _).when().returns(expectedXML)
       val fileIO = FileIO()
-      val path = "ResultTable"
+      val path = "ResultTable.xml"
       val result = fileIO.save(resultTableStub, path)
 
       "ask the resultTable for its data in XML" in {
@@ -24,9 +24,9 @@ class FileIOSpec extends AnyWordSpec with Matchers with MockFactory {
       }
 
       "store the correct data in the correct file" in {
-        val storedXML = XML.loadFile(path)
+        val storedXML = XML.loadFile(path + ".xml")
         storedXML should be(expectedXML)
-        Files.deleteIfExists(Path.of(path)) should be(true)
+        Files.deleteIfExists(Path.of(path + ".xml")) should be(true)
       }
 
       "return a Success" in {

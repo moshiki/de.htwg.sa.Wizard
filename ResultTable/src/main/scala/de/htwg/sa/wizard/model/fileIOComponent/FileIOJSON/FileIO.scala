@@ -22,7 +22,7 @@ case class FileIO() extends FileIOInterface {
 
   override def save(resultTableInterface: ResultTableInterface, path: String): Try[Unit] = {
     Try{
-      val printWriter = new PrintWriter(new File(path + "json"))
+      val printWriter = new PrintWriter(new File(path + ".json"))
       printWriter.write(Json.prettyPrint(resultTableInterface.toJson))
       printWriter.close()
     }
