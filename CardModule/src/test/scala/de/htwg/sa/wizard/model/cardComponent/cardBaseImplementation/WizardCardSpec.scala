@@ -1,7 +1,6 @@
 package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 
 import de.htwg.sa.wizard.model.cardComponent.CardInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -32,12 +31,13 @@ class WizardCardSpec extends AnyWordSpec with Matchers {
       "is able to store itself in a json representation and restore successfully" in {
         val json = wizardCard.toJson
         val newCard = wizardCard.fromJson(json)
-        newCard should be(wizardCard)
+        newCard.isWizard should be(wizardCard.isWizard)
+        newCard.owner should be(wizardCard.owner)
       }
     }
 
     "is a WizardCard with owner 'TestPlayer'" should {
-      val wizardCardWithOwner = WizardCard(Some(Player("TestPlayer")))
+      val wizardCardWithOwner = WizardCard(Some("TestPlayer"))
       "has owner" in {
         wizardCardWithOwner.hasOwner should be(true)
       }
@@ -59,7 +59,7 @@ class WizardCardSpec extends AnyWordSpec with Matchers {
 
     "should set Owner correctly" in {
       val wizardCardWithoutOwner = WizardCard()
-      val testPlayer = Player("TestPlayer")
+      val testPlayer = "TestPlayer"
       val cardWithOwner = CardInterface.setOwner(wizardCardWithoutOwner, testPlayer)
       cardWithOwner.ownerName should be("TestPlayer")
     }

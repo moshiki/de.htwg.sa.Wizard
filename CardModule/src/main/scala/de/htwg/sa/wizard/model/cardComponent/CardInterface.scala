@@ -5,8 +5,9 @@ import play.api.libs.json.JsValue
 
 import scala.xml.{Elem, Node}
 
+//ToDo: FileIO integrieren
+
 trait CardInterface {
-  //ToDo: Abhängigkeit zu PlayerObjekt auflösen: Name als String
   val owner: Option[String]
   def hasColor: Boolean
   def isWizard: Boolean
@@ -28,7 +29,6 @@ object CardInterface {
     }
   }
 
-  //ToDo: Abhängigkeit zu PlayerObjekt auflösen: Name als String
   def setOwner(card:CardInterface, player: String): CardInterface = {
     if(card.isJester) card.asInstanceOf[JesterCard].copy(owner = Some(player))
     else if(card.isWizard) card.asInstanceOf[WizardCard].copy(owner = Some(player))

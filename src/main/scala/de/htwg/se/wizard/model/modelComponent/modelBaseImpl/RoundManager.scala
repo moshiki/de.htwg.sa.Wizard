@@ -47,7 +47,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val playersWithCards = players map(player => {
       val playerNumber = players.indexOf(player)
       val cardsForPlayer = shuffledCardStack.slice(playerNumber * currentRound, playerNumber * currentRound + currentRound)
-      val assignedCards = cardsForPlayer.map(card => CardInterface.setOwner(card, player))
+      val assignedCards = cardsForPlayer.map(card => CardInterface.setOwner(card, player.name))
       player.assignCards(assignedCards)
     })
     val newShuffledCardStack = shuffledCardStack.splitAt((numberOfPlayers - 1) * currentRound + 1)._2
@@ -100,12 +100,12 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def trickInThisCycle: RoundManager = {
-    val trickPlayer = CardStack.playerOfHighestCard(playedCards.reverse, trumpColor) match {
-      case Some(player) => player
+    val trickPlayerName = CardStack.playerOfHighestCard(playedCards.reverse, trumpColor) match {
+      case Some(playerName) => playerName
       // TODO: case None => Exception?
     }
     val mutMap = collection.mutable.Map() ++ tricksPerRound
-    mutMap.put(trickPlayer.name, mutMap(trickPlayer.name) + 1)
+    mutMap.put(trickPlayerName, mutMap(trickPlayerName) + 1)
     this.copy(tricksPerRound = mutMap.toMap, playedCards = Nil)
   }
 

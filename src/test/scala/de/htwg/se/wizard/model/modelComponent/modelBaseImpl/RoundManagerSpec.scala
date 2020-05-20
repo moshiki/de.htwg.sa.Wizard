@@ -90,7 +90,7 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "store who played the highest card in the current cycle" in {
       var roundManager = RoundManager(players = Nil, numberOfPlayers = 1, predictionMode = false,
-        playedCards = List(WizardCard(Some(Player("1")))))
+        playedCards = List(WizardCard(Some("1"))))
       roundManager = roundManager.addPlayer("1")
 
       roundManager = roundManager.nextPlayer
@@ -134,9 +134,9 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val player1 = Player("name1")
       val player2 = Player("name2")
       val player3 = Player("name3")
-      val card1 = CardInterface.setOwner(JesterCard(), player1)
-      val card2 = CardInterface.setOwner(WizardCard(), player2)
-      val card3 = CardInterface.setOwner(DefaultCard("blue", 3), player3)
+      val card1 = CardInterface.setOwner(JesterCard(), player1.name)
+      val card2 = CardInterface.setOwner(WizardCard(), player2.name)
+      val card3 = CardInterface.setOwner(DefaultCard("blue", 3), player3.name)
       val roundManager = RoundManager(playedCards = List[CardInterface](card1, card2, card3),
         tricksPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
       val newRoundManager = roundManager.trickInThisCycle

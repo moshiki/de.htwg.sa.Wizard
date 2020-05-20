@@ -34,7 +34,7 @@ class PlayerSpec extends AnyWordSpec with Matchers {
 
       "get the correct String for his turn" in {
         val player = Player("TestPlayer")
-        val list = List[Card](JesterCard(Some(player)))
+        val list = List[Card](JesterCard(Some(player.name)))
         val player1 = player.copy(playerCards = list)
         Player.playerTurn(player1, 1) should startWith(
           """Round 1 - Player: TestPlayer
@@ -45,7 +45,7 @@ class PlayerSpec extends AnyWordSpec with Matchers {
 
       "get correct string for stitches" in {
         val player = Player("TestPlayer")
-        val list = List[Card](JesterCard(Some(player)))
+        val list = List[Card](JesterCard(Some(player.name)))
         val player1 = player.copy(playerCards = list)
         Player.playerPrediction(player1, 1, Some("blue")) should startWith(
           """Round 1 - Player: TestPlayer

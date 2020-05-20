@@ -1,12 +1,11 @@
 package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 
 import de.htwg.sa.wizard.model.cardComponent.CardInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import play.api.libs.json.{JsValue, Json}
 
 import scala.xml.Elem
 
-case class JesterCard(owner: Option[Player] = None) extends Card(owner) with CardInterface {
+case class JesterCard(owner: Option[String] = None) extends Card(owner) with CardInterface {
   def hasColor: Boolean = false
 
   def isWizard: Boolean = false
@@ -18,7 +17,7 @@ case class JesterCard(owner: Option[Player] = None) extends Card(owner) with Car
   override def toXML: Elem = {
     <JesterCard>
       <owner>{owner match {
-        case Some(player) => player.toXML
+        case Some(owner) => owner
         case None => "None"
       }}</owner>
     </JesterCard>
@@ -26,8 +25,7 @@ case class JesterCard(owner: Option[Player] = None) extends Card(owner) with Car
 
   def fromXML(node: scala.xml.Node): JesterCard = {
     val owner = if ((node \ "owner" ).text.trim != "None") {
-      val player = Player.fromXML((node \ "owner").head.child.filter(node => node.text.trim != "").head)
-      Some(player)
+      Some((node \ "owner" ).text.trim)
     } else None
 
     this.copy(owner = owner)
@@ -39,8 +37,7 @@ case class JesterCard(owner: Option[Player] = None) extends Card(owner) with Car
   )
 
   override def fromJson(jsValue: JsValue): CardInterface = {
-    val ownerString = (jsValue \ "owner").get.as[String]
-    val owner = if (ownerString != "None") Some(Player(ownerString)) else None
+    val owner = if (ownerString != "None") Some(ownerString) else None
     this copy owner
   }
 }

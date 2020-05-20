@@ -1,7 +1,6 @@
 package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 
 import de.htwg.sa.wizard.model.cardComponent.CardInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -39,7 +38,7 @@ class DefaultCardSpec extends AnyWordSpec with Matchers {
     }
 
     "is a blue DefaultCard of value 2 with owner 'TestPlayer" should {
-      val defCardWithOwner = DefaultCard("blue", 2, Some(Player("TestPlayer")))
+      val defCardWithOwner = DefaultCard("blue", 2, Some("TestPlayer"))
       "has owner" in {
         defCardWithOwner.hasOwner should be(true)
       }
@@ -60,7 +59,7 @@ class DefaultCardSpec extends AnyWordSpec with Matchers {
 
     "should set Owner correctly" in {
       val defCardWithoutOwner = DefaultCard("blue", 2)
-      val testPlayer = Player("TestPlayer")
+      val testPlayer = "TestPlayer"
       val cardWithOwner = CardInterface.setOwner(defCardWithoutOwner, testPlayer)
       cardWithOwner.ownerName should be("TestPlayer")
     }
@@ -86,7 +85,7 @@ class DefaultCardSpec extends AnyWordSpec with Matchers {
         card equals equalCard should be(true)
       }
       "be equal to another DefaultCard with same number, but different owner" in {
-        val equalCard = card.copy(owner = Some(Player("test")))
+        val equalCard = card.copy(owner = Some("test"))
         card == equalCard should be(true)
         card equals equalCard should be(true)
       }

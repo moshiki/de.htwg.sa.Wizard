@@ -1,13 +1,12 @@
 package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 
 import de.htwg.sa.wizard.model.cardComponent.CardInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import play.api.libs.json.JsValue
 
-import scala.xml.{Elem, Node}
+import scala.xml.Elem
 
 
-abstract class Card(owner: Option[Player]) extends CardInterface {
+abstract class Card(owner: Option[String]) extends CardInterface {
   def hasColor: Boolean
 
   def isWizard: Boolean
@@ -17,7 +16,7 @@ abstract class Card(owner: Option[Player]) extends CardInterface {
   def hasOwner: Boolean = owner.isDefined
 
   def ownerName: String = owner match {
-    case Some(player) => player.name
+    case Some(owner) => owner
     case _ => "unknown"
   }
 
@@ -26,7 +25,7 @@ abstract class Card(owner: Option[Player]) extends CardInterface {
   def toXML: Elem
 
   def ownerString: String = owner match {
-    case Some(player) => player.toString
+    case Some(owner) => owner
     case None => "None"
   }
 

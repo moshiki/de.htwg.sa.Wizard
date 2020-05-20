@@ -294,7 +294,7 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
       controller.roundManager = controller.roundManager.addPlayer("1")
       controller.roundManager = controller.roundManager.addPlayer("2")
       controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(
-        players = List(Player("1", playerCards = List(WizardCard(owner = Some(Player("1"))))),
+        players = List(Player("1", playerCards = List(WizardCard(owner = Some("1")))),
           Player("2", playerCards = Nil)))
       controller.eval("1")
 

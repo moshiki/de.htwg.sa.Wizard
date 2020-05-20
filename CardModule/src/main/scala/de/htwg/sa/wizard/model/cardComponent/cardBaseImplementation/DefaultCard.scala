@@ -1,12 +1,11 @@
 package de.htwg.sa.wizard.model.cardComponent.cardBaseImplementation
 
 import de.htwg.sa.wizard.model.cardComponent.CardInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.Player
 import play.api.libs.json.{JsValue, Json}
 
 import scala.xml.Elem
 
-case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
+case class DefaultCard(color: String, number: Int, owner: Option[String] = None)
   extends Card(owner) with Ordered[DefaultCard] with CardInterface {
   require(number >= 1 && number <= 13)
   require(color == "blue" || color == "red" || color == "yellow" || color == "green")
@@ -33,7 +32,7 @@ case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
       <color>{color}</color>
       <number>{number}</number>
       <owner>{owner match {
-        case Some(player) => player.toXML
+        case Some(owner) => owner
         case None => "None"
       }}</owner>
     </DefaultCard>
@@ -43,8 +42,7 @@ case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
     val color = (node \ "color").text.trim
     val number = (node \ "number").text.trim.toInt
     val owner = if ((node \ "owner" ).text.trim != "None") {
-      val player = Player.fromXML((node \ "owner").head.child.filter(node => node.text.trim != "").head)
-      Some(player)
+      Some((node \ "owner" ).text.trim)
     } else None
     this.copy(color = color, number = number, owner = owner)
   }
@@ -59,8 +57,7 @@ case class DefaultCard(color: String, number: Int, owner: Option[Player] = None)
   override def fromJson(jsValue: JsValue): CardInterface = {
     val color = (jsValue \ "color").get.as[String]
     val number = (jsValue \ "number").get.as[Int]
-    val ownerString = (jsValue \ "owner").get.as[String]
-    val owner = if (ownerString != "None") Some(Player(ownerString)) else None
+    val owner = if (ownerString != "None") Some(ownerString) else None
     this copy(color, number, owner)
   }
 }
