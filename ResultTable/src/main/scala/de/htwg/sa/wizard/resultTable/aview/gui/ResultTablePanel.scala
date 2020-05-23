@@ -1,4 +1,4 @@
-package de.htwg.sa.wizard.resultTable.gui
+package de.htwg.sa.wizard.resultTable.aview.gui
 
 import de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface
 
