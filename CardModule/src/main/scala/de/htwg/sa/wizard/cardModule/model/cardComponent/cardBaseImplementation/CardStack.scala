@@ -16,7 +16,10 @@ object CardStack extends CardStackInterface {
   def shuffleCards(a: List[CardInterface]): List[CardInterface] = Random.shuffle(a)
 
   def playerOfHighestCard(cardList: List[CardInterface], color: Option[String]): Option[String] = {
-    val actualColor = color.get
+    val actualColor = color match {
+      case Some(color) => color
+      case _ => ""
+    }
     val wizardCards = cardList.filter(card => card.isWizard).map(card => card.asInstanceOf[WizardCard])
     val defaultCards = cardList.filterNot(card => card.isWizard || card.isJester)
       .map(card => card.asInstanceOf[DefaultCard]).sortWith(_ > _)

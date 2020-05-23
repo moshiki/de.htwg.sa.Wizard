@@ -22,9 +22,9 @@ val commonDependencies = Seq(
 lazy val root = (project in file(".")).settings(
   name := "Wizard",
   libraryDependencies ++= commonDependencies,
-).aggregate(ResultTable, CardModule).dependsOn(ResultTable, CardModule) //% "compile->compile;test->test")
+).aggregate(ResultTableModule, CardModule).dependsOn(ResultTableModule, CardModule) //% "compile->compile;test->test")
 
-lazy val ResultTable = project.settings(
+lazy val ResultTableModule = project.settings(
   name := "ResultTable",
   libraryDependencies ++= commonDependencies,
   libraryDependencies += "de.vandermeer" % "asciitable" % "0.3.2"
@@ -35,5 +35,5 @@ lazy val CardModule = project.settings(
   libraryDependencies ++= commonDependencies
 )
 
-coverageExcludedPackages := "*gui*.*"
-coverageExcludedFiles := ".*Wizard*"
+coverageExcludedPackages := ".*gui.*"
+coverageExcludedFiles := ".*Wizard.scala;.*WizardModule.scala"

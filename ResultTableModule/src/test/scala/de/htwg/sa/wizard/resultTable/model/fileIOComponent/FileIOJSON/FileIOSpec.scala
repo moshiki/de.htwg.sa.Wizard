@@ -1,6 +1,7 @@
 package de.htwg.sa.wizard.resultTable.model.fileIOComponent.FileIOJSON
 
 import java.nio.file.{Files, Path}
+
 import de.htwg.sa.wizard.resultTable.model.resultTableComponent.ResultTableInterface
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
@@ -40,7 +41,7 @@ class FileIOSpec extends AnyWordSpec with Matchers with MockFactory {
 
     "loading the result table" should {
       "return the correct result table in a success" in {
-        val path = "ResultTable/src/test/resources/ResultTable"
+        val path = "ResultTableModule/src/test/resources/ResultTable"
         val expectedJson = Json.obj("resultTableJson" -> "Test-Data")
         val expectedResultTable = stub[ResultTableInterface]
         val resultTableStub = stub[ResultTableInterface]
