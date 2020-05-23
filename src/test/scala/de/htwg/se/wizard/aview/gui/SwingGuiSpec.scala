@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.aview.gui
 
 import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.{CardStack, WizardCard}
-import de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface
+import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
 import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl._
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, RoundManager}

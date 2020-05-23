@@ -1,6 +1,6 @@
 package de.htwg.sa.wizard.resultTable.aview.gui
 
-import de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface
+import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
 
 import scala.swing.{ScrollPane, Table}
 

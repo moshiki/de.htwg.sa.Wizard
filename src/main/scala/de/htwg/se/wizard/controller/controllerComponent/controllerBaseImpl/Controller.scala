@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
 import com.google.inject.Inject
+import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
@@ -10,7 +11,7 @@ import scala.util.{Failure, Success}
 
 class Controller @Inject()(var roundManager: ModelInterface,
                            fileIOInterface: FileIOInterface,
-                           var resultTableController: de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface)
+                           var resultTableController: ResultTableControllerInterface)
   extends ControllerInterface {
 
   val undoManager = new UndoManager

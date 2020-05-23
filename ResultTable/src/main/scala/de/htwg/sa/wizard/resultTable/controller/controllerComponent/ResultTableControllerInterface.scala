@@ -1,4 +1,4 @@
-package de.htwg.sa.wizard.resultTable.controllerComponent
+package de.htwg.sa.wizard.resultTable.controller.controllerComponent
 
 trait ResultTableControllerInterface {
   def updatePoints(round: Int, points: Vector[Int]): Unit

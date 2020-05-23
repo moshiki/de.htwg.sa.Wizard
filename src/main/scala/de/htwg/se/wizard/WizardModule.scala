@@ -1,8 +1,8 @@
 package de.htwg.se.wizard
 
 import com.google.inject.AbstractModule
-import de.htwg.sa.wizard.resultTable.controllerComponent.ResultTableControllerInterface
-import de.htwg.sa.wizard.resultTable.controllerComponent.controllerBaseImplementation.ResultTableController
+import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
+import de.htwg.sa.wizard.resultTable.controller.controllerComponent.controllerBaseImplementation.ResultTableController
 import de.htwg.sa.wizard.resultTable.model.resultTableComponent.ResultTableInterface
 import de.htwg.sa.wizard.resultTable.model.resultTableComponent.resultTableBaseImplementation.ResultTable
 import de.htwg.se.wizard.model.fileIOComponent._
