@@ -74,6 +74,7 @@ class Controller @Inject()(var roundManager: ModelInterface,
 
   override def save(): Unit = {
     fileIOInterface.save(controllerStateAsString, roundManager)
+    resultTableController.safe()
     notifyObservers()
   }
 
@@ -90,6 +91,7 @@ class Controller @Inject()(var roundManager: ModelInterface,
       case "GameOverState" => GameOverState(this)
     }
     roundManager = returnTuple._2
+    resultTableController.load()
     notifyObservers()
   }
 
