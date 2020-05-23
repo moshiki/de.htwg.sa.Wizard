@@ -34,3 +34,6 @@ lazy val CardModule = project.settings(
   name :=  "CardModule",
   libraryDependencies ++= commonDependencies
 )
+
+coverageExcludedPackages := "*gui*.*"
+coverageExcludedFiles := ".*Wizard*"

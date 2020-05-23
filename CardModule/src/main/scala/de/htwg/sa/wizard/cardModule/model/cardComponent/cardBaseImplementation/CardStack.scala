@@ -1,6 +1,7 @@
 package de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation
 
 import de.htwg.sa.wizard.cardModule.model.cardComponent.{CardInterface, CardStackInterface}
+
 import scala.util.Random
 
 object CardStack extends CardStackInterface {
@@ -15,10 +16,7 @@ object CardStack extends CardStackInterface {
   def shuffleCards(a: List[CardInterface]): List[CardInterface] = Random.shuffle(a)
 
   def playerOfHighestCard(cardList: List[CardInterface], color: Option[String]): Option[String] = {
-    val actualColor = color match {
-      case Some(color) => color
-      case _ => ""
-    }
+    val actualColor = color.get
     val wizardCards = cardList.filter(card => card.isWizard).map(card => card.asInstanceOf[WizardCard])
     val defaultCards = cardList.filterNot(card => card.isWizard || card.isJester)
       .map(card => card.asInstanceOf[DefaultCard]).sortWith(_ > _)
