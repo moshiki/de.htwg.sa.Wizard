@@ -1,7 +1,5 @@
 package de.htwg.sa.wizard.resultTable.model.resultTableComponent.resultTableBaseImplementation
 
-import de.htwg.sa.wizard.resultTable.model.resultTableComponent.resultTableBaseImplementation
-import de.htwg.sa.wizard.resultTable.model.resultTableComponent.resultTableBaseImplementation.ResultTable
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.Json
@@ -60,6 +58,19 @@ class ResultTableSpec extends AnyWordSpec with Matchers {
       restoredTable should be(table)
       table.toJson should be(json)
       table.fromJson(json) should be(restoredTable)
+    }
+
+    "be able to store a list of player names" in {
+      val playerNames = List("P1, P2")
+      val table = ResultTable()
+      val newTable = table.storePlayerNames(playerNames).asInstanceOf[ResultTable]
+      newTable.playerNames should be(playerNames)
+    }
+
+    "be able to return the list of player names" in {
+      val playerNames = List("P1", "P2")
+      val table = ResultTable(playerNames = playerNames)
+      table.playerNameList should be(playerNames)
     }
   }
 }
