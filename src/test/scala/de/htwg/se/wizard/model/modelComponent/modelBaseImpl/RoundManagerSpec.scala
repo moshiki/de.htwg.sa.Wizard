@@ -36,6 +36,8 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
     }
   }
 
+  "A RoundManager" should {
+
     "ask for next player's name correctly" in {
       val roundManager = RoundManager(currentPlayerNumber = 1)
       roundManager.setupStrings should be("Player 1, please enter your name:")
@@ -67,8 +69,6 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val newRoundManager = roundManager.addPlayer("P1")
       newRoundManager.players should be(expectedList)
     }
-
-
 
 
     "should ask player for his prediction if Prediction list is empty" in {
@@ -136,7 +136,7 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       val player3 = Player("name3")
       val card1 = JesterCard().setOwner(player1.name)
       val card2 = WizardCard().setOwner(player2.name)
-      val card3 = DefaultCard("blue", 3)setOwner(player3.name)
+      val card3 = DefaultCard("blue", 3) setOwner player3.name
       val roundManager = RoundManager(playedCards = List[CardInterface](card1, card2, card3),
         tricksPerRound = Map("name1" -> 0, "name2" -> 1, "name3" -> 0))
       val newRoundManager = roundManager.trickInThisCycle
@@ -153,8 +153,8 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
         players = List(player1, player2, player3), predictionPerRound = List(1, 2, 0))
       roundManager.playerStateStrings should be(
         s"""Round 2 - Player: name2
-            |Select one of the following cards:
-            |{ ${player2.playerCards.mkString} }""".stripMargin
+           |Select one of the following cards:
+           |{ ${player2.playerCards.mkString} }""".stripMargin
       )
     }
 
@@ -186,4 +186,14 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
       newRoundManager should be(roundManager)
     }
 
+    "calculate the points for each player correctly after one round" in {
+      val players = List(Player("P1"), Player("P2"))
+      val tricksPerRound = Map("P1" -> 0, "P2" -> 0)
+      val predictionPerRound = List(0, 0)
+      val roundManager = RoundManager(players = players, tricksPerRound = tricksPerRound, predictionPerRound = predictionPerRound)
+      val expectedResult = Vector(20, 20)
+
+      roundManager.pointsForThisRound should be(expectedResult)
+    }
+  }
 }
