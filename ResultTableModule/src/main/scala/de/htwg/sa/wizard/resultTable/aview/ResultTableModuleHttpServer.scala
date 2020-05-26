@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
-import de.htwg.sa.wizard.resultTable.util.ArrayArrayIntContainer
+import de.htwg.sa.wizard.resultTable.util.{ArrayArrayIntContainer, InitializeTableArgumentContainer, StringListContainer, UpdatePointsArgumentContainer}
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -19,8 +19,15 @@ class ResultTableModuleHttpServer(resultTableControllerInterface: ResultTableCon
 
   val route: Route = concat(
     get {
-      path("resultTable" / "table") {
-        complete(resultTableControllerInterface.tableAsString)
+      path("resultTable" / "safe") {
+        resultTableControllerInterface.safe()
+        complete("")
+      }
+    },
+    get {
+      path("resultTable" / "load") {
+        resultTableControllerInterface.load()
+        complete("")
       }
     },
     get {
@@ -28,9 +35,42 @@ class ResultTableModuleHttpServer(resultTableControllerInterface: ResultTableCon
         val container = ArrayArrayIntContainer(resultTableControllerInterface.pointArrayForView)
         complete(Json.toJson(container).toString())
       }
+    },
+    get {
+      path("resultTable" / "table") {
+        complete(resultTableControllerInterface.tableAsString)
+      }
+    },
+    get {
+      path("resultTable" / "playerList") {
+        val container = StringListContainer(resultTableControllerInterface.playerList)
+        complete(Json.toJson(container).toString())
+      }
+    },
+    put {
+      path("resultTable" / "table") {
+        decodeRequest {
+          entity(as[String]) {string => {
+            val container = Json.fromJson(Json.parse(string))(UpdatePointsArgumentContainer.containerReads).get
+            resultTableControllerInterface.updatePoints(container.round, container.points)
+            complete("")
+          }
+          }
+        }
+      }
+    },
+    post {
+      path("resultTable" / "table") {
+        decodeRequest {
+          entity(as[String]) {string => {
+            val container = Json.fromJson(Json.parse(string))(InitializeTableArgumentContainer.containerReads).get
+            resultTableControllerInterface.initializeTable(container.numberOfRounds, container.numberOfPlayers)
+            complete("")
+          }
+          }
+        }
+      }
     }
-
-    ,get {path("test")(complete("Hello"))}
   )
 
   val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", 54251)
