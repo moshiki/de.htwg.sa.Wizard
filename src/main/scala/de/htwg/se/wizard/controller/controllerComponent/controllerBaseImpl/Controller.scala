@@ -43,6 +43,8 @@ class Controller @Inject()(var roundManager: ModelInterface,
 
   override def currentStateAsString: String = state.currentStateAsString
 
+  override def currentStateAsHtml: String = state.currentStateAsString.replace("\n", "<br>")
+
   override def controllerStateAsString: String = {
     state match {
       case _: PreSetupState => "PreSetupState"

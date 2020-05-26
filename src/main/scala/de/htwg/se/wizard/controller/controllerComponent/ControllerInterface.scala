@@ -15,6 +15,8 @@ trait ControllerInterface extends Observable {
 
   def currentStateAsString: String
 
+  def currentStateAsHtml: String
+
   def controllerStateAsString: String
 
   def currentPlayerNumber: Int

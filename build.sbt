@@ -2,7 +2,7 @@ import sbt.Keys.libraryDependencies
 
 //name := "Wizard"
 
-ThisBuild / version := "SAR-4"
+ThisBuild / version := "SAR-5"
 
 ThisBuild / scalaVersion := "2.13.1"
 
@@ -17,6 +17,8 @@ val commonDependencies = Seq(
   "com.typesafe.play" %% "play-json" % "2.8.1",
   "com.google.inject" % "guice" % "4.2.2",
   "net.codingwell" %% "scala-guice" % "4.2.6",
+  "com.typesafe.akka" %% "akka-http" % "10.1.12",
+  "com.typesafe.akka" %% "akka-stream" % "2.6.5"
 )
 
 lazy val root = (project in file(".")).settings(
@@ -25,7 +27,7 @@ lazy val root = (project in file(".")).settings(
 ).aggregate(ResultTableModule, CardModule).dependsOn(ResultTableModule, CardModule) //% "compile->compile;test->test")
 
 lazy val ResultTableModule = project.settings(
-  name := "ResultTable",
+  name := "ResultTableModule",
   libraryDependencies ++= commonDependencies,
   libraryDependencies += "de.vandermeer" % "asciitable" % "0.3.2"
 )
