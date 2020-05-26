@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.client.RequestBuilding._
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.unmarshalling._
 import akka.stream.ActorMaterializer
@@ -13,7 +14,7 @@ import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import de.htwg.se.wizard.util.UndoManager
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContextExecutor}
@@ -24,12 +25,6 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
-
-  implicit val jsObjectUnmarshaller: FromEntityUnmarshaller[JsObject] = {
-    Unmarshaller.byteStringUnmarshaller.mapWithCharset { (data, charset) =>
-      Json.parse(data.toArray).as[JsObject]
-    }
-  }
 
   val undoManager = new UndoManager
   var state: ControllerState = PreSetupState(this)
@@ -58,9 +53,14 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
     notifyObservers()
   }
 
-  override def currentStateAsString: String = state.currentStateAsString
+  override def currentStateAsString: String = {
+    val response = Http().singleRequest(Get("http://localhost:54251/resultTable/table"))
+    val tableStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
+    val tableString = Await.result(tableStringFuture, Duration(1, TimeUnit.SECONDS))
+    tableString + "\n" + state.currentStateAsString
+  }
 
-  override def currentStateAsHtml: String = state.currentStateAsString.replace("\n", "<br>")
+  override def currentStateAsHtml: String = state.currentStateAsString
 
   override def controllerStateAsString: String = {
     state match {

@@ -18,7 +18,7 @@ class HttpTui (val controllerInterface: ControllerInterface) {
   // needed for the future flatMap/onComplete in the end
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
-  val route: Route = get {
+  val route: Route = {get {
     path("wizard"){
       gameToHtml()
     }~
@@ -43,6 +43,18 @@ class HttpTui (val controllerInterface: ControllerInterface) {
         controllerInterface.eval(input)
         gameToHtml()
     }
+  }~
+  post {
+    path("wizard") {
+      decodeRequest {
+        entity(as[String]) { input => {
+          controllerInterface.eval(input.replace("input=", ""))
+          gameToHtml()
+        }
+        }
+      }
+    }
+  }
   }
 
   val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", 8080)
@@ -54,6 +66,10 @@ class HttpTui (val controllerInterface: ControllerInterface) {
   }
 
   def gameToHtml(): StandardRoute = {
-    complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Wizard</h1>" + controllerInterface.currentStateAsHtml))
+    complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Wizard</h1><p>" + controllerInterface.currentStateAsHtml +
+    """</p><form action="/wizard" method="post">
+      |  <input type="text" id="input" name="input">
+      |  <input type="submit" value="Submit">
+      |</form> """.stripMargin))
   }
 }

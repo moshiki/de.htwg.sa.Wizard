@@ -15,10 +15,10 @@ object Wizard {
   val tui = new TUI(controller)
   val gui = new SwingGui(controller)
   val httpTui = new HttpTui(controller)
+  ResultTable.main(Array())
   controller.notifyObservers()
 
   def main(args: Array[String]): Unit = {
-    ResultTable.main(Array())
     var input: String = ""
     do {
       input = readLine()
