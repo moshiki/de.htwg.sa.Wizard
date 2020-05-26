@@ -9,7 +9,7 @@ trait ResultTableControllerInterface {
 
   def load(): Unit
 
-  def pointArrayForView: Array[Array[Any]]
+  def pointArrayForView: Array[Array[Int]]
 
   def tableAsString: String
 

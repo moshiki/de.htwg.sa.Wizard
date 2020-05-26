@@ -73,8 +73,8 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
       val resultTableMock = mock[ResultTableInterface]
       val fileIOStub = stub[FileIOInterface]
       val controller = ResultTableController(resultTableMock, fileIOStub)
-      val expectedArray = Array(Array(5.asInstanceOf[Any]))
-      (resultTableMock.toAnyArray _).expects().returning(expectedArray)
+      val expectedArray = Array(Array(5))
+      (resultTableMock.toArray _).expects().returning(expectedArray)
 
       controller.pointArrayForView should be(expectedArray)
     }

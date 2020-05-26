@@ -16,8 +16,8 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6,
                           else this.copy(points = points.updated(round - 1, points(round - 1).updated(player, result + points(round - 2)(player))))
                         }
 
-                        def toAnyArray: Array[Array[Any]] = {
-                          points.toArray map(innerVector => innerVector.toArray[Any])
+                        def toArray: Array[Array[Int]] = {
+                          points.toArray map(innerVector => innerVector.toArray)
                         }
 
                         override def toString: String = {
@@ -71,7 +71,6 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6,
                       }
 
 object ResultTable {
-
   import play.api.libs.json._
   implicit val resultTableWrites: OWrites[ResultTable] = Json.writes[ResultTable]
   implicit val resultTableReads: Reads[ResultTable] = Json.reads[ResultTable]

@@ -6,6 +6,8 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
+import de.htwg.sa.wizard.resultTable.util.ArrayArrayIntContainer
+import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -23,7 +25,8 @@ class ResultTableModuleHttpServer(resultTableControllerInterface: ResultTableCon
     },
     get {
       path("resultTable" / "pointArrayForView") {
-        complete("hello")
+        val container = ArrayArrayIntContainer(resultTableControllerInterface.pointArrayForView)
+        complete(Json.toJson(container).toString())
       }
     }
 

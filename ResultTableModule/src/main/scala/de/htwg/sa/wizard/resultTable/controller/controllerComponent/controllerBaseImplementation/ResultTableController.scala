@@ -27,9 +27,9 @@ case class ResultTableController @Inject()(var resultTableInterface: ResultTable
     }
   }
 
-  def pointArrayForView: Array[Array[Any]] = resultTableInterface.toAnyArray
+  override def pointArrayForView: Array[Array[Int]] = resultTableInterface.toArray
 
-  def tableAsString: String = resultTableInterface.toString
+  override def tableAsString: String = resultTableInterface.toString
 
   override def playerList: List[String] = resultTableInterface.playerNameList
 }

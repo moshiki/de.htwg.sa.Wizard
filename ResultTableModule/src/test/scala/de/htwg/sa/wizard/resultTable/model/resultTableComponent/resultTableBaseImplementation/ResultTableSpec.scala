@@ -38,7 +38,7 @@ class ResultTableSpec extends AnyWordSpec with Matchers {
     }
 
     "convert its data into an AnyArray" in {
-      val arr = table.toAnyArray
+      val arr = table.toArray
       for (i <- arr.indices) {
         for (j <- arr(i).indices) {
           arr(i)(j) should equal(table.points(i)(j))
