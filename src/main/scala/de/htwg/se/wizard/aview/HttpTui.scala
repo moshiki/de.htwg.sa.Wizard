@@ -45,9 +45,7 @@ class HttpTui (val controllerInterface: ControllerInterface) {
     }
   }
 
-  println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
-
-  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", 8080)
+  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", 80)
 
   def shutdownWebServer() : Unit = {
     bindingFuture

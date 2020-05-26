@@ -8,19 +8,19 @@ import de.htwg.sa.wizard.resultTable.model.resultTableComponent.ResultTableInter
 import scala.util.{Failure, Success}
 
 case class ResultTableController @Inject()(var resultTableInterface: ResultTableInterface, fileIOInterface: FileIOInterface) extends ResultTableControllerInterface {
-  def updatePoints(round: Int, points: Vector[Int]): Unit = for (playerWhosePointsGetUpdated <- points.indices) {
+  override def updatePoints(round: Int, points: Vector[Int]): Unit = for (playerWhosePointsGetUpdated <- points.indices) {
     resultTableInterface = resultTableInterface.updatePoints(round, playerWhosePointsGetUpdated, points(playerWhosePointsGetUpdated))
   }
 
-  def initializeTable(numberOfRounds: Int, numberOfPlayers: Int): Unit = {
+  override def initializeTable(numberOfRounds: Int, numberOfPlayers: Int): Unit = {
     resultTableInterface = resultTableInterface.initializeTable(numberOfRounds, numberOfPlayers)
   }
 
-  def safe(): Unit = {
+  override def safe(): Unit = {
     fileIOInterface.save(resultTableInterface, "ResultTableModule")
   }
 
-  def load(): Unit = {
+  override def load(): Unit = {
     resultTableInterface = fileIOInterface.load(resultTableInterface, "ResultTableModule") match {
       case Failure(_) => return
       case Success(resultTable) => resultTable

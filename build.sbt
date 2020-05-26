@@ -18,7 +18,9 @@ val commonDependencies = Seq(
   "com.google.inject" % "guice" % "4.2.2",
   "net.codingwell" %% "scala-guice" % "4.2.6",
   "com.typesafe.akka" %% "akka-http" % "10.1.12",
-  "com.typesafe.akka" %% "akka-stream" % "2.6.5"
+  "com.typesafe.akka" %% "akka-stream" % "2.6.5",
+  "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.12",
+  "com.typesafe.akka" %% "akka-http-jackson" % "10.1.12"
 )
 
 lazy val root = (project in file(".")).settings(

@@ -1,18 +1,32 @@
 package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
+import akka.actor.ActorSystem
+import akka.http.scaladsl.unmarshalling._
+import akka.stream.ActorMaterializer
 import com.google.inject.Inject
 import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import de.htwg.se.wizard.util.UndoManager
+import play.api.libs.json.{JsObject, Json}
 
+import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
 class Controller @Inject()(var roundManager: ModelInterface,
                            fileIOInterface: FileIOInterface,
                            var resultTableController: ResultTableControllerInterface)
   extends ControllerInterface {
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+
+  implicit val jsObjectUnmarshaller: FromEntityUnmarshaller[JsObject] = {
+    Unmarshaller.byteStringUnmarshaller.mapWithCharset { (data, charset) =>
+      Json.parse(data.toArray).as[JsObject]
+    }
+  }
 
   val undoManager = new UndoManager
   var state: ControllerState = PreSetupState(this)
@@ -97,7 +111,14 @@ class Controller @Inject()(var roundManager: ModelInterface,
     notifyObservers()
   }
 
-  override def resultArray: Array[Array[Any]] = resultTableController.pointArrayForView
+  override def resultArray: Array[Array[Any]] = {
+//    val response = Http().singleRequest(HttpRequest(uri = "http://localhost:54251/resultTable/pointArrayForView"))
+//    val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
+//    val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+//    val array: Array[Array[Any]] = Json.fromJson(Json.parse(jsonString)).get
+//    array
+    Array(Array(5.asInstanceOf[Any])) // FIXME
+  }
 }
 
 object Controller {

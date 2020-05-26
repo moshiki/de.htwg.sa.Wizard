@@ -1,6 +1,7 @@
 package de.htwg.se.wizard
 
 import com.google.inject.{Guice, Injector}
+import de.htwg.sa.wizard.resultTable.ResultTable
 import de.htwg.se.wizard.aview.gui.SwingGui
 import de.htwg.se.wizard.aview.{HttpTui, TUI}
 import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Controller
@@ -17,11 +18,13 @@ object Wizard {
   controller.notifyObservers()
 
   def main(args: Array[String]): Unit = {
+    ResultTable.main(Array())
     var input: String = ""
     do {
       input = readLine()
       tui.processInput(input)
     } while (input != "q")
     httpTui.shutdownWebServer()
+    ResultTable.shutdownServer()
   }
 }
