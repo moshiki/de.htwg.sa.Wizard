@@ -14,7 +14,7 @@ class FileIOSpec extends AnyWordSpec with Matchers with MockFactory{
       val fileIO = FileIO()
       val roundManager = RoundManager.Builder().build()
       val orig = roundManager.copy()
-      val controller = new Controller(roundManager, fileIO, resultTableControllerStub)
+      val controller = new Controller(roundManager, fileIO)
       fileIO.save(controller.controllerStateAsString, roundManager)
       val res = fileIO.load(roundManager)
       res.get._1 should be("PreSetupState")

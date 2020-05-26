@@ -16,7 +16,7 @@ case class ResultTableController @Inject()(var resultTableInterface: ResultTable
     resultTableInterface = resultTableInterface.initializeTable(numberOfRounds, numberOfPlayers)
   }
 
-  override def safe(): Unit = {
+  override def save(): Unit = {
     fileIOInterface.save(resultTableInterface, "ResultTableModule")
   }
 

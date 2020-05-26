@@ -13,7 +13,7 @@ class SwingGuiSpec extends AnyWordSpec with Matchers with MockFactory {
   val fileIOStub: FileIOInterface = stub[FileIOInterface]
   val resultTableControllerStub: ResultTableControllerInterface = stub[ResultTableControllerInterface]
   val controller = new Controller(RoundManager(
-     shuffledCardStack = CardStack.shuffleCards(CardStack.initialize)), fileIOStub, resultTableControllerStub)
+     shuffledCardStack = CardStack.shuffleCards(CardStack.initialize)), fileIOStub)
   "A SwingGuiSpec" should {
     "load the correct Panel" when {
       "Controller is in preSetupState" in {

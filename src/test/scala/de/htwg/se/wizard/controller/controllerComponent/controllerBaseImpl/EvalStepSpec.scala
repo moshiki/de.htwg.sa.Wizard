@@ -11,7 +11,7 @@ class EvalStepSpec extends AnyWordSpec with Matchers with MockFactory {
   "An EvalStep" when {
     val fileIOStub = stub[FileIOInterface]
     val resultTableControllerStub = stub[ResultTableControllerInterface]
-    val controller = new Controller(RoundManager(), fileIOStub, resultTableControllerStub)
+    val controller = new Controller(RoundManager(), fileIOStub)
     val evalStep = new EvalStep(controller)
     "saves the current controller's state and round manager" in {
       val state = (controller.roundManager, controller.state)

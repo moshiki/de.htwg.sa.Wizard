@@ -8,8 +8,7 @@ import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.unmarshalling._
 import akka.stream.ActorMaterializer
 import com.google.inject.Inject
-import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
-import de.htwg.sa.wizard.resultTable.util.ArrayArrayIntContainer
+import de.htwg.sa.wizard.resultTable.util.{ArrayArrayIntContainer, InitializeTableArgumentContainer, UpdatePointsArgumentContainer}
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
@@ -20,9 +19,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.util.{Failure, Success}
 
-class Controller @Inject()(var roundManager: ModelInterface,
-                           fileIOInterface: FileIOInterface,
-                           var resultTableController: ResultTableControllerInterface)
+class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: FileIOInterface)
   extends ControllerInterface {
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
@@ -96,7 +93,7 @@ class Controller @Inject()(var roundManager: ModelInterface,
 
   override def save(): Unit = {
     fileIOInterface.save(controllerStateAsString, roundManager)
-    resultTableController.safe()
+    Http().singleRequest(HttpRequest(uri = "http://localhost:54251/resultTable/save"))
     notifyObservers()
   }
 
@@ -113,7 +110,7 @@ class Controller @Inject()(var roundManager: ModelInterface,
       case "GameOverState" => GameOverState(this)
     }
     roundManager = returnTuple._2
-    resultTableController.load()
+    Http().singleRequest(HttpRequest(uri = "http://localhost:54251/resultTable/load"))
     notifyObservers()
   }
 
@@ -146,6 +143,10 @@ trait ControllerState {
 
 
 case class PreSetupState(controller: Controller) extends ControllerState {
+  import akka.http.scaladsl.client.RequestBuilding.Post
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+
   override def evaluate(input: String): Unit = {
     val number = Controller.toInt(input)
     val actualNumber = number match {
@@ -153,7 +154,8 @@ case class PreSetupState(controller: Controller) extends ControllerState {
       case None => return
     }
     if (!controller.roundManager.isNumberOfPlayersValid(actualNumber)) return
-    controller.resultTableController.initializeTable(controller.numberOfRounds(actualNumber), actualNumber)
+    val initializeTableContainer = InitializeTableArgumentContainer(controller.numberOfRounds(actualNumber), actualNumber)
+    Http().singleRequest(Post("http://localhost:54251/resultTable/table", Json.toJson(initializeTableContainer).toString()))
     controller.roundManager = controller.roundManager.configurePlayersAndRounds(actualNumber)
     controller.nextState()
     controller.roundManager = controller.roundManager.nextPlayerInSetup
@@ -179,6 +181,10 @@ case class SetupState(controller: Controller) extends ControllerState {
 }
 
 case class InGameState(controller: Controller) extends ControllerState {
+  import akka.http.scaladsl.client.RequestBuilding.Put
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+
   override def evaluate(input: String): Unit = {
     val in = Controller.toInt(input)
     val convertedInput = in match {
@@ -191,7 +197,8 @@ case class InGameState(controller: Controller) extends ControllerState {
     if (controller.roundManager.isTimeForNextRound) {
       val pointsForThisRound = controller.roundManager.pointsForThisRound
       val currentRound = controller.roundManager.currentRound
-      controller.resultTableController.updatePoints(currentRound, pointsForThisRound)
+      val updatePointsArgumentContainer = UpdatePointsArgumentContainer(currentRound, pointsForThisRound)
+      Http().singleRequest(Put("http://localhost:54251/resultTable/table", Json.toJson(updatePointsArgumentContainer).toString()))
       controller.roundManager = controller.roundManager.nextRound
     }
     if (controller.roundManager.currentRound == controller.roundManager.numberOfRounds &&

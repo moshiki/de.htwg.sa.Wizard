@@ -19,8 +19,8 @@ class ResultTableModuleHttpServer(resultTableControllerInterface: ResultTableCon
 
   val route: Route = concat(
     get {
-      path("resultTable" / "safe") {
-        resultTableControllerInterface.safe()
+      path("resultTable" / "save") {
+        resultTableControllerInterface.save()
         complete("")
       }
     },

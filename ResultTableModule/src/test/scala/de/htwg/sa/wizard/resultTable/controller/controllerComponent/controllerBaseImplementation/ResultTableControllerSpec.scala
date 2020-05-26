@@ -43,7 +43,7 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
       val controller = ResultTableController(resultTableStub, fileIOMock)
       (fileIOMock.save _).expects(resultTableStub, fileName)
 
-      controller.safe()
+      controller.save()
     }
 
     "store the stored result data in case of a success" in {

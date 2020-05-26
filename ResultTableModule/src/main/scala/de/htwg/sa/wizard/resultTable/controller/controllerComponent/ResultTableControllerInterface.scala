@@ -5,7 +5,7 @@ trait ResultTableControllerInterface {
 
   def initializeTable(numberOfRounds: Int, numberOfPlayers: Int): Unit
 
-  def safe(): Unit
+  def save(): Unit
 
   def load(): Unit
 

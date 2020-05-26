@@ -13,7 +13,7 @@ class TUISpec extends AnyWordSpec with Matchers with MockFactory {
   "A Wizard Tui" should {
     val fileIOStub = stub[FileIOInterface]
     val resultTableControllerStub = stub[ResultTableControllerInterface]
-    val controller = new Controller(RoundManager(numberOfPlayers = 3), fileIOStub, resultTableControllerStub)
+    val controller = new Controller(RoundManager(numberOfPlayers = 3), fileIOStub)
     val tui = new TUI(controller)
     "register itself in the controller" in {
         controller.subscribers.contains(tui) should be(true)

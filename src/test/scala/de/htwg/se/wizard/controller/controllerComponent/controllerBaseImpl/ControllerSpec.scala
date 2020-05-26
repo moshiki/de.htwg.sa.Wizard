@@ -17,7 +17,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     val fileIOStub = stub[FileIOInterface]
     val resultTableControllerStub = stub[ResultTableControllerInterface]
     val roundManager = RoundManager()
-    val controller = new Controller(roundManager, fileIOStub, resultTableControllerStub)
+    val controller = new Controller(roundManager, fileIOStub)
     val observer = stub[Observer]
 
     controller.add(observer)
@@ -125,7 +125,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val fileIOMock = mock[FileIOInterface]
       fileIOMock.save _ expects("InGameState", roundManagerStub)
       fileIOMock.load _ expects roundManagerStub returning Success("PreSetupState",expectedRoundMangerStub)
-      val controller = new Controller(roundManagerStub, fileIOMock, resultTableControllerStub)
+      val controller = new Controller(roundManagerStub, fileIOMock)
       controller.state = InGameState(controller)
       controller.save()
       controller.load()
@@ -140,7 +140,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       fileIOMock.save _ expects("PreSetupState", roundManagerStub)
       fileIOMock.load _ expects roundManagerStub returning Success("PreSetupState",roundManagerStub)
 
-      val controller = new Controller(roundManagerStub, fileIOMock, resultTableControllerStub)
+      val controller = new Controller(roundManagerStub, fileIOMock)
       var state = controller.state
       controller.save()
       controller.load()
@@ -179,7 +179,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val resultTableControllerStub = stub[ResultTableControllerInterface]
       val fileIOMock = mock[FileIOInterface]
       fileIOMock.load _ expects roundManagerStub returning Failure(new Exception())
-      val controller = new Controller(roundManagerStub, fileIOMock, resultTableControllerStub)
+      val controller = new Controller(roundManagerStub, fileIOMock)
       controller.load()
       controller.state should be(PreSetupState(controller))
       controller.roundManager should be(roundManagerStub)
@@ -189,7 +189,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val roundManagerStub = stub[ModelInterface]
       val resultTableControllerStub = stub[ResultTableControllerInterface]
       val fileIOMock = mock[FileIOInterface]
-      val controller = new Controller(roundManagerStub, fileIOMock, resultTableControllerStub)
+      val controller = new Controller(roundManagerStub, fileIOMock)
       controller.numberOfRounds(3) should be(20)
       controller.numberOfRounds(4) should be(15)
       controller.numberOfRounds(5) should be(12)
@@ -201,7 +201,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val fileIOStub = stub[FileIOInterface]
       val resultTableControllerMock = mock[ResultTableControllerInterface]
       val roundManager = RoundManager()
-      val controller = new Controller(roundManager, fileIOStub, resultTableControllerMock)
+      val controller = new Controller(roundManager, fileIOStub)
       val state = PreSetupState(controller)
       val old = roundManager
       state.evaluate("AAA")
@@ -212,7 +212,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val fileIOStub = stub[FileIOInterface]
       val resultTableControllerMock = mock[ResultTableControllerInterface]
       val roundManager = RoundManager()
-      val controller = new Controller(roundManager, fileIOStub, resultTableControllerMock)
+      val controller = new Controller(roundManager, fileIOStub)
       val state = PreSetupState(controller)
       state.evaluate("8")
       roundManager should be(roundManager)
@@ -222,7 +222,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val fileIOStub = stub[FileIOInterface]
       val resultTableControllerMock = mock[ResultTableControllerInterface]
       val roundManager = RoundManager()
-      val controller = new Controller(roundManager, fileIOStub, resultTableControllerMock)
+      val controller = new Controller(roundManager, fileIOStub)
       val state = PreSetupState(controller)
       (resultTableControllerMock.initializeTable _).expects(20, 3).returning(resultTableControllerMock)
       state.evaluate("3")
@@ -234,7 +234,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val fileIOStub = stub[FileIOInterface]
       val resultTableControllerMock = mock[ResultTableControllerInterface]
       val roundManager = RoundManager()
-      val controller = new Controller(roundManager, fileIOStub, resultTableControllerMock)
+      val controller = new Controller(roundManager, fileIOStub)
       val state = PreSetupState(controller)
       (resultTableControllerMock.initializeTable _).expects(20, 3).returning(resultTableControllerMock)
       val old = state
@@ -246,7 +246,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val fileIOStub = stub[FileIOInterface]
       val resultTableControllerMock = mock[ResultTableControllerInterface]
       val roundManager = RoundManager()
-      val controller = new Controller(roundManager, fileIOStub, resultTableControllerMock)
+      val controller = new Controller(roundManager, fileIOStub)
       val state = PreSetupState(controller)
       state.currentStateAsString should be("Welcome to Wizard!\nPlease enter the number of Players[3-5]:")
     }
@@ -256,17 +256,17 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val fileIOStub = stub[FileIOInterface]
       val resultTableControllerMock = mock[ResultTableControllerInterface]
       val roundManager = RoundManager()
-      val controller = new Controller(roundManager, fileIOStub, resultTableControllerMock)
+      val controller = new Controller(roundManager, fileIOStub)
       val state = PreSetupState(controller)
       state.nextState should be(SetupState(controller))
     }
 
     "return the same result array stored in ResultTable" in {
-      val expectedArray = Array(Array(1.asInstanceOf[Any]))
+      val expectedArray = Array(Array(1))
       val fileIOStub = stub[FileIOInterface]
       val resultTableControllerMock = mock[ResultTableControllerInterface]
       val roundManager = RoundManager()
-      val controller = new Controller(roundManager, fileIOStub, resultTableControllerMock)
+      val controller = new Controller(roundManager, fileIOStub)
       (resultTableControllerMock.pointArrayForView _).expects().returning(expectedArray)
       controller.resultArray should be(expectedArray)
     }
@@ -276,7 +276,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     val fileIOStub = stub[FileIOInterface]
     val resultTableControllerStub = stub[ResultTableControllerInterface]
     val roundManager = RoundManager()
-    val controller = new Controller(roundManager, fileIOStub, resultTableControllerStub)
+    val controller = new Controller(roundManager, fileIOStub)
     val state = SetupState(controller)
 
     "does nothing when theres no input" in {
@@ -316,7 +316,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     val fileIOStub = stub[FileIOInterface]
     val resultTableControllerStub = stub[ResultTableControllerInterface]
     val roundManager = RoundManager()
-    val controller = new Controller(roundManager, fileIOStub, resultTableControllerStub)
+    val controller = new Controller(roundManager, fileIOStub)
     controller.state = InGameState(controller)
     "does nothing when trying to evaluate a string that's not a number" in {
       controller.eval("AAA")
@@ -382,7 +382,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
       val resultTableControllerMock = mock[ResultTableControllerInterface]
       val roundManagerStub = stub[ModelInterface]
       val expectedRoundManagerStub = stub[ModelInterface]
-      val controller = new Controller(roundManagerStub, fileIOStub, resultTableControllerMock)
+      val controller = new Controller(roundManagerStub, fileIOStub)
       controller.state = InGameState(controller)
       (roundManagerStub.isTimeForNextRound _).when().returns(true)
       (roundManagerStub.pointsForThisRound _).when().returns(pointsForThisRound)
@@ -403,7 +403,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with MockFactory {
     val fileIOStub = stub[FileIOInterface]
     val resultTableControllerStub = stub[ResultTableControllerInterface]
     val roundManager = RoundManager()
-    val controller = new Controller(roundManager, fileIOStub, resultTableControllerStub)
+    val controller = new Controller(roundManager, fileIOStub)
     val state = GameOverState(controller)
     "do nothing when evaluating" in {
       state.evaluate("5")
