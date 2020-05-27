@@ -9,7 +9,7 @@ import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
-import de.htwg.sa.wizard.cardModule.util.{CardsForPlayerArgumentContainer, SplitCardStackArgumentContainer, StringListContainer}
+import de.htwg.sa.wizard.cardModule.util.{CardsForPlayerArgumentContainer, PlayerOfHighestCardArgumentContainer, SplitCardStackArgumentContainer, StringListContainer}
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import play.api.libs.json.{JsValue, Json}
 
@@ -84,7 +84,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       return "\nGame Over! Press 'q' to quit.\n"
     }
     if (predictionPerRound.size < numberOfPlayers) {
-      val trumpColorFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/trumpColor")
+      val trumpColorFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/trumpColor"))
       val jsonStringFuture = trumpColorFuture.flatMap(r => Unmarshal(r.entity).to[String])
       val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
       val json = Json.parse(jsonString)
@@ -116,10 +116,10 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def trickInThisCycle: RoundManager = {
-    val trickPlayerName = CardStack.playerOfHighestCard(playedCards.reverse, trumpColor) match {
-      case Some(playerName) => playerName
-      // TODO: case None => Exception?
-    }
+    val container = PlayerOfHighestCardArgumentContainer(playedCards.reverse)
+    val response = Http().singleRequest(Post("http://localhost:1234/cardStack/playerOfHighestCard", Json.toJson(container).toString()))
+    val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
+    val trickPlayerName = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
     val mutMap = collection.mutable.Map() ++ tricksPerRound
     mutMap.put(trickPlayerName, mutMap(trickPlayerName) + 1)
     this.copy(tricksPerRound = mutMap.toMap, playedCards = Nil)
@@ -162,7 +162,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val cleanMap = cleanMapNode.reverse.map(node => (node \ "player").text -> (node \ "trick").text.toInt).toMap
     copy(
       numberOfPlayers = numberOfPlayers,
-      numberOfRounds = numberOfRounds,,
+      numberOfRounds = numberOfRounds,
       players = players.toList,
       currentPlayerNumber = currentPlayer,
       currentRound = currentRound,

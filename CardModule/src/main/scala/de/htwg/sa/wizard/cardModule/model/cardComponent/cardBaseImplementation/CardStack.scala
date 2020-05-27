@@ -22,9 +22,29 @@ case class CardStack(cards: List[CardInterface] = {
   }
 
   override def topOfCardStackString: String = cards.head.toString
+
+  override def playerOfHighestCard(cardList: List[CardInterface], color: Option[String]): String = {
+    val actualColor = color match {
+      case Some(color) => color
+      case _ => ""
+    }
+    val wizardCards = cardList.filter(card => card.isWizard).map(card => card.asInstanceOf[WizardCard])
+    val defaultCards = cardList.filterNot(card => card.isWizard || card.isJester)
+      .map(card => card.asInstanceOf[DefaultCard]).sortWith(_ > _)
+    val jesterCards = cardList.filter(card => card.isJester).map(card => card.asInstanceOf[JesterCard])
+
+    if (wizardCards.nonEmpty) wizardCards.head.owner.get
+    else if (defaultCards.nonEmpty) {
+      val highestNumber = defaultCards.head.number
+      val cardsWithHighestNumberInNormalCards = defaultCards.filter(_.number == highestNumber)
+      val highestCardMatchingTrumpColor = cardsWithHighestNumberInNormalCards.filter(_.color == actualColor)
+      if (highestCardMatchingTrumpColor.nonEmpty) highestCardMatchingTrumpColor.head.owner.get
+      else cardsWithHighestNumberInNormalCards.head.owner.get
+    } else jesterCards.head.owner.get
+  }
 }
 
-object CardStack {
+object CardStack { // TODO: Remove as dont needed anymore
   def playerOfHighestCard(cardList: List[CardInterface], color: Option[String]): Option[String] = {
     val actualColor = color match {
       case Some(color) => color
