@@ -7,6 +7,8 @@ import de.htwg.sa.wizard.cardModule.model.cardComponent.{CardInterface, CardStac
 import de.htwg.sa.wizard.cardModule.model.fileIOComponent.FileIOInterface
 import play.api.libs.json.Json
 
+import scala.util.{Failure, Success}
+
 case class CardController @Inject()(var cardStackInterface: CardStackInterface, fileIOInterface: FileIOInterface) extends CardControllerInterface {
 
   override def shuffleCardStack(): List[CardInterface] = {
@@ -34,12 +36,13 @@ case class CardController @Inject()(var cardStackInterface: CardStackInterface, 
     cards.map(card => card.setOwner(playerName))
   }
 
+  // ToDo: implement save an load methods for card stack
   override def save(): Unit = {
-    //fileIOInterface.save(cardStackInterface, "CardModule")
+    /*fileIOInterface.save(cardStackInterface.cards, "CardModule")*/
   }
 
   override def load(): Unit = {
-   /* cardStack = fileIOInterface.load(cardStackInterface, "CardModule") match {
+    /*cardStackInterface = fileIOInterface.load(cardStackInterface, "CardModule") match {
       case Failure(_) => return
       case Success(cardStackInterface) => cardStackInterface
     }*/
