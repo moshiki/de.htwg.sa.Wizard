@@ -20,7 +20,6 @@ import scala.xml.Elem
 
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
-                        /*var shuffledCardStack: List[CardInterface] = Nil,*/
                         players: List[Player] = Nil,
                         currentPlayerNumber: Int = 0,
                         currentRound: Int = 1,

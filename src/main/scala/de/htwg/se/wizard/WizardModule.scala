@@ -14,9 +14,9 @@ class WizardModule extends AbstractModule with ScalaModule {
   override def configure(): Unit = {
     bind[ModelInterface].toInstance(RoundManager())
     bind[FileIOInterface].to[FileIOJSON.FileIO]
-    bind[ResultTableControllerInterface].to[ResultTableController]
-    bind[ResultTableInterface].toInstance(ResultTable())
-    bind[de.htwg.sa.wizard.cardModule.model.fileIOComponent.FileIOInterface].to[de.htwg.sa.wizard.cardModule.model.fileIOComponent.FileIOJSON.FileIO]
-    bind[de.htwg.sa.wizard.resultTable.model.fileIOComponent.FileIOInterface].to[de.htwg.sa.wizard.resultTable.model.fileIOComponent.FileIOJSON.FileIO]
+    /*bind[ResultTableControllerInterface].to[ResultTableController]*/
+    /*bind[ResultTableInterface].toInstance(ResultTable())*/
+/*    bind[de.htwg.sa.wizard.cardModule.model.fileIOComponent.FileIOInterface].to[de.htwg.sa.wizard.cardModule.model.fileIOComponent.FileIOJSON.FileIO]
+    bind[de.htwg.sa.wizard.resultTable.model.fileIOComponent.FileIOInterface].to[de.htwg.sa.wizard.resultTable.model.fileIOComponent.FileIOJSON.FileIO]*/
   }
 }
