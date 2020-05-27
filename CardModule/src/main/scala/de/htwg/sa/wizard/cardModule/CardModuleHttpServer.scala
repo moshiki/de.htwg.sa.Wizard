@@ -67,7 +67,7 @@ case class CardModuleHttpServer(controller: CardControllerInterface) {
       }
     },
     post {
-      path("card" / "assignCardsToPlayer") {
+      path("cardStack" / "assignCardsToPlayer") {
         decodeRequest {
           entity(as[String]) { string => {
             val params = Json.parse(string)

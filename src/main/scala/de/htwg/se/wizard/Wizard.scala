@@ -22,8 +22,7 @@ object Wizard {
   val tui = new TUI(controller)
   val gui = new SwingGui(controller)
   val httpTui = new HttpTui(controller)
-  ResultTable.main(Array())
-  CardMod.main(Array())
+
   controller.notifyObservers()
 
   def main(args: Array[String]): Unit = {
@@ -33,7 +32,6 @@ object Wizard {
       tui.processInput(input)
     } while (input != "q")
     httpTui.shutdownWebServer()
-    ResultTable.shutdownServer()
     Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardMod/exit"))
   }
 }
