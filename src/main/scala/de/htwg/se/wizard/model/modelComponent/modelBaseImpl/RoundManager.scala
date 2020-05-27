@@ -8,12 +8,12 @@ import akka.http.scaladsl.client.RequestBuilding.Post
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
-import de.htwg.sa.wizard.cardModule.util.{StringListContainer, cardsForPlayerArgumentContainer}
+import de.htwg.sa.wizard.cardModule.util.{CardsForPlayerArgumentContainer, StringListContainer}
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.Await
+import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.concurrent.duration.Duration
 import scala.xml.Elem
 
@@ -30,6 +30,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         cleanMap: Map[String, Int] = Map.empty[String, Int]) extends ModelInterface {
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   override def isNumberOfPlayersValid(number: Int): Boolean = Player.checkNumberOfPlayers(number)
 
@@ -57,7 +58,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       val playerNumber = players.indexOf(player)
       val cardsForPlayer = {
         val response = Http().singleRequest(Post("http://localhost:1234/cardStack/cardsForPlayer",
-          Json.toJson(cardsForPlayerArgumentContainer(playerNumber, currentRound)).toString()))
+          Json.toJson(CardsForPlayerArgumentContainer(playerNumber, currentRound)).toString()))
         val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
         val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
         val json = Json.parse(jsonString)

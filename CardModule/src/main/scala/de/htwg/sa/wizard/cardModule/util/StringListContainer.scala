@@ -1,6 +1,8 @@
 package de.htwg.sa.wizard.cardModule.util
 
-case class StringListContainer(list: List[String])
+import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
+
+case class StringListContainer(list: List[CardInterface])
 
 object StringListContainer {
   import play.api.libs.json._

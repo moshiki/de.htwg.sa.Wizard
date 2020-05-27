@@ -6,8 +6,6 @@ import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.D
 import de.htwg.sa.wizard.cardModule.model.cardComponent.{CardInterface, CardStackInterface}
 import de.htwg.sa.wizard.cardModule.model.fileIOComponent.FileIOInterface
 
-import scala.util.{Failure, Success}
-
 case class CardController @Inject()(var cardStackInterface: CardStackInterface, fileIOInterface: FileIOInterface) extends CardControllerInterface {
   override def shuffleCardStack(): List[CardInterface] = {
     cardStackInterface = cardStackInterface.shuffleCards()
@@ -24,6 +22,10 @@ case class CardController @Inject()(var cardStackInterface: CardStackInterface, 
 
   def cardsForPlayer(playerNumber: Int, currentRound: Int): List[CardInterface] = {
     cardStackInterface.cards.slice(playerNumber * currentRound, playerNumber * currentRound + currentRound)
+  }
+
+  def splitCardStack(numberOfPlayers: Int, currentRound: Int) = {
+    cardStackInterface.cards.splitAt((numberOfPlayers - 1) * currentRound + 1)._2
   }
 
   override def save(): Unit = {
