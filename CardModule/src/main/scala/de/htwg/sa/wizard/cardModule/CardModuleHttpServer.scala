@@ -7,7 +7,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.controller.controllerComponent.CardControllerInterface
-import de.htwg.sa.wizard.cardModule.util.{AssignCardsToPlayerArgumentContainer, CardsForPlayerArgumentContainer, PlayerOfHighestCardArgumentContainer, SplitCardStackArgumentContainer}
+import de.htwg.sa.wizard.cardModule.util._
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -37,7 +37,8 @@ case class CardModuleHttpServer(controller: CardControllerInterface) {
     },
     get {
       path("cardStack" / "trumpColor") {
-        complete(Json.toJson(controller.trumpColor).toString)
+        val container = StringOptionContainer(controller.trumpColor)
+        complete(Json.toJson(container).toString)
       }
     },
     post {
