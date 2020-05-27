@@ -24,8 +24,8 @@ case class CardController @Inject()(var cardStackInterface: CardStackInterface, 
     cardStackInterface.cards.slice(playerNumber * currentRound, playerNumber * currentRound + currentRound)
   }
 
-  def splitCardStack(numberOfPlayers: Int, currentRound: Int) = {
-    cardStackInterface.cards.splitAt((numberOfPlayers - 1) * currentRound + 1)._2
+  def splitCardStack(numberOfPlayers: Int, currentRound: Int): Unit = {
+    cardStackInterface = cardStackInterface.split(numberOfPlayers, currentRound)
   }
 
   override def save(): Unit = {

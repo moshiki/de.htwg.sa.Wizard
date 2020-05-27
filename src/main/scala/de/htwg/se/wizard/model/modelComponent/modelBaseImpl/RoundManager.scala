@@ -5,10 +5,11 @@ import java.util.concurrent.TimeUnit
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.client.RequestBuilding.Post
+import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
-import de.htwg.sa.wizard.cardModule.util.{CardsForPlayerArgumentContainer, StringListContainer}
+import de.htwg.sa.wizard.cardModule.util.{CardsForPlayerArgumentContainer, SplitCardStackArgumentContainer, StringListContainer}
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import play.api.libs.json.{JsValue, Json}
 
@@ -67,8 +68,9 @@ case class RoundManager(numberOfPlayers: Int = 0,
       val assignedCards = cardsForPlayer.map(card => card.setOwner(player.name))
       player.assignCards(assignedCards)
     })
-    val newShuffledCardStack = shuffledCardStack.splitAt((numberOfPlayers - 1) * currentRound + 1)._2
-    copy(shuffledCardStack = newShuffledCardStack, players = playersWithCards)
+    Http().singleRequest(Post("http://localhost:1234/cardStack/splitCardStack",
+      Json.toJson(SplitCardStackArgumentContainer(numberOfPlayers, currentRound)).toString()))
+    copy(players = playersWithCards)
   }
 
   override def updatePlayerPrediction(input: Int): RoundManager = copy(predictionPerRound = predictionPerRound ::: List(input))
@@ -82,6 +84,11 @@ case class RoundManager(numberOfPlayers: Int = 0,
       return "\nGame Over! Press 'q' to quit.\n"
     }
     if (predictionPerRound.size < numberOfPlayers) {
+      val trumpColorFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/splitCardStack")
+      val jsonStringFuture = trumpColorFuture.flatMap(r => Unmarshal(r.entity).to[String])
+      val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+      val json = Json.parse(jsonString)
+      val trumpColor: Option[String] = Json.fromJson(json).get
       Player.playerPrediction(players(currentPlayerNumber), currentRound, trumpColor)
     } else {
       Player.playerTurn(players(currentPlayerNumber), currentRound)

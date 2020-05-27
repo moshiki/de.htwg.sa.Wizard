@@ -4,18 +4,22 @@ import de.htwg.sa.wizard.cardModule.model.cardComponent.{CardInterface, CardStac
 
 import scala.util.Random
 
-case class CardStack() extends CardStackInterface {
-  val cards: List[CardInterface] = {
-    Random.shuffle({
-      val wizards = List.fill(4)(CardInterface.apply("WizardCard"))
-      val jesters = List.fill(4)(CardInterface.apply("JesterCard"))
-      val colors = List("red", "blue", "yellow", "green")
-      val normals = 1 to 13 flatMap (number => colors.map(color => DefaultCard(color, number)))
-      wizards ::: jesters ::: normals.toList
-    })
-  }
+case class CardStack(cards: List[CardInterface] = {
+  Random.shuffle({
+    val wizards = List.fill(4)(CardInterface.apply("WizardCard"))
+    val jesters = List.fill(4)(CardInterface.apply("JesterCard"))
+    val colors = List("red", "blue", "yellow", "green")
+    val normals = 1 to 13 flatMap (number => colors.map(color => DefaultCard(color, number)))
+    wizards ::: jesters ::: normals.toList
+  })
+}) extends CardStackInterface {
 
-  def shuffleCards(): CardStackInterface = this.copy
+
+  override def shuffleCards(): CardStackInterface = this.copy()
+
+  override def split(numberOfPlayers: Int, currentRound: Int): CardStackInterface = {
+    this.copy(cards.splitAt((numberOfPlayers - 1) * currentRound + 1)._2)
+  }
 
 }
 

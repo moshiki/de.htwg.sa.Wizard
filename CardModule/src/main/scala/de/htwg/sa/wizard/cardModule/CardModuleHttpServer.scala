@@ -8,7 +8,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.controller.controllerComponent.CardControllerInterface
-import de.htwg.sa.wizard.cardModule.util.{StringListContainer, CardsForPlayerArgumentContainer}
+import de.htwg.sa.wizard.cardModule.util.{CardsForPlayerArgumentContainer, SplitCardStackArgumentContainer, StringListContainer}
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -48,6 +48,19 @@ case class CardModuleHttpServer(controller: CardControllerInterface) {
             val params = Json.parse(string)
             val parsedParams = Json.fromJson(params)(CardsForPlayerArgumentContainer.containerReads).get
             complete(Json.toJson(controller.cardsForPlayer(parsedParams.playerNumber, parsedParams.currentRound)).toString())
+          }
+          }
+        }
+      }
+    },
+    post {
+      path("cardStack" / "splitCardStack") {
+        decodeRequest {
+          entity(as[String]) { string => {
+            val params = Json.parse(string)
+            val parsedParams = Json.fromJson(params)(SplitCardStackArgumentContainer.containerReads).get
+            controller.splitCardStack(parsedParams.numberOfPlayers, parsedParams.currentRound)
+            complete(StatusCodes.OK)
           }
           }
         }
