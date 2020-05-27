@@ -9,7 +9,7 @@ import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
-import de.htwg.sa.wizard.cardModule.util.{AssignCardsToPlayerArgumentContainer, CardsForPlayerArgumentContainer, PlayerOfHighestCardArgumentContainer, SplitCardStackArgumentContainer, StringListContainer}
+import de.htwg.sa.wizard.cardModule.util._
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import play.api.libs.json.{JsValue, Json}
 
@@ -95,10 +95,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       val jsonStringFuture = trumpColorFuture.flatMap(r => Unmarshal(r.entity).to[String])
       val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
       val json = Json.parse(jsonString)
-      val trumpColor: Option[String] = Json.fromJson(json).get match {
-        case "None" => None
-        case _: String => Some(_)
-      }
+      val trumpColor: Option[String] = Json.fromJson(json)(StringOptionContainer.containerReads).get.option
       Player.playerPrediction(players(currentPlayerNumber), currentRound, trumpColor)
     } else {
       Player.playerTurn(players(currentPlayerNumber), currentRound)

@@ -1,14 +1,11 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
-import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.{CardStack, DefaultCard, JesterCard, WizardCard}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.libs.json.Json
 
 class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
-  "A Round Manager" when {
+  /*"A Round Manager" when {
     "new" should {
       val roundManager = RoundManager()
       "set the number of players correctly" in {
@@ -195,5 +192,5 @@ class RoundManagerSpec extends AnyWordSpec with Matchers with MockFactory {
 
       roundManager.pointsForThisRound should be(expectedResult)
     }
-  }
+  }*/
 }
