@@ -84,7 +84,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       return "\nGame Over! Press 'q' to quit.\n"
     }
     if (predictionPerRound.size < numberOfPlayers) {
-      val trumpColorFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/splitCardStack")
+      val trumpColorFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/trumpColor")
       val jsonStringFuture = trumpColorFuture.flatMap(r => Unmarshal(r.entity).to[String])
       val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
       val json = Json.parse(jsonString)
