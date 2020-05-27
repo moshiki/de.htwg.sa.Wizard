@@ -2,13 +2,12 @@ package de.htwg.sa.wizard.cardModule
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.controller.controllerComponent.CardControllerInterface
-import de.htwg.sa.wizard.cardModule.util.{AssignCardsToPlayerArgumentContainer, CardsForPlayerArgumentContainer, SplitCardStackArgumentContainer, StringListContainer}
+import de.htwg.sa.wizard.cardModule.util.{AssignCardsToPlayerArgumentContainer, CardsForPlayerArgumentContainer, PlayerOfHighestCardArgumentContainer, SplitCardStackArgumentContainer}
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -73,6 +72,23 @@ case class CardModuleHttpServer(controller: CardControllerInterface) {
             val params = Json.parse(string)
             val parsedParams = Json.fromJson(params)(AssignCardsToPlayerArgumentContainer.containerReads).get
             complete(Json.toJson(controller.assignCardsForPlayer(parsedParams.cards, parsedParams.playerName)).toString())
+          }
+          }
+        }
+      }
+    },
+    get {
+      path("cardStack" / "topOfCardStackString") {
+        complete(controller.topOfCardStackString())
+      }
+    },
+    post {
+      path("cardStack" / "playerOfHighestCard") {
+        decodeRequest {
+          entity(as[String]) { string => {
+            val params = Json.parse(string)
+            val parsedParams = Json.fromJson(params)(PlayerOfHighestCardArgumentContainer.containerReads).get
+            complete(controller.playerOfHighestCard(parsedParams.list))
           }
           }
         }

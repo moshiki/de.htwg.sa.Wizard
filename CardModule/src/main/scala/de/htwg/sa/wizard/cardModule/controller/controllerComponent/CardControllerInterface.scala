@@ -10,4 +10,6 @@ trait CardControllerInterface {
   def trumpColor: Option[String]
   def save(): Unit
   def load(): Unit
+  def topOfCardStackString(): String
+  def playerOfHighestCard(list: List[CardInterface]): String
 }

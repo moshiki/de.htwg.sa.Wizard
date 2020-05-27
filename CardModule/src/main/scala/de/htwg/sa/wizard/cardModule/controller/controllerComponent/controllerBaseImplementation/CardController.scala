@@ -42,4 +42,12 @@ case class CardController @Inject()(var cardStackInterface: CardStackInterface, 
       case Success(cardStackInterface) => cardStackInterface
     }*/
   }
+
+  override def topOfCardStackString(): String = {
+    cardStackInterface.topOfCardStackString
+  }
+
+  override def playerOfHighestCard(list: List[CardInterface]): String = {
+    cardStackInterface.playerOfHighestCard(list, trumpColor)
+  }
 }
