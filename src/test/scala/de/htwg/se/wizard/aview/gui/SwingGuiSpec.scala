@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.{CardStack, WizardCard}
+import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.WizardCard
 import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
 import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl._
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
@@ -13,7 +13,7 @@ class SwingGuiSpec extends AnyWordSpec with Matchers with MockFactory {
   val fileIOStub: FileIOInterface = stub[FileIOInterface]
   val resultTableControllerStub: ResultTableControllerInterface = stub[ResultTableControllerInterface]
   val controller = new Controller(RoundManager(
-     shuffledCardStack = CardStack.shuffleCards(CardStack.initialize)), fileIOStub)
+     ), fileIOStub)
   "A SwingGuiSpec" should {
     "load the correct Panel" when {
       "Controller is in preSetupState" in {

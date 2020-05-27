@@ -5,21 +5,21 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class CardStackSpec extends AnyWordSpec with Matchers {
   "An initial CardStack" should {
-    val cardStack = CardStack.initialize
+    val cardStack = CardStack()
     "contain 60 cards" in {
-      cardStack.size should be(60)
+      cardStack.cards.size should be(60)
     }
     "contain 4 wizards" in {
-      cardStack.count(_.isWizard) should be(4)
+      cardStack.cards.count(_.isWizard) should be(4)
     }
     "contain 4 jesters" in {
-      cardStack.count(_.isJester) should be(4)
+      cardStack.cards.count(_.isJester) should be(4)
     }
     "have 52 normal cards" in {
-      cardStack.count(_.isInstanceOf[DefaultCard]) should be(52)
+      cardStack.cards.count(_.isInstanceOf[DefaultCard]) should be(52)
     }
 
-    val defaultCards = cardStack.filter(_.isInstanceOf[DefaultCard]).map(_.asInstanceOf[DefaultCard])
+    val defaultCards = cardStack.cards.filter(_.isInstanceOf[DefaultCard]).map(_.asInstanceOf[DefaultCard])
     "have 13 red cards" in {
       defaultCards.count(_.color == "red") should be(13)
     }
@@ -41,22 +41,22 @@ class CardStackSpec extends AnyWordSpec with Matchers {
   }
 
   "A shuffled CardStack" should {
-    val cardStack = CardStack.initialize
-    val shuffledCardStack = CardStack.shuffleCards(cardStack)
+    val cardStack = CardStack()
+    val shuffledCardStack = cardStack.shuffleCards()
 
     "contains 60 cards" in {
-      shuffledCardStack.size should be(60)
+      shuffledCardStack.cards.size should be(60)
     }
     "contains 4 Wizards" in {
-      shuffledCardStack.count(_.isWizard) should be(4)
+      shuffledCardStack.cards.count(_.isWizard) should be(4)
     }
     "contains 4 Jesters" in {
-      shuffledCardStack.count(_.isJester) should be(4)
+      shuffledCardStack.cards.count(_.isJester) should be(4)
     }
     "has 52 normal cards" in {
-      shuffledCardStack.count(_.isInstanceOf[DefaultCard]) should be(52)
+      shuffledCardStack.cards.count(_.isInstanceOf[DefaultCard]) should be(52)
     }
-    val shuffledDefaultcards = shuffledCardStack.filter(_.isInstanceOf[DefaultCard]).map(_.asInstanceOf[DefaultCard])
+    val shuffledDefaultcards = shuffledCardStack.cards.filter(_.isInstanceOf[DefaultCard]).map(_.asInstanceOf[DefaultCard])
     "has 13 red cards" in {
       shuffledDefaultcards.count(_.color == "red") should be(13)
     }

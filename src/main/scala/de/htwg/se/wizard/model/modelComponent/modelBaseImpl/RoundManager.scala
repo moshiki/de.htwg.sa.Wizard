@@ -1,16 +1,25 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
+import java.util.concurrent.TimeUnit
+
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.client.RequestBuilding._
+import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.unmarshalling.Unmarshal
+import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
-import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.{CardStack, DefaultCard, WizardCard}
+import de.htwg.sa.wizard.cardModule.util._
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.xml.Elem
 
 case class RoundManager(numberOfPlayers: Int = 0,
                         numberOfRounds: Int = 0,
-                        shuffledCardStack: List[CardInterface] = CardStack.shuffleCards(CardStack.initialize),
                         players: List[Player] = Nil,
                         currentPlayerNumber: Int = 0,
                         currentRound: Int = 1,
@@ -19,7 +28,9 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         playedCards: List[CardInterface] = Nil,
                         predictionMode: Boolean = true,
                         cleanMap: Map[String, Int] = Map.empty[String, Int]) extends ModelInterface {
-  val initialCardStack: List[CardInterface] = CardStack.initialize
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   override def isNumberOfPlayersValid(number: Int): Boolean = Player.checkNumberOfPlayers(number)
 
@@ -41,17 +52,31 @@ case class RoundManager(numberOfPlayers: Int = 0,
     copy(playedCards = playedCard :: playedCards, players = newPlayers.toList)
   }
 
-
   override def cardDistribution: RoundManager = {
     if (players.head.playerCards.nonEmpty) return this
     val playersWithCards = players map(player => {
       val playerNumber = players.indexOf(player)
-      val cardsForPlayer = shuffledCardStack.slice(playerNumber * currentRound, playerNumber * currentRound + currentRound)
-      val assignedCards = cardsForPlayer.map(card => card.setOwner(player.name))
+      val cardsForPlayer = {
+        val response = Http().singleRequest(Post("http://localhost:1234/cardStack/cardsForPlayer",
+          Json.toJson(CardsForPlayerArgumentContainer(playerNumber, currentRound)).toString()))
+        val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
+        val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+        val json = Json.parse(jsonString)
+        Json.fromJson(json)(StringListContainer.containerReads).get.list
+      }
+      val assignedCards = {
+        val response = Http().singleRequest(Post("http://localhost:1234/cardStack/assignCardsToPlayer",
+          Json.toJson(AssignCardsToPlayerArgumentContainer(cardsForPlayer, player.name)).toString()))
+        val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
+        val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+        val json = Json.parse(jsonString)
+        Json.fromJson(json)(AssignCardsToPlayerArgumentContainer.containerReads).get.cards
+      }
       player.assignCards(assignedCards)
     })
-    val newShuffledCardStack = shuffledCardStack.splitAt((numberOfPlayers - 1) * currentRound + 1)._2
-    copy(shuffledCardStack = newShuffledCardStack, players = playersWithCards)
+    Http().singleRequest(Post("http://localhost:1234/cardStack/splitCardStack",
+      Json.toJson(SplitCardStackArgumentContainer(numberOfPlayers, currentRound)).toString()))
+    copy(players = playersWithCards)
   }
 
   override def updatePlayerPrediction(input: Int): RoundManager = copy(predictionPerRound = predictionPerRound ::: List(input))
@@ -65,6 +90,11 @@ case class RoundManager(numberOfPlayers: Int = 0,
       return "\nGame Over! Press 'q' to quit.\n"
     }
     if (predictionPerRound.size < numberOfPlayers) {
+      val trumpColorFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/trumpColor"))
+      val jsonStringFuture = trumpColorFuture.flatMap(r => Unmarshal(r.entity).to[String])
+      val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+      val json = Json.parse(jsonString)
+      val trumpColor: Option[String] = Json.fromJson(json)(StringOptionContainer.containerReads).get.option
       Player.playerPrediction(players(currentPlayerNumber), currentRound, trumpColor)
     } else {
       Player.playerTurn(players(currentPlayerNumber), currentRound)
@@ -73,8 +103,8 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def nextRound: RoundManager = {
     if (currentPlayerNumber == 0 && currentRound != numberOfRounds && players.last.playerCards.isEmpty) {
+      Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/shuffleCardStack"))
       copy(
-        shuffledCardStack = CardStack.shuffleCards(initialCardStack),
         predictionPerRound = Nil,
         tricksPerRound = cleanMap,
         currentRound = currentRound + 1
@@ -91,19 +121,12 @@ case class RoundManager(numberOfPlayers: Int = 0,
     }
   }
 
-  def trumpColor: Option[String] = {
-    val topCard = shuffledCardStack.head
-    topCard match {
-      case card: DefaultCard => Some(card.color)
-      case _ => None
-    }
-  }
-
   def trickInThisCycle: RoundManager = {
-    val trickPlayerName = CardStack.playerOfHighestCard(playedCards.reverse, trumpColor) match {
-      case Some(playerName) => playerName
-      // TODO: case None => Exception?
-    }
+
+    val container = PlayerOfHighestCardArgumentContainer(playedCards.reverse)
+    val response = Http().singleRequest(Post("http://localhost:1234/cardStack/playerOfHighestCard", Json.toJson(container).toString()))
+    val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
+    val trickPlayerName = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
     val mutMap = collection.mutable.Map() ++ tricksPerRound
     mutMap.put(trickPlayerName, mutMap(trickPlayerName) + 1)
     this.copy(tricksPerRound = mutMap.toMap, playedCards = Nil)
@@ -115,7 +138,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
     <RoundManager>
       <numberOfPlayers>{numberOfPlayers}</numberOfPlayers>
       <numberOfRounds>{numberOfRounds}</numberOfRounds>
-      <shuffledCardStack>{shuffledCardStack map(card => card.toXML)}</shuffledCardStack>
       <players>{players map(player => player.toXML)}</players>
       <currentPlayer>{currentPlayerNumber}</currentPlayer>
       <currentRound>{currentRound}</currentRound>
@@ -148,7 +170,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
     copy(
       numberOfPlayers = numberOfPlayers,
       numberOfRounds = numberOfRounds,
-      shuffledCardStack = shuffledCardStack.toList,
       players = players.toList,
       currentPlayerNumber = currentPlayer,
       currentRound = currentRound,
@@ -170,7 +191,11 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def currentPlayersCards: List[String] = players(currentPlayerNumber).playerCards.map(card => card.toString)
 
-  override def topOfStackCardString: String = shuffledCardStack.head.toString
+  override def topOfStackCardString: String = {
+    val response = Http().singleRequest(Get("http://localhost:1234/cardStack/topOfCardStackString"))
+    val topOfStackStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
+    Await.result(topOfStackStringFuture, Duration(1, TimeUnit.SECONDS))
+  }
 
   override def playersAsStringList: List[String] = players.map(player => player.toString)
 
