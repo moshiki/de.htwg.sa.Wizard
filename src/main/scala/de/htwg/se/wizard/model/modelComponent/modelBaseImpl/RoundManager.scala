@@ -9,7 +9,7 @@ import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
-import de.htwg.sa.wizard.cardModule.util.{CardsForPlayerArgumentContainer, SplitCardStackArgumentContainer, StringListContainer}
+import de.htwg.sa.wizard.cardModule.util.{AssignCardsToPlayerArgumentContainer, CardsForPlayerArgumentContainer, SplitCardStackArgumentContainer, StringListContainer}
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import play.api.libs.json.{JsValue, Json}
 
@@ -63,9 +63,16 @@ case class RoundManager(numberOfPlayers: Int = 0,
         val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
         val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
         val json = Json.parse(jsonString)
-        Json.fromJson(json)(StringListContainer.containerReads).get
+        Json.fromJson(json)(StringListContainer.containerReads).get.list
       }
-      val assignedCards = cardsForPlayer.map(card => card.setOwner(player.name))
+      val assignedCards = {
+        val response = Http().singleRequest(Post("http://localhost:1234/cardStack/assignCardsToPlayer",
+          Json.toJson(AssignCardsToPlayerArgumentContainer(cardsForPlayer, player.name)).toString()))
+        val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
+        val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+        val json = Json.parse(jsonString)
+        Json.fromJson(json)(AssignCardsToPlayerArgumentContainer.containerReads).get.cards
+      }
       player.assignCards(assignedCards)
     })
     Http().singleRequest(Post("http://localhost:1234/cardStack/splitCardStack",
@@ -97,8 +104,8 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def nextRound: RoundManager = {
     if (currentPlayerNumber == 0 && currentRound != numberOfRounds && players.last.playerCards.isEmpty) {
+      Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/shuffleCardStack"))
       copy(
-        shuffledCardStack = CardStack.shuffleCards(initialCardStack),
         predictionPerRound = Nil,
         tricksPerRound = cleanMap,
         currentRound = currentRound + 1
@@ -116,6 +123,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   }
 
   def trickInThisCycle: RoundManager = {
+
     val trickPlayerName = CardStack.playerOfHighestCard(playedCards.reverse, trumpColor) match {
       case Some(playerName) => playerName
       // TODO: case None => Exception?

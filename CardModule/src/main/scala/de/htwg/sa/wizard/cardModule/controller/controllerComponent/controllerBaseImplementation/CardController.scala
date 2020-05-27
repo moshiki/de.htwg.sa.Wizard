@@ -28,6 +28,10 @@ case class CardController @Inject()(var cardStackInterface: CardStackInterface, 
     cardStackInterface = cardStackInterface.split(numberOfPlayers, currentRound)
   }
 
+  def assignCardsForPlayer(cards: List[CardInterface], playerName: String): List[CardInterface] = {
+    cards.map(card => card.setOwner(playerName))
+  }
+
   override def save(): Unit = {
     //fileIOInterface.save(cardStackInterface, "CardModule")
   }
