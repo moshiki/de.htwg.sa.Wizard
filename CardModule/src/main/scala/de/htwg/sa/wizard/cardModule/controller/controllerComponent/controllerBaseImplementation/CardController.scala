@@ -38,4 +38,8 @@ case class CardController @Inject()(var cardStackInterface: CardStackInterface, 
       case Success(cardStackInterface) => cardStackInterface
     }*/
   }
+
+  override def topOfCardStackString(): String = {
+    cardStackInterface.topOfCardStackString
+  }
 }

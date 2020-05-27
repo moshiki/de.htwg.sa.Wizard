@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.client.RequestBuilding.Post
+import akka.http.scaladsl.client.RequestBuilding._
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
@@ -14,8 +14,8 @@ import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.xml.Elem
 
 case class RoundManager(numberOfPlayers: Int = 0,
@@ -131,7 +131,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
     <RoundManager>
       <numberOfPlayers>{numberOfPlayers}</numberOfPlayers>
       <numberOfRounds>{numberOfRounds}</numberOfRounds>
-      <shuffledCardStack>{shuffledCardStack map(card => card.toXML)}</shuffledCardStack>
       <players>{players map(player => player.toXML)}</players>
       <currentPlayer>{currentPlayerNumber}</currentPlayer>
       <currentRound>{currentRound}</currentRound>
@@ -163,8 +162,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val cleanMap = cleanMapNode.reverse.map(node => (node \ "player").text -> (node \ "trick").text.toInt).toMap
     copy(
       numberOfPlayers = numberOfPlayers,
-      numberOfRounds = numberOfRounds,
-      shuffledCardStack = shuffledCardStack.toList,
+      numberOfRounds = numberOfRounds,,
       players = players.toList,
       currentPlayerNumber = currentPlayer,
       currentRound = currentRound,
@@ -186,7 +184,11 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def currentPlayersCards: List[String] = players(currentPlayerNumber).playerCards.map(card => card.toString)
 
-  override def topOfStackCardString: String = shuffledCardStack.head.toString
+  override def topOfStackCardString: String = {
+    val response = Http().singleRequest(Get("http://localhost:1234/cardStack/topOfCardStackString"))
+    val topOfStackStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
+    Await.result(topOfStackStringFuture, Duration(1, TimeUnit.SECONDS))
+  }
 
   override def playersAsStringList: List[String] = players.map(player => player.toString)
 

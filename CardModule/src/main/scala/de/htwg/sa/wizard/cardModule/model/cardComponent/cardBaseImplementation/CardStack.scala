@@ -21,6 +21,7 @@ case class CardStack(cards: List[CardInterface] = {
     this.copy(cards.splitAt((numberOfPlayers - 1) * currentRound + 1)._2)
   }
 
+  override def topOfCardStackString: String = cards.head.toString
 }
 
 object CardStack {

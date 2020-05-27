@@ -4,5 +4,6 @@ trait CardStackInterface {
   val cards: List[CardInterface]
   def shuffleCards(): CardStackInterface
   def split(numberOfPlayers: Int, currentRound: Int): CardStackInterface
+  def topOfCardStackString: String
   //def playerOfHighestCard(cardList: List[CardInterface], color: Option[String]): Option[String]
 }
