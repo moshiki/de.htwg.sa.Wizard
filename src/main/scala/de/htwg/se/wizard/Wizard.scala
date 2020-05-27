@@ -1,6 +1,11 @@
 package de.htwg.se.wizard
 
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.HttpRequest
+import akka.stream.ActorMaterializer
 import com.google.inject.{Guice, Injector}
+import de.htwg.sa.wizard.cardModule.CardMod
 import de.htwg.sa.wizard.resultTable.ResultTable
 import de.htwg.se.wizard.aview.gui.SwingGui
 import de.htwg.se.wizard.aview.{HttpTui, TUI}
@@ -9,6 +14,8 @@ import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Contr
 import scala.io.StdIn.readLine
 
 object Wizard {
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
   val injector: Injector = Guice.createInjector(new WizardModule)
   val controller: Controller = injector.getInstance(classOf[Controller])
 
@@ -19,6 +26,7 @@ object Wizard {
 
   def main(args: Array[String]): Unit = {
     ResultTable.main(Array())
+    CardMod.main(Array())
     var input: String = ""
     do {
       input = readLine()
@@ -26,5 +34,6 @@ object Wizard {
     } while (input != "q")
     httpTui.shutdownWebServer()
     ResultTable.shutdownServer()
+    Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardMod/exit"))
   }
 }

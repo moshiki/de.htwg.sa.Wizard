@@ -4,7 +4,7 @@ import de.htwg.sa.wizard.cardModule.model.cardComponent.{CardInterface, CardStac
 
 import scala.util.Random
 
-class CardStack extends CardStackInterface {
+case class CardStack() extends CardStackInterface {
   val cards: List[CardInterface] = {
     Random.shuffle({
       val wizards = List.fill(4)(CardInterface.apply("WizardCard"))
@@ -15,8 +15,11 @@ class CardStack extends CardStackInterface {
     })
   }
 
-  def shuffleCards(): CardStackInterface = copy(this)
+  def shuffleCards(): CardStackInterface = this.copy
 
+}
+
+object CardStack {
   def playerOfHighestCard(cardList: List[CardInterface], color: Option[String]): Option[String] = {
     val actualColor = color match {
       case Some(color) => color

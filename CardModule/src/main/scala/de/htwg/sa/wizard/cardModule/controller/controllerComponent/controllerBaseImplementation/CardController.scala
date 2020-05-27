@@ -22,14 +22,18 @@ case class CardController @Inject()(var cardStackInterface: CardStackInterface, 
     }
   }
 
+  def cardsForPlayer(playerNumber: Int, currentRound: Int): List[CardInterface] = {
+    cardStackInterface.cards.slice(playerNumber * currentRound, playerNumber * currentRound + currentRound)
+  }
+
   override def save(): Unit = {
-    fileIOInterface.save(cardStack, "CardModule")
+    //fileIOInterface.save(cardStackInterface, "CardModule")
   }
 
   override def load(): Unit = {
-    cardStack = fileIOInterface.load(cardStack, "CardModule") match {
+   /* cardStack = fileIOInterface.load(cardStackInterface, "CardModule") match {
       case Failure(_) => return
-      case Success(cardStack) => cardStack
-    }
+      case Success(cardStackInterface) => cardStackInterface
+    }*/
   }
 }

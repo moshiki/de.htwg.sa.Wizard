@@ -2,12 +2,12 @@ package de.htwg.sa.wizard.cardModule
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.controller.controllerComponent.CardControllerInterface
-import de.htwg.sa.wizard.cardModule.model.cardComponent.CardStackInterface
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -20,19 +20,35 @@ case class CardModuleHttpServer(controller: CardControllerInterface) {
 
   val route: Route = concat(
     get {
-      path("cardmod") {
+      path("cardMod") {
         toHtml("<h1>This is the Wizard CardModule Webserver</h1>")
       }
     },
     get {
-      path("cardmod" / "exit") {
+      path("cardMod" / "exit") {
         CardMod.exitServer = true
         toHtml("<h3>Shutting down CardModule Webserver... bye!</h3>")
       }
     },
     get {
-      path("cardstack" / "shufflecardstack") {
-        complete(Json.toJson(controller.shuffleCardStack()))
+      path("cardStack" / "shuffleCardStack") {
+        complete(Json.toJson(controller.shuffleCardStack()).toString())
+      }
+    },
+    get {
+      path("cardStack" / "trumpColor") {
+        complete(Json.toJson(controller.trumpColor).toString)
+      }
+    },
+    post {
+      path("cardStack" / "cardsForPlayer") {
+        decodeRequest {
+          entity(as[String]) { string => {
+            val params = Json.parse(string)
+            complete(controller.cardsForPlayer(params.playerNumber, params.currentRound))
+          }
+          }
+        }
       }
     }
   )
