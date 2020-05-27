@@ -95,7 +95,10 @@ case class RoundManager(numberOfPlayers: Int = 0,
       val jsonStringFuture = trumpColorFuture.flatMap(r => Unmarshal(r.entity).to[String])
       val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
       val json = Json.parse(jsonString)
-      val trumpColor: Option[String] = Json.fromJson(json).get
+      val trumpColor: Option[String] = Json.fromJson(json).get match {
+        case "None" => None
+        case _: String => Some(_)
+      }
       Player.playerPrediction(players(currentPlayerNumber), currentRound, trumpColor)
     } else {
       Player.playerTurn(players(currentPlayerNumber), currentRound)
