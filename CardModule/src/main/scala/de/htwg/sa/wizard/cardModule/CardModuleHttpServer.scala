@@ -6,16 +6,17 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
+import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.wizard.cardModule.controller.controllerComponent.CardControllerInterface
+import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
+import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface._
 import de.htwg.sa.wizard.cardModule.util._
-import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-case class CardModuleHttpServer(controller: CardControllerInterface) {
+case class CardModuleHttpServer(controller: CardControllerInterface) extends PlayJsonSupport {
   implicit val system: ActorSystem = ActorSystem("my-system")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
-  // needed for the future flatMap/onComplete in the end
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   val route: Route = concat(
@@ -32,48 +33,38 @@ case class CardModuleHttpServer(controller: CardControllerInterface) {
     },
     get {
       path("cardStack" / "shuffleCardStack") {
-        complete(Json.toJson(util.StringListContainer(controller.shuffleCardStack())).toString)
+        complete(controller.shuffleCardStack())
       }
     },
     get {
       path("cardStack" / "trumpColor") {
-        val container = StringOptionContainer(controller.trumpColor)
-        complete(Json.toJson(container).toString)
+        complete(controller.trumpColor)
+      }
+    },get {
+      path("cardStack" / "cardsForPlayer") {
+        complete(controller.cardsForPlayer(1, 5))
       }
     },
     post {
       path("cardStack" / "cardsForPlayer") {
-        decodeRequest {
-          entity(as[String]) { string => {
-            val params = Json.parse(string)
-            val parsedParams = Json.fromJson(params)(CardsForPlayerArgumentContainer.containerReads).get
-            complete(Json.toJson(controller.cardsForPlayer(parsedParams.playerNumber, parsedParams.currentRound)).toString())
-          }
-          }
-        }
+            entity(as[CardsForPlayerArgumentContainer]) { params =>
+              complete(controller.cardsForPlayer(params.playerNumber, params.currentRound))
+            }
       }
     },
     post {
       path("cardStack" / "splitCardStack") {
-        decodeRequest {
-          entity(as[String]) { string => {
-            val params = Json.parse(string)
-            val parsedParams = Json.fromJson(params)(SplitCardStackArgumentContainer.containerReads).get
-            controller.splitCardStack(parsedParams.numberOfPlayers, parsedParams.currentRound)
+          entity(as[SplitCardStackArgumentContainer]) { params => {
+            controller.splitCardStack(params.numberOfPlayers, params.currentRound)
             complete(StatusCodes.OK)
-          }
           }
         }
       }
     },
     post {
       path("cardStack" / "assignCardsToPlayer") {
-        decodeRequest {
-          entity(as[String]) { string => {
-            val params = Json.parse(string)
-            val parsedParams = Json.fromJson(params)(AssignCardsToPlayerArgumentContainer.containerReads).get
-            complete(Json.toJson(controller.assignCardsForPlayer(parsedParams.cards, parsedParams.playerName)).toString())
-          }
+          entity(as[AssignCardsToPlayerArgumentContainer]) { params => {
+            complete(controller.assignCardsForPlayer(params.cards, params.playerName))
           }
         }
       }
@@ -85,12 +76,8 @@ case class CardModuleHttpServer(controller: CardControllerInterface) {
     },
     post {
       path("cardStack" / "playerOfHighestCard") {
-        decodeRequest {
-          entity(as[String]) { string => {
-            val params = Json.parse(string)
-            val parsedParams = Json.fromJson(params)(PlayerOfHighestCardArgumentContainer.containerReads).get
-            complete(controller.playerOfHighestCard(parsedParams.list))
-          }
+          entity(as[List[CardInterface]]) { cardList => {
+            complete(controller.playerOfHighestCard(cardList))
           }
         }
       }

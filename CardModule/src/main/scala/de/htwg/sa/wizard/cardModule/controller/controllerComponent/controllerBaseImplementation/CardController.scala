@@ -5,8 +5,10 @@ import de.htwg.sa.wizard.cardModule.controller.controllerComponent.CardControlle
 import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.DefaultCard
 import de.htwg.sa.wizard.cardModule.model.cardComponent.{CardInterface, CardStackInterface}
 import de.htwg.sa.wizard.cardModule.model.fileIOComponent.FileIOInterface
+import play.api.libs.json.Json
 
 case class CardController @Inject()(var cardStackInterface: CardStackInterface, fileIOInterface: FileIOInterface) extends CardControllerInterface {
+
   override def shuffleCardStack(): List[CardInterface] = {
     cardStackInterface = cardStackInterface.shuffleCards()
     cardStackInterface.cards

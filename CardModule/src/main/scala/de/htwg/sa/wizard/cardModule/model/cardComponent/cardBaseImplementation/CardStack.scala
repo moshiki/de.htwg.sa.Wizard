@@ -14,7 +14,6 @@ case class CardStack(cards: List[CardInterface] = {
   })
 }) extends CardStackInterface {
 
-
   override def shuffleCards(): CardStackInterface = this.copy()
 
   override def split(numberOfPlayers: Int, currentRound: Int): CardStackInterface = {
@@ -38,9 +37,9 @@ case class CardStack(cards: List[CardInterface] = {
       val highestNumber = defaultCards.head.number
       val cardsWithHighestNumberInNormalCards = defaultCards.filter(_.number == highestNumber)
       val highestCardMatchingTrumpColor = cardsWithHighestNumberInNormalCards.filter(_.color == actualColor)
-      if (highestCardMatchingTrumpColor.nonEmpty) highestCardMatchingTrumpColor.head.owner.get
-      else cardsWithHighestNumberInNormalCards.head.owner.get
-    } else jesterCards.head.owner.get
+      if (highestCardMatchingTrumpColor.nonEmpty) highestCardMatchingTrumpColor.head.owner.getOrElse("")
+      else cardsWithHighestNumberInNormalCards.head.owner.getOrElse("")
+    } else jesterCards.head.owner.getOrElse("")
   }
 }
 
