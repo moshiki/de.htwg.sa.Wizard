@@ -8,6 +8,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Route, StandardRoute}
 import akka.stream.ActorMaterializer
 import de.htwg.sa.wizard.cardModule.controller.controllerComponent.CardControllerInterface
+import de.htwg.sa.wizard.cardModule.util.StringListContainer
 import play.api.libs.json.Json
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -32,7 +33,7 @@ case class CardModuleHttpServer(controller: CardControllerInterface) {
     },
     get {
       path("cardStack" / "shuffleCardStack") {
-        complete(Json.toJson(controller.shuffleCardStack()).toString())
+        complete(Json.toJson(util.StringListContainer(controller.shuffleCardStack())))
       }
     },
     get {

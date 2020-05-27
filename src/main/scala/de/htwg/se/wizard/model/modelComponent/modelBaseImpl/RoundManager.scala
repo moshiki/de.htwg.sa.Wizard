@@ -1,21 +1,20 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import java.util.concurrent.{Future, TimeUnit}
+import java.util.concurrent.TimeUnit
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model._
+import akka.http.scaladsl.client.RequestBuilding.Post
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
-import de.htwg.sa.wizard.cardModule.model.cardComponent.{CardInterface, CardStackInterface}
-import de.htwg.sa.wizard.resultTable.util.ArrayArrayIntContainer
+import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
+import de.htwg.sa.wizard.cardModule.util.{StringListContainer, cardsForPlayerArgumentContainer}
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-import scala.util.{Failure, Success}
 import scala.xml.Elem
 
 case class RoundManager(numberOfPlayers: Int = 0,
@@ -31,27 +30,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
                         cleanMap: Map[String, Int] = Map.empty[String, Int]) extends ModelInterface {
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
-  /*val cardStack: List[CardInterface] = {
-    /*val response = Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/shuffleCardStack"))
-    val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
-    val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
-    val json = Json.parse(jsonString)
-    Json.fromJson(json)(CardInterface.cardReads).get*/
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/shuffleCardStack"))
-    responseFuture
-      .onComplete {
-        case Success(cardStack) =>
-          val json = Json.parse(cardStack)
-          Json.fromJson(json)(CardInterface.cardReads).get
-        case Failure(_) => sys.error("something wrong")
-      }
-    val response = Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/shuffleCardStack"))
-    val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
-    val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
-    val json = Json.parse(jsonString)
-
-  }
-  shuffledCardStack = cardStack*/
 
   override def isNumberOfPlayersValid(number: Int): Boolean = Player.checkNumberOfPlayers(number)
 
@@ -77,7 +55,14 @@ case class RoundManager(numberOfPlayers: Int = 0,
     if (players.head.playerCards.nonEmpty) return this
     val playersWithCards = players map(player => {
       val playerNumber = players.indexOf(player)
-      val cardsForPlayer = shuffledCardStack.slice(playerNumber * currentRound, playerNumber * currentRound + currentRound)
+      val cardsForPlayer = {
+        val response = Http().singleRequest(Post("http://localhost:1234/cardStack/cardsForPlayer",
+          Json.toJson(cardsForPlayerArgumentContainer(playerNumber, currentRound)).toString()))
+        val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
+        val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+        val json = Json.parse(jsonString)
+        Json.fromJson(json)(StringListContainer.containerReads).get
+      }
       val assignedCards = cardsForPlayer.map(card => card.setOwner(player.name))
       player.assignCards(assignedCards)
     })
