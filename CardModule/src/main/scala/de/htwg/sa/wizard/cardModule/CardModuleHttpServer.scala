@@ -72,7 +72,7 @@ case class CardModuleHttpServer(controller: CardControllerInterface) {
           entity(as[String]) { string => {
             val params = Json.parse(string)
             val parsedParams = Json.fromJson(params)(AssignCardsToPlayerArgumentContainer.containerReads).get
-            complete(Json.toJson(controller.assignCardsForPlayer(parsedParams.cards, parsedParams.playerName).toString()))
+            complete(Json.toJson(controller.assignCardsForPlayer(parsedParams.cards, parsedParams.playerName)).toString())
           }
           }
         }

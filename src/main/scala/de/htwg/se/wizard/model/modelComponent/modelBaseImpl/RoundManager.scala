@@ -172,7 +172,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
     copy(
       numberOfPlayers = numberOfPlayers,
       numberOfRounds = numberOfRounds,
-      shuffledCardStack = shuffledCardStack.toList,
       players = players.toList,
       currentPlayerNumber = currentPlayer,
       currentRound = currentRound,
