@@ -4,16 +4,18 @@ import de.htwg.sa.wizard.cardModule.model.cardComponent.{CardInterface, CardStac
 
 import scala.util.Random
 
-object CardStack extends CardStackInterface {
-  val initialize: List[CardInterface] = {
-    val wizards = List.fill(4)(CardInterface.apply("WizardCard"))
-    val jesters = List.fill(4)(CardInterface.apply("JesterCard"))
-    val colors = List("red", "blue", "yellow", "green")
-    val normals = 1 to 13 flatMap(number => colors.map(color => DefaultCard(color, number)))
-    wizards ::: jesters ::: normals.toList
+class CardStack extends CardStackInterface {
+  val cards: List[CardInterface] = {
+    Random.shuffle({
+      val wizards = List.fill(4)(CardInterface.apply("WizardCard"))
+      val jesters = List.fill(4)(CardInterface.apply("JesterCard"))
+      val colors = List("red", "blue", "yellow", "green")
+      val normals = 1 to 13 flatMap (number => colors.map(color => DefaultCard(color, number)))
+      wizards ::: jesters ::: normals.toList
+    })
   }
 
-  def shuffleCards(a: List[CardInterface]): List[CardInterface] = Random.shuffle(a)
+  def shuffleCards(): CardStackInterface = copy(this)
 
   def playerOfHighestCard(cardList: List[CardInterface], color: Option[String]): Option[String] = {
     val actualColor = color match {

@@ -1,7 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
-import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
-import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.{CardStack, DefaultCard, WizardCard}
+import de.htwg.sa.wizard.cardModule.model.cardComponent.{CardInterface, CardStackInterface}
+import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.DefaultCard
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import play.api.libs.json.{JsValue, Json}
 
