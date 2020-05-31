@@ -23,7 +23,7 @@ trait ControllerInterface extends Observable {
 
   def currentPlayerString: String
 
-  def currentAmountOfStitches: Int
+  def currentAmountOfTricks: Int
 
   def playerPrediction: Int
 
