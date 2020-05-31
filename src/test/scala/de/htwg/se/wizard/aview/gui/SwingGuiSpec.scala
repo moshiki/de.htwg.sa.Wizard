@@ -1,40 +1,41 @@
 package de.htwg.se.wizard.aview.gui
 
-import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.WizardCard
-import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
-import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl._
-import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.{Player, RoundManager}
+import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class SwingGuiSpec extends AnyWordSpec with Matchers with MockFactory {
-  val fileIOStub: FileIOInterface = stub[FileIOInterface]
-  val resultTableControllerStub: ResultTableControllerInterface = stub[ResultTableControllerInterface]
-  val controller = new Controller(RoundManager(
-     ), fileIOStub)
+  val controllerStub: ControllerInterface = stub[ControllerInterface]
   "A SwingGuiSpec" should {
     "load the correct Panel" when {
       "Controller is in preSetupState" in {
-        controller.state = PreSetupState(controller)
-        SwingGui.getPanel(controller).isInstanceOf[WelcomePanel] should be(true)
+        (controllerStub.controllerStateAsString _).when() returns "PreSetupState"
+        SwingGui.getPanel(controllerStub).isInstanceOf[WelcomePanel] should be(true)
       }
 
       "Controller is in SetupState" in {
-        controller.state = SetupState(controller)
-        SwingGui.getPanel(controller).isInstanceOf[PlayerSetupPanel] should be(true)
+        (controllerStub.controllerStateAsString _).when() returns "SetupState"
+        SwingGui.getPanel(controllerStub).isInstanceOf[PlayerSetupPanel] should be(true)
       }
 
       "Controller is in InGameState" in {
-        controller.state = InGameState(controller)
-        controller.roundManager = controller.roundManager.asInstanceOf[RoundManager].copy(players = List(Player("test", playerCards = List(WizardCard()))))
-        SwingGui.getPanel(controller).isInstanceOf[InGamePanel] should be(true)
+        (controllerStub.controllerStateAsString _).when() returns "InGameState"
+        (controllerStub.currentPlayerString _).when() returns ""
+        (controllerStub.predictionMode _).when() returns true
+        (controllerStub.currentRound _).when() returns 0
+        (controllerStub.currentPlayersCards _).when() returns Nil
+        (controllerStub.topOfStackCardString _).when() returns ""
+        (controllerStub.resultArray _).when() returns Array(Array())
+        (controllerStub.playersAsStringList _).when() returns List()
+        SwingGui.getPanel(controllerStub).isInstanceOf[InGamePanel] should be(true)
       }
 
       "Controller is in GameOverState" in {
-        controller.state = GameOverState(controller)
-        SwingGui.getPanel(controller).isInstanceOf[GameOverPanel] should be(true)
+        (controllerStub.controllerStateAsString _).when() returns "GameOverState"
+        (controllerStub.resultArray _).when() returns Array(Array())
+        (controllerStub.playersAsStringList _).when() returns List()
+        SwingGui.getPanel(controllerStub).isInstanceOf[GameOverPanel] should be(true)
       }
     }
   }
