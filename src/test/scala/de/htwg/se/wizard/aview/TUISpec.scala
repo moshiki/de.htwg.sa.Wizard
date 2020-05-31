@@ -1,32 +1,43 @@
 package de.htwg.se.wizard.aview
 
-import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
-import de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
-import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.RoundManager
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class TUISpec extends AnyWordSpec with Matchers with MockFactory {
   "A Wizard Tui" should {
-    val fileIOStub = stub[FileIOInterface]
-    val resultTableControllerStub = stub[ResultTableControllerInterface]
-    val controller = new Controller(RoundManager(numberOfPlayers = 3), fileIOStub)
-    val tui = new TUI(controller)
     "register itself in the controller" in {
-        controller.subscribers.contains(tui) should be(true)
+      val controllerStub = stub[ControllerInterface]
+      (controllerStub.add _).when(*)
+
+      val tui = new TUI(controllerStub)
+      (controllerStub.add _).verify(tui)
     }
+
     "do nothing on input 'q'" in {
+      val controllerStub = stub[ControllerInterface]
+      (controllerStub.add _).when(*)
+      val tui = new TUI(controllerStub)
+
       tui.processInput("q")
     }
 
     "do undo on input 'z'" in {
+      val controllerMock = mock[ControllerInterface]
+      (controllerMock.add _).expects(*)
+      val tui = new TUI(controllerMock)
+      (controllerMock.undo _).expects()
+
       tui.processInput("z")
     }
 
     "do redo on input 'y'" in {
+      val controllerMock = mock[ControllerInterface]
+      (controllerMock.add _).expects(*)
+      val tui = new TUI(controllerMock)
+      (controllerMock.redo _).expects()
+
       tui.processInput("y")
     }
 
@@ -45,8 +56,13 @@ class TUISpec extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "should let the controller evaluate the input" in {
-      tui.processInput("3")
-      controller.currentStateAsString should be("Player 1, please enter your name:")
+      val expectedString = "3"
+      val controllerMock = mock[ControllerInterface]
+      (controllerMock.add _).expects(*)
+      val tui = new TUI(controllerMock)
+      (controllerMock.eval _).expects(expectedString)
+
+      tui.processInput(expectedString)
     }
   }
 }

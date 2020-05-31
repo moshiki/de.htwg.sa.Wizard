@@ -157,8 +157,6 @@ case class RoundManager(numberOfPlayers: Int = 0,
   override def fromXML(node: scala.xml.Node): RoundManager = {
     val numberOfPlayers = (node \ "numberOfPlayers").text.toInt
     val numberOfRounds = (node \ "numberOfRounds").text.toInt
-    val shuffledCardStackNode = (node \ "shuffledCardStack").head.child
-    val shuffledCardStack = shuffledCardStackNode.map(node => CardInterface(node.label).fromXML(node))
     val playersNode = (node \ "players").head.child
     val players = playersNode.map(node => Player.fromXML(node))
     val currentPlayer = (node \ "currentPlayer").text.toInt
