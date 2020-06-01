@@ -186,8 +186,7 @@ case class InGameState(controller: Controller) extends ControllerState {
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   override def evaluate(input: String): Unit = {
-    val in = Controller.toInt(input)
-    val convertedInput = in match {
+    val convertedInput = Controller.toInt(input) match {
       case Some(number) => number
       case None => return
     }
