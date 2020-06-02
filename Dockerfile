@@ -1,4 +1,4 @@
 FROM hseeberger/scala-sbt
 WORKDIR /wizard
-ADD . /wizard
-CMD sbt run
+ADD target/scala-2.13/Wizard-assembly-SAR-6.jar /wizard
+CMD java -jar Wizard-assembly-SAR-6.jar
