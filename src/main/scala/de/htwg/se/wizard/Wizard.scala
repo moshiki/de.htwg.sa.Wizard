@@ -21,7 +21,7 @@ object Wizard {
   val dockerenv: String = sys.env.getOrElse("DOCKERENV", "FALSE")
 
   val tui = new TUI(controller)
-  if (dockerenv == "FALSE") {
+  if (dockerenv != "TRUE") {
     val gui = new SwingGui(controller)
   }
   val httpTui = new HttpTui(controller)
