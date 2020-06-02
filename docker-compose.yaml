@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.0'
 services:
   root:
     image: wizard-root:latest
@@ -6,5 +6,9 @@ services:
       - "1233:1233"
   CardModule:
     image: wizard-cardmodule:latest
+    ports:
+      - "1234:1234"
   ResultTableModule:
-    image: wizard-resulttable:latest
+    image: wizard-resulttablemodule:latest
+    ports:
+      - "54251:54251"
