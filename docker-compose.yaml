@@ -6,9 +6,11 @@ services:
       - "1233:1233"
   CardModule:
     image: wizard-cardmodule:latest
-    ports:
-      - "1234:1234"
+    hostname: cardmodule
+    #ports:
+    #  - "1234:1234"
   ResultTableModule:
     image: wizard-resulttablemodule:latest
-    ports:
-      - "54251:54251"
+    hostname: resulttablemodule
+    #ports:
+    #  - "54251:54251"

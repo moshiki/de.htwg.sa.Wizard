@@ -1,6 +1,6 @@
 FROM hseeberger/scala-sbt
 EXPOSE 54251
 WORKDIR /wizard
-ADD . /wizard
+ADD target/scala-2.13/ResultTableModule-assembly-SAR-6.jar /wizard
 ENV DOCKERENV="TRUE"
-CMD sbt ResultTableModule/run
+CMD java -jar ResultTableModule-assembly-SAR-6.jar
