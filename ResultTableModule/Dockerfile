@@ -1,6 +1,5 @@
 FROM hseeberger/scala-sbt
-EXPOSE 1233
+EXPOSE 54251
 WORKDIR /wizard
 ADD . /wizard
-ENV DOCKERENV="TRUE"
-CMD sbt root/run
+CMD sbt run

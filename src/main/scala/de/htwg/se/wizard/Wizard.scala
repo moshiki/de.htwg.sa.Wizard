@@ -5,7 +5,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
 import akka.stream.ActorMaterializer
 import com.google.inject.{Guice, Injector}
-import de.htwg.sa.wizard.cardModule.CardMod
+
 import de.htwg.sa.wizard.resultTable.ResultTable
 import de.htwg.se.wizard.aview.gui.SwingGui
 import de.htwg.se.wizard.aview.{HttpTui, TUI}
@@ -18,9 +18,12 @@ object Wizard {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   val injector: Injector = Guice.createInjector(new WizardModule)
   val controller: Controller = injector.getInstance(classOf[Controller])
+  val dockerenv: String = sys.env.getOrElse("DOCKERENV", "FALSE")
 
   val tui = new TUI(controller)
-  val gui = new SwingGui(controller)
+  if (dockerenv == "FALSE") {
+    val gui = new SwingGui(controller)
+  }
   val httpTui = new HttpTui(controller)
 
   ResultTable.main(Array())
