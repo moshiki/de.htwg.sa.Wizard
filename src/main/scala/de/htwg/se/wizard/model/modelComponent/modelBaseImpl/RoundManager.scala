@@ -60,20 +60,20 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val playersWithCards = players map(player => {
       val playerNumber = players.indexOf(player)
       val cardsForPlayer = {
-        val response = Http().singleRequest(Post("http://localhost:1234/cardStack/cardsForPlayer",
+        val response = Http().singleRequest(Post("http://host.docker.internal:1234/cardStack/cardsForPlayer",
           CardsForPlayerArgumentContainer(playerNumber, currentRound)))
         val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[List[CardInterface]])
         Await.result(jsonStringFuture, Duration(5, TimeUnit.SECONDS))
       }
       val assignedCards = {
-        val response = Http().singleRequest(Post("http://localhost:1234/cardStack/assignCardsToPlayer",
+        val response = Http().singleRequest(Post("http://host.docker.internal:1234/cardStack/assignCardsToPlayer",
           AssignCardsToPlayerArgumentContainer(cardsForPlayer, player.name)))
         val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[List[CardInterface]])
         Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
       }
       player.assignCards(assignedCards)
     })
-    Http().singleRequest(Post("http://localhost:1234/cardStack/splitCardStack",
+    Http().singleRequest(Post("http://host.docker.internal:1234/cardStack/splitCardStack",
       SplitCardStackArgumentContainer(numberOfPlayers, currentRound)))
     copy(players = playersWithCards)
   }
@@ -89,7 +89,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       return "\nGame Over! Press 'q' to quit.\n"
     }
     if (predictionPerRound.size < numberOfPlayers) {
-      val trumpColorFuture = Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/trumpColor"))
+      val trumpColorFuture = Http().singleRequest(HttpRequest(uri = "http://host.docker.internal:1234/cardStack/trumpColor"))
       val jsonStringFuture = trumpColorFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
       val trumpColor = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
       Player.playerPrediction(players(currentPlayerNumber), currentRound, trumpColor)
@@ -100,7 +100,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def nextRound: RoundManager = {
     if (currentPlayerNumber == 0 && currentRound != numberOfRounds && players.last.playerCards.isEmpty) {
-      Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardStack/shuffleCardStack"))
+      Http().singleRequest(HttpRequest(uri = "http://host.docker.internal:1234/cardStack/shuffleCardStack"))
       copy(
         predictionPerRound = Nil,
         tricksPerRound = cleanMap,
@@ -120,7 +120,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   def trickInThisCycle: RoundManager = {
 
-      val response = Http().singleRequest(Post("http://localhost:1234/cardStack/playerOfHighestCard", playedCards.reverse))
+      val response = Http().singleRequest(Post("http://host.docker.internal:1234/cardStack/playerOfHighestCard", playedCards.reverse))
     var futurestring: Future[String]= Future("")
     var trickPlayerName = ""
     Try {
@@ -195,7 +195,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   override def currentPlayersCards: List[String] = players(currentPlayerNumber).playerCards.map(card => card.toString)
 
   override def topOfStackCardString: String = {
-    val response = Http().singleRequest(Get("http://localhost:1234/cardStack/topOfCardStackString"))
+    val response = Http().singleRequest(Get("http://host.docker.internal:1234/cardStack/topOfCardStackString"))
     val topOfStackStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
     Await.result(topOfStackStringFuture, Duration(1, TimeUnit.SECONDS))
   }

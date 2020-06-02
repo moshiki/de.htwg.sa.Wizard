@@ -57,7 +57,7 @@ class HttpTui (val controllerInterface: ControllerInterface) {
   }
   }
 
-  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", 1233)
+  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "0.0.0.0", 1233)
 
   def shutdownWebServer() : Unit = {
     bindingFuture
