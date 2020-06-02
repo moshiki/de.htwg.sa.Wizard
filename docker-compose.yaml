@@ -5,12 +5,15 @@ services:
     hostname: root
     ports:
       - "1233:1233"
-  CardModule:
+    depends_on:
+      - cardmodule
+      - resulttablemodule
+  cardmodule:
     image: wizard-cardmodule:latest
     hostname: cardmodule
     ports:
       - "1234:1234"
-  ResultTableModule:
+  resulttablemodule:
     image: wizard-resulttablemodule:latest
     hostname: resulttablemodule
     ports:
