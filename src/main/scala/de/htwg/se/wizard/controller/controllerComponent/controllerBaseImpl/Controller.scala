@@ -54,7 +54,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   }
 
   override def currentStateAsString: String = {
-    val response = Http().singleRequest(Get("http://host.docker.internal:54251/resultTable/table"))
+    val response = Http().singleRequest(Get("http://resulttablemodule:54251/resultTable/table"))
     val tableStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
     val tableString = Await.result(tableStringFuture, Duration(1, TimeUnit.SECONDS))
     tableString + "\n" + state.currentStateAsString
@@ -93,7 +93,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
 
   override def save(): Unit = {
     fileIOInterface.save(controllerStateAsString, roundManager)
-    Http().singleRequest(HttpRequest(uri = "http://host.docker.internal:54251/resultTable/save"))
+    Http().singleRequest(HttpRequest(uri = "http://resulttablemodule:54251/resultTable/save"))
     notifyObservers()
   }
 
@@ -110,12 +110,12 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
       case "GameOverState" => GameOverState(this)
     }
     roundManager = returnTuple._2
-    Http().singleRequest(HttpRequest(uri = "http://host.docker.internal:54251/resultTable/load"))
+    Http().singleRequest(HttpRequest(uri = "http://resulttablemodule:54251/resultTable/load"))
     notifyObservers()
   }
 
   override def resultArray: Array[Array[Any]] = {
-    val response = Http().singleRequest(HttpRequest(uri = "http://host.docker.internal:54251/resultTable/pointArrayForView"))
+    val response = Http().singleRequest(HttpRequest(uri = "http://resulttablemodule:54251/resultTable/pointArrayForView"))
     val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
     val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
     val json = Json.parse(jsonString)
@@ -155,7 +155,7 @@ case class PreSetupState(controller: Controller) extends ControllerState {
     }
     if (!controller.roundManager.isNumberOfPlayersValid(actualNumber)) return
     val initializeTableContainer = InitializeTableArgumentContainer(controller.numberOfRounds(actualNumber), actualNumber)
-    Http().singleRequest(Post("http://host.docker.internal:54251/resultTable/table", Json.toJson(initializeTableContainer).toString()))
+    Http().singleRequest(Post("http://resulttablemodule:54251/resultTable/table", Json.toJson(initializeTableContainer).toString()))
     controller.roundManager = controller.roundManager.configurePlayersAndRounds(actualNumber)
     controller.nextState()
     controller.roundManager = controller.roundManager.nextPlayerInSetup
@@ -197,7 +197,7 @@ case class InGameState(controller: Controller) extends ControllerState {
       val pointsForThisRound = controller.roundManager.pointsForThisRound
       val currentRound = controller.roundManager.currentRound
       val updatePointsArgumentContainer = UpdatePointsArgumentContainer(currentRound, pointsForThisRound)
-      Http().singleRequest(Put("http://host.docker.internal:54251/resultTable/table", Json.toJson(updatePointsArgumentContainer).toString()))
+      Http().singleRequest(Put("http://resulttablemodule:54251/resultTable/table", Json.toJson(updatePointsArgumentContainer).toString()))
       controller.roundManager = controller.roundManager.nextRound
     }
     if (controller.roundManager.currentRound == controller.roundManager.numberOfRounds &&
