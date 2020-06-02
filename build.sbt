@@ -2,7 +2,7 @@ import sbt.Keys.libraryDependencies
 
 //name := "Wizard"
 
-ThisBuild / version := "SAR-5"
+ThisBuild / version := "SAR-6"
 
 ThisBuild / scalaVersion := "2.13.1"
 
@@ -27,17 +27,53 @@ val commonDependencies = Seq(
 lazy val root = (project in file(".")).settings(
   name := "Wizard",
   libraryDependencies ++= commonDependencies,
+  assemblyMergeStrategy in assembly := {
+    case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
+    case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
+    case "application.conf"                            => MergeStrategy.concat
+    case "module-info.class"                           => MergeStrategy.concat
+    case "CHANGELOG.adoc"                              => MergeStrategy.concat
+    case "unwanted.txt"                                => MergeStrategy.discard
+    case x =>
+      val oldStrategy = (assemblyMergeStrategy in assembly).value
+      oldStrategy(x)
+  },
+  mainClass in assembly := Some("de.htwg.se.wizard.Wizard")
 ).aggregate(ResultTableModule, CardModule).dependsOn(ResultTableModule, CardModule) //% "compile->compile;test->test")
 
 lazy val ResultTableModule = project.settings(
   name := "ResultTableModule",
   libraryDependencies ++= commonDependencies,
-  libraryDependencies += "de.vandermeer" % "asciitable" % "0.3.2"
+  libraryDependencies += "de.vandermeer" % "asciitable" % "0.3.2",
+  assemblyMergeStrategy in assembly := {
+    case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
+    case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
+    case "application.conf"                            => MergeStrategy.concat
+    case "module-info.class"                           => MergeStrategy.concat
+    case "CHANGELOG.adoc"                              => MergeStrategy.concat
+    case "unwanted.txt"                                => MergeStrategy.discard
+    case x =>
+      val oldStrategy = (assemblyMergeStrategy in assembly).value
+      oldStrategy(x)
+  },
+  mainClass in assembly := Some("de.htwg.sa.wizard.resultTable.ResultTable")
 )
 
 lazy val CardModule = project.settings(
   name :=  "CardModule",
-  libraryDependencies ++= commonDependencies
+  libraryDependencies ++= commonDependencies,
+  assemblyMergeStrategy in assembly := {
+    case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
+    case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
+    case "application.conf"                            => MergeStrategy.concat
+    case "module-info.class"                           => MergeStrategy.concat
+    case "CHANGELOG.adoc"                              => MergeStrategy.concat
+    case "unwanted.txt"                                => MergeStrategy.discard
+    case x =>
+      val oldStrategy = (assemblyMergeStrategy in assembly).value
+      oldStrategy(x)
+  },
+  mainClass in assembly := Some("de.htwg.sa.wizard.cardModule.CardMod")
 )
 
 coverageExcludedPackages := ".*gui.*"
