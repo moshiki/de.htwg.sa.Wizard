@@ -56,7 +56,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   override def currentStateAsString: String = {
     val response = Http().singleRequest(Get("http://host.docker.internal:54251/resultTable/table"))
     val tableStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
-    val tableString = Await.result(tableStringFuture, Duration(20, TimeUnit.SECONDS))
+    val tableString = Await.result(tableStringFuture, Duration(1, TimeUnit.SECONDS))
     tableString + "\n" + state.currentStateAsString
   }
 

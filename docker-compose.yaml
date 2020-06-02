@@ -3,12 +3,13 @@ services:
   root:
     image: wizard-root:latest
     hostname: root
+    tty: true
     ports:
       - "1233:1233"
     depends_on:
       - cardmodule
       - resulttablemodule
-    command: ["./wait-for-it.sh", "localhost:1234", "--", "localhost:54251"]
+    #command: ["./wait-for-it.sh", "localhost:1234", "--", "localhost:54251"]
   cardmodule:
     image: wizard-cardmodule:latest
     hostname: cardmodule
