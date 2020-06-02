@@ -1,8 +1,6 @@
 package de.htwg.se.wizard
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.HttpRequest
 import akka.stream.ActorMaterializer
 import com.google.inject.{Guice, Injector}
 
@@ -26,7 +24,6 @@ object Wizard {
   }
   val httpTui = new HttpTui(controller)
 
-  ResultTable.main(Array())
   controller.notifyObservers()
 
   def main(args: Array[String]): Unit = {
@@ -36,6 +33,5 @@ object Wizard {
       tui.processInput(input)
     } while (input != "q")
     httpTui.shutdownWebServer()
-    Http().singleRequest(HttpRequest(uri = "http://localhost:1234/cardMod/exit"))
   }
 }
