@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  root:
+    image: wizard-root:latest
+    ports:
+      - "1233:1233"
+  CardModule:
+    image: wizard-cardmodule:latest
+  ResultTableModule:
+    image: wizard-resulttable:latest

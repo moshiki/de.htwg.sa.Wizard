@@ -1,5 +1,6 @@
 FROM hseeberger/scala-sbt
 EXPOSE 1234
-WORKDIR /wizard-root
+WORKDIR /wizard
 ADD . /wizard
-CMD sbt run
+ENV DOCKERENV="TRUE"
+CMD sbt CardModule/run
