@@ -9,6 +9,7 @@ services:
     depends_on:
       - cardmodule
       - resulttablemodule
+    #command: ["./wait-for-it.sh", "-t", "60", "cardmodule:1234"]
   cardmodule:
     image: wizard-cardmodule:latest
     hostname: cardmodule

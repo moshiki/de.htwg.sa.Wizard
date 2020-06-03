@@ -1,5 +1,5 @@
 #FROM hseeberger/scala-sbt
-FROM adoptopenjdk/openjdk14:alpine
+FROM adoptopenjdk/openjdk14:alpine-slim
 EXPOSE 1234
 WORKDIR /wizard
 ADD target/scala-2.13/CardModule-assembly-SAR-6.jar /wizard
