@@ -84,7 +84,7 @@ case class CardModuleHttpServer(controller: CardControllerInterface) extends Pla
     }
   )
 
-  println(s"CardModule Server online at http://host.docker.internal:1234/")
+  println(s"CardModule Server online at http://0.0.0.0:1234/")
 
   val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "0.0.0.0", 1234)
 
