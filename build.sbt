@@ -21,7 +21,11 @@ val commonDependencies = Seq(
   "com.typesafe.akka" %% "akka-stream" % "2.6.5",
   "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.12",
   "com.typesafe.akka" %% "akka-http-jackson" % "10.1.12",
-  "de.heikoseeberger" %% "akka-http-play-json" % "1.32.0"
+  "de.heikoseeberger" %% "akka-http-play-json" % "1.32.0",
+  "com.typesafe.slick" %% "slick" % "3.3.2",
+  "org.slf4j" % "slf4j-nop" % "1.7.30",
+  "com.typesafe.slick" %% "slick-hikaricp" % "3.3.2",
+  "mysql" % "mysql-connector-java" % "8.0.20"
 )
 
 lazy val root = (project in file(".")).settings(
