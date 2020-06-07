@@ -6,13 +6,14 @@ import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api._
 
 case class DaoSlick() extends DaoInterface {
-  val database = Database.forConfig("mysql")/*Database.forURL(
-    url = "jdbc:mysql://localhost:3306/resultTable",
+  // TODO: Docker-ENV for Docker-Database
+
+  val database = Database.forURL(
+    url = "jdbc:mysql://localhost:3306/resultTable?serverTimezone=UTC",
     driver = "com.mysql.cj.jdbc.Driver",
     user = "wizard",
     password = "wizard"
-  )*/
-  //val setupDatabase = DBIO.seq((TableQuery[ResultTableTable].schema ++ TableQuery[PointsOuterTable].schema ++ TableQuery[PointsInnerTable].schema).create)
+  )
 
   val resultTableTable = TableQuery[ResultTableTable]
   val pointsOuterTable = TableQuery[PointsOuterTable]
