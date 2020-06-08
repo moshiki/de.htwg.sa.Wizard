@@ -8,8 +8,6 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-import scala.util.{Failure, Success}
-
 class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFactory {
   "A ResultTableController" should {
     "be able to update the points stored in the result table correctly" in {
@@ -42,10 +40,10 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
     "invoke saving the result table data correctly" in {
       val fileName = "ResultTableModule"
       val resultTableStub = stub[ResultTableInterface]
-      val daoInterfaceStub = stub[DaoInterface]
-      val fileIOMock = mock[FileIOInterface]
-      val controller = ResultTableController(resultTableStub, fileIOMock, daoInterfaceStub)
-      (fileIOMock.save _).expects(resultTableStub, fileName)
+      val daoInterfaceMock = mock[DaoInterface]
+      val fileIOStub = stub[FileIOInterface]
+      val controller = ResultTableController(resultTableStub, fileIOStub, daoInterfaceMock)
+      (daoInterfaceMock.saveGame _).expects(resultTableStub)
 
       controller.save()
     }
@@ -54,16 +52,16 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
       val fileName = "ResultTableModule"
       val resultTableStub = stub[ResultTableInterface]
       val expectedResultTableStub = stub[ResultTableInterface]
-      val fileIOMock = mock[FileIOInterface]
-      val daoInterfaceStub = stub[DaoInterface]
-      val controller = ResultTableController(resultTableStub, fileIOMock, daoInterfaceStub)
-      (fileIOMock.load _).expects(resultTableStub, fileName).returning(Success(expectedResultTableStub))
+      val fileIOStub = stub[FileIOInterface]
+      val daoInterfaceMock = mock[DaoInterface]
+      val controller = ResultTableController(resultTableStub, fileIOStub, daoInterfaceMock)
+      (daoInterfaceMock.getLatestGame _).expects(resultTableStub).returning(expectedResultTableStub)
 
       controller.load()
       controller.resultTableInterface should be(expectedResultTableStub)
     }
 
-    "not store the stored result data in case of a failure" in {
+    /*"not store the stored result data in case of a failure" in {
       val fileName = "ResultTableModule"
       val resultTableStub = stub[ResultTableInterface]
       val fileIOMock = mock[FileIOInterface]
@@ -73,7 +71,7 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
 
       controller.load()
       controller.resultTableInterface should be(resultTableStub)
-    }
+    }*/
 
     "return the same array of objects as returned by the result table" in {
       val resultTableMock = mock[ResultTableInterface]
