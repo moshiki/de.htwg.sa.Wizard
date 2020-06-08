@@ -2,12 +2,13 @@ package de.htwg.sa.wizard.resultTable.controller.controllerComponent.controllerB
 
 import com.google.inject.Inject
 import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
+import de.htwg.sa.wizard.resultTable.model.dbComponent.DaoInterface
 import de.htwg.sa.wizard.resultTable.model.fileIOComponent.FileIOInterface
 import de.htwg.sa.wizard.resultTable.model.resultTableComponent.ResultTableInterface
 
-import scala.util.{Failure, Success}
-
-case class ResultTableController @Inject()(var resultTableInterface: ResultTableInterface, fileIOInterface: FileIOInterface) extends ResultTableControllerInterface {
+case class ResultTableController @Inject()(var resultTableInterface: ResultTableInterface,
+                                           fileIOInterface: FileIOInterface,
+                                           daoInterface: DaoInterface) extends ResultTableControllerInterface {
   override def updatePoints(round: Int, points: Vector[Int]): Unit = for (playerWhosePointsGetUpdated <- points.indices) {
     resultTableInterface = resultTableInterface.updatePoints(round, playerWhosePointsGetUpdated, points(playerWhosePointsGetUpdated))
   }
@@ -17,14 +18,16 @@ case class ResultTableController @Inject()(var resultTableInterface: ResultTable
   }
 
   override def save(): Unit = {
-    fileIOInterface.save(resultTableInterface, "ResultTableModule")
+    //fileIOInterface.save(resultTableInterface, "ResultTableModule")
+    daoInterface.saveGame(resultTableInterface)
   }
 
   override def load(): Unit = {
-    resultTableInterface = fileIOInterface.load(resultTableInterface, "ResultTableModule") match {
+    /*resultTableInterface = fileIOInterface.load(resultTableInterface, "ResultTableModule") match {
       case Failure(_) => return
       case Success(resultTable) => resultTable
-    }
+    }*/
+    resultTableInterface = daoInterface.getLatestGame(resultTableInterface)
   }
 
   override def pointArrayForView: Array[Array[Int]] = resultTableInterface.toArray

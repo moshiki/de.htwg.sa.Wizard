@@ -1,5 +1,6 @@
 package de.htwg.sa.wizard.resultTable.controller.controllerComponent.controllerBaseImplementation
 
+import de.htwg.sa.wizard.resultTable.model.dbComponent.DaoInterface
 import de.htwg.sa.wizard.resultTable.model.fileIOComponent.FileIOInterface
 import de.htwg.sa.wizard.resultTable.model.resultTableComponent.ResultTableInterface
 import de.htwg.sa.wizard.resultTable.model.resultTableComponent.resultTableBaseImplementation.ResultTable
@@ -14,7 +15,8 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
     "be able to update the points stored in the result table correctly" in {
       val resultTableMock = mock[ResultTableInterface]
       val fileIOStub = stub[FileIOInterface]
-      val controller = ResultTableController(resultTableMock, fileIOStub)
+      val daoInterfaceStub = stub[DaoInterface]
+      val controller = ResultTableController(resultTableMock, fileIOStub, daoInterfaceStub)
       val points = Vector(7, 8, 9)
       inSequence(
         (resultTableMock.updatePoints _).expects(5, 0, 7).returning(resultTableMock),
@@ -28,7 +30,8 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
     "initialize the result table correctly" in {
       val resultTableMock = mock[ResultTableInterface]
       val fileIOStub = stub[FileIOInterface]
-      val controller = ResultTableController(resultTableMock, fileIOStub)
+      val daoInterfaceStub = stub[DaoInterface]
+      val controller = ResultTableController(resultTableMock, fileIOStub, daoInterfaceStub)
       val numberOfRounds = 1
       val numberOfPlayers = 2
       (resultTableMock.initializeTable _).expects(numberOfRounds, numberOfPlayers)
@@ -39,8 +42,9 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
     "invoke saving the result table data correctly" in {
       val fileName = "ResultTableModule"
       val resultTableStub = stub[ResultTableInterface]
+      val daoInterfaceStub = stub[DaoInterface]
       val fileIOMock = mock[FileIOInterface]
-      val controller = ResultTableController(resultTableStub, fileIOMock)
+      val controller = ResultTableController(resultTableStub, fileIOMock, daoInterfaceStub)
       (fileIOMock.save _).expects(resultTableStub, fileName)
 
       controller.save()
@@ -51,7 +55,8 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
       val resultTableStub = stub[ResultTableInterface]
       val expectedResultTableStub = stub[ResultTableInterface]
       val fileIOMock = mock[FileIOInterface]
-      val controller = ResultTableController(resultTableStub, fileIOMock)
+      val daoInterfaceStub = stub[DaoInterface]
+      val controller = ResultTableController(resultTableStub, fileIOMock, daoInterfaceStub)
       (fileIOMock.load _).expects(resultTableStub, fileName).returning(Success(expectedResultTableStub))
 
       controller.load()
@@ -62,7 +67,8 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
       val fileName = "ResultTableModule"
       val resultTableStub = stub[ResultTableInterface]
       val fileIOMock = mock[FileIOInterface]
-      val controller = ResultTableController(resultTableStub, fileIOMock)
+      val daoInterfaceStub = stub[DaoInterface]
+      val controller = ResultTableController(resultTableStub, fileIOMock, daoInterfaceStub)
       (fileIOMock.load _).expects(resultTableStub, fileName).returning(Failure(new Exception))
 
       controller.load()
@@ -72,7 +78,8 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
     "return the same array of objects as returned by the result table" in {
       val resultTableMock = mock[ResultTableInterface]
       val fileIOStub = stub[FileIOInterface]
-      val controller = ResultTableController(resultTableMock, fileIOStub)
+      val daoInterfaceStub = stub[DaoInterface]
+      val controller = ResultTableController(resultTableMock, fileIOStub, daoInterfaceStub)
       val expectedArray = Array(Array(5))
       (resultTableMock.toArray _).expects().returning(expectedArray)
 
@@ -83,7 +90,8 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
       // Sadly ScalaMock does not support mocking toString methods, therefore no mocking
       val resultTable = ResultTable().initializeTable(5, 3)
       val fileIOStub = stub[FileIOInterface]
-      val controller = ResultTableController(resultTable, fileIOStub)
+      val daoInterfaceStub = stub[DaoInterface]
+      val controller = ResultTableController(resultTable, fileIOStub, daoInterfaceStub)
 
       controller.tableAsString should be(resultTable.toString)
     }
@@ -91,7 +99,8 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
     "return the list of players stored in the result table" in {
       val resultTableMock = mock[ResultTableInterface]
       val fileIOStub = stub[FileIOInterface]
-      val controller = ResultTableController(resultTableMock, fileIOStub)
+      val daoInterfaceStub = stub[DaoInterface]
+      val controller = ResultTableController(resultTableMock, fileIOStub, daoInterfaceStub)
       val expectedPlayerList = List("P1", "P2")
       (resultTableMock.playerNames _).expects().returning(expectedPlayerList)
 
