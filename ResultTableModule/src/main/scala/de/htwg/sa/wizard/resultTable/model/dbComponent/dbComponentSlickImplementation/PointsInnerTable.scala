@@ -11,5 +11,5 @@ class PointsInnerTable(tag: Tag) extends Table[(Int, Int, Int)](tag, "PointsInne
 
   override def * = (id, value, outerTableId)
 
-  def outerTable = foreignKey("PointsOuterTable_FK", outerTableId, TableQuery[PointsOuterTable])(_.id)
+  def outerTableForeignKey = foreignKey("PointsOuterTable_FK", outerTableId, TableQuery[PointsOuterTable])(_.id)
 }

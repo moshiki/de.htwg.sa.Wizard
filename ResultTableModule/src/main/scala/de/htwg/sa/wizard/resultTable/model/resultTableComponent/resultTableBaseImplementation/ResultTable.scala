@@ -68,7 +68,10 @@ case class ResultTable(roundsToPlay: Int = 20, numberOfPlayers: Int = 6,
                         override def storePlayerNames(playerNames: List[String]): ResultTableInterface = copy(playerNames = playerNames)
 
                         override def playerNameList: List[String] = playerNames
-                      }
+
+  override def recreateWithData(roundsToPlay: Int, numberOfPlayers: Int, points: Vector[Vector[Int]], playerNames: List[String]): ResultTableInterface =
+    copy(roundsToPlay, numberOfPlayers, points, playerNames)
+}
 
 object ResultTable {
   import play.api.libs.json._

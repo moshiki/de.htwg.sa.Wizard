@@ -7,5 +7,5 @@ class PointsOuterTable(tag: Tag) extends Table[(Int, Int)](tag, "PointsOuterTabl
   def resultTableId = column[Int]("ResultTableId")
   def * = (id, resultTableId)
 
-  def resultTable = foreignKey("ResultTable_FK", resultTableId, TableQuery[ResultTableTable])(_.id)
+  def resultTableForeignKey = foreignKey("ResultTable_FK", resultTableId, TableQuery[ResultTableTable])(_.id)
 }

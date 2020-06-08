@@ -4,7 +4,7 @@ import de.htwg.sa.wizard.resultTable.model.dbComponent.dbComponentSlickImplement
 import de.htwg.sa.wizard.resultTable.model.resultTableComponent.ResultTableInterface
 
 trait DaoInterface {
-  def getLatestGame: ResultTableInterface
+  def getLatestGame(resultTableInterface: ResultTableInterface): ResultTableInterface
 
   def saveGame(daoResultTable: ResultTableTable): Unit
 }

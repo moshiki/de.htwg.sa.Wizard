@@ -24,4 +24,6 @@ trait ResultTableInterface {
   def storePlayerNames(playerNames: List[String]): ResultTableInterface
 
   def playerNameList: List[String]
+
+  def recreateWithData(roundsToPlay: Int, numberOfPlayers: Int, points: Vector[Vector[Int]], playerNames: List[String]): ResultTableInterface
 }

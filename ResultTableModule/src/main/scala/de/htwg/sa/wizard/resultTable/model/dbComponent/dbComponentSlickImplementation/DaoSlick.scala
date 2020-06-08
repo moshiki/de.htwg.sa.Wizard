@@ -5,6 +5,9 @@ import de.htwg.sa.wizard.resultTable.model.resultTableComponent.ResultTableInter
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api._
 
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
 case class DaoSlick() extends DaoInterface {
   // TODO: Docker-ENV for Docker-Database
 
@@ -18,10 +21,30 @@ case class DaoSlick() extends DaoInterface {
   val resultTableTable = TableQuery[ResultTableTable]
   val pointsOuterTable = TableQuery[PointsOuterTable]
   val pointsInnerTable = TableQuery[PointsInnerTable]
-  val setup = DBIO.seq((resultTableTable.schema ++ pointsOuterTable.schema ++ pointsInnerTable.schema).createIfNotExists)
+  val playerNameTable = TableQuery[PlayerNameTable]
+  val setup = DBIO.seq((resultTableTable.schema
+    ++ pointsOuterTable.schema
+    ++ pointsInnerTable.schema
+    ++ playerNameTable.schema).createIfNotExists)
   database.run(setup)
 
-  override def getLatestGame: ResultTableInterface = ???
+  override def getLatestGame(resultTableInterface: ResultTableInterface): ResultTableInterface = {
+    val latestResultTableQuery = resultTableTable.sortBy(resultTable => resultTable.id.desc).take(1).result.head
+    val latestResultTable = Await.result(database.run(latestResultTableQuery), Duration.Inf)
+
+    val pointsOuterVectorQuery = pointsOuterTable.filter(_.resultTableId === latestResultTable._1).map(_.resultTableId).result
+    val pointsOuterVectorIds = Await.result(database.run(pointsOuterVectorQuery), Duration.Inf)
+
+    val pointsVector = pointsOuterVectorIds.map(id => {
+      val pointsQuery = pointsInnerTable.filter(points => points.outerTableId === id).map(innerTable => innerTable.value).result
+      Await.result(database.run(pointsQuery), Duration.Inf).toVector
+    }).toVector
+
+    val playerNamesQuery = playerNameTable.filter(_.resultTableId === latestResultTable._1).map(_.playerName).result
+    val playerNamesList = Await.result(database.run(playerNamesQuery), Duration.Inf).toList
+
+    resultTableInterface.recreateWithData(latestResultTable._2, latestResultTable._3, pointsVector, playerNamesList)
+  }
 
   override def saveGame(daoResultTable: ResultTableTable): Unit = ???
 }
