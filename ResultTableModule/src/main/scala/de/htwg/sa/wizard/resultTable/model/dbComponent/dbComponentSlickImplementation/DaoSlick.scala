@@ -32,7 +32,7 @@ case class DaoSlick() extends DaoInterface {
     val latestResultTableQuery = resultTableTable.sortBy(resultTable => resultTable.id.desc).take(1).result.head
     val latestResultTable = Await.result(database.run(latestResultTableQuery), Duration.Inf)
 
-    val pointsOuterVectorQuery = pointsOuterTable.filter(_.resultTableId === latestResultTable._1).map(_.resultTableId).result
+    val pointsOuterVectorQuery = pointsOuterTable.filter(_.resultTableId === latestResultTable._1).map(_.id).result
     val pointsOuterVectorIds = Await.result(database.run(pointsOuterVectorQuery), Duration.Inf)
 
     val pointsVector = pointsOuterVectorIds.map(id => {

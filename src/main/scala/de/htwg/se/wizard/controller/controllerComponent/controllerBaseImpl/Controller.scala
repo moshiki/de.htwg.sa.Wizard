@@ -1,7 +1,5 @@
 package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
-import java.util.concurrent.TimeUnit
-
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.client.RequestBuilding._
@@ -29,7 +27,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   val undoManager = new UndoManager
   var state: ControllerState = PreSetupState(this)
 
-  val resulttableHost: String = "http://" + sys.env.getOrElse("RESULTTABLEMODULE_HOST", "localhost:54251") +"/"
+  val resultTableHost: String = "http://" + sys.env.getOrElse("RESULTTABLEMODULE_HOST", "localhost:54251") +"/"
 
   def numberOfRounds(numberOfPlayers: Int): Int = numberOfPlayers match {
     case 3 => 20
@@ -56,9 +54,9 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   }
 
   override def currentStateAsString: String = {
-    val response = Http().singleRequest(Get(resulttableHost + "resultTable/table"))
+    val response = Http().singleRequest(Get(resultTableHost + "resultTable/table"))
     val tableStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
-    val tableString = Await.result(tableStringFuture, Duration(30, TimeUnit.SECONDS))
+    val tableString = Await.result(tableStringFuture, Duration.Inf)
     tableString + "\n" + state.currentStateAsString
   }
 
@@ -95,7 +93,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
 
   override def save(): Unit = {
     fileIOInterface.save(controllerStateAsString, roundManager)
-    Http().singleRequest(HttpRequest(uri = resulttableHost + "resultTable/save"))
+    Await.ready(Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/save")), Duration.Inf)
     notifyObservers()
   }
 
@@ -112,14 +110,14 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
       case "GameOverState" => GameOverState(this)
     }
     roundManager = returnTuple._2
-    Http().singleRequest(HttpRequest(uri = resulttableHost + "resultTable/load"))
+    Await.ready(Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/load")), Duration.Inf)
     notifyObservers()
   }
 
   override def resultArray: Array[Array[Any]] = {
-    val response = Http().singleRequest(HttpRequest(uri = resulttableHost + "resultTable/pointArrayForView"))
+    val response = Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/pointArrayForView"))
     val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
-    val jsonString = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
+    val jsonString = Await.result(jsonStringFuture, Duration.Inf)
     val json = Json.parse(jsonString)
     val arrayContainer: ArrayArrayIntContainer = Json.fromJson(json)(ArrayArrayIntContainer.containerReads).get
     arrayContainer.array.map(innerArray => innerArray.toArray[Any])
@@ -157,7 +155,7 @@ case class PreSetupState(controller: Controller) extends ControllerState {
     }
     if (!controller.roundManager.isNumberOfPlayersValid(actualNumber)) return
     val initializeTableContainer = InitializeTableArgumentContainer(controller.numberOfRounds(actualNumber), actualNumber)
-    Http().singleRequest(Post(controller.resulttableHost + "resultTable/table", Json.toJson(initializeTableContainer).toString()))
+    Http().singleRequest(Post(controller.resultTableHost + "resultTable/table", Json.toJson(initializeTableContainer).toString()))
     controller.roundManager = controller.roundManager.configurePlayersAndRounds(actualNumber)
     controller.nextState()
     controller.roundManager = controller.roundManager.nextPlayerInSetup
@@ -199,7 +197,7 @@ case class InGameState(controller: Controller) extends ControllerState {
       val pointsForThisRound = controller.roundManager.pointsForThisRound
       val currentRound = controller.roundManager.currentRound
       val updatePointsArgumentContainer = UpdatePointsArgumentContainer(currentRound, pointsForThisRound)
-      Http().singleRequest(Put(controller.resulttableHost + "resultTable/table", Json.toJson(updatePointsArgumentContainer).toString()))
+      Http().singleRequest(Put(controller.resultTableHost + "resultTable/table", Json.toJson(updatePointsArgumentContainer).toString()))
       controller.roundManager = controller.roundManager.nextRound
     }
     if (controller.roundManager.currentRound == controller.roundManager.numberOfRounds &&
