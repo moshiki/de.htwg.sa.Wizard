@@ -31,5 +31,5 @@ case class ResultTableController @Inject()(var resultTableInterface: ResultTable
 
   override def tableAsString: String = resultTableInterface.toString
 
-  override def playerList: List[String] = resultTableInterface.playerNameList
+  override def playerList: List[String] = resultTableInterface.playerNames
 }

@@ -93,7 +93,7 @@ class ResultTableControllerSpec extends AnyWordSpec with Matchers with MockFacto
       val fileIOStub = stub[FileIOInterface]
       val controller = ResultTableController(resultTableMock, fileIOStub)
       val expectedPlayerList = List("P1", "P2")
-      (resultTableMock.playerNameList _).expects().returning(expectedPlayerList)
+      (resultTableMock.playerNames _).expects().returning(expectedPlayerList)
 
       controller.playerList should be(expectedPlayerList)
     }

@@ -46,5 +46,19 @@ case class DaoSlick() extends DaoInterface {
     resultTableInterface.recreateWithData(latestResultTable._2, latestResultTable._3, pointsVector, playerNamesList)
   }
 
-  override def saveGame(daoResultTable: ResultTableTable): Unit = ???
+  override def saveGame(resultTableInterface: ResultTableInterface): Unit = {
+    resultTableTable += (null, resultTableInterface.roundsToPlay,resultTableInterface.numberOfPlayers)
+    val resultTableIdQuery = resultTableTable.sortBy(_.id.desc).take(1).map(_.id).result.head
+    val resultTableId = Await.result(database.run(resultTableIdQuery), Duration.Inf)
+
+    playerNameTable ++= resultTableInterface.playerNames.map(name => (null, name, resultTableId))
+
+    resultTableInterface.points.foreach(outerVector => {
+      pointsOuterTable += (null, resultTableId)
+      val pointsOuterTableIdQuery = pointsOuterTable.sortBy(_.id.desc).take(1).map(_.id).result.head
+      val outerTableId = Await.result(database.run(pointsOuterTableIdQuery), Duration.Inf)
+
+      pointsInnerTable ++= outerVector.map(point => (null, point, outerTableId))
+    })
+  }
 }

@@ -70,7 +70,7 @@ class ResultTableSpec extends AnyWordSpec with Matchers {
     "be able to return the list of player names" in {
       val playerNames = List("P1", "P2")
       val table = ResultTable(playerNames = playerNames)
-      table.playerNameList should be(playerNames)
+      table.playerNames should be(playerNames)
     }
   }
 }
