@@ -7,12 +7,23 @@ services:
     ports:
       - "1233:1233"
     depends_on:
+      - rootdb
       - cardmodule
       - resulttablemodule
     #command: ["./wait-for-it.sh", "-t", "60", "cardmodule:1234"]
+  rootdb:
+    image: wizard-root-mysql:latest
+    hostname: wizard-root-db
+
   cardmodule:
     image: wizard-cardmodule:latest
     hostname: cardmodule
+
   resulttablemodule:
     image: wizard-resulttablemodule:latest
     hostname: resulttablemodule
+    depends_on:
+      - resulttablemoduledb
+  resulttablemoduledb:
+    image: wizard-resulttablemodule-mysql:latest
+    hostname: wizard-resulttablemodule-db
