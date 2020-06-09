@@ -12,7 +12,7 @@ import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
 import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface._
 import de.htwg.sa.wizard.cardModule.util._
-import de.htwg.se.wizard.model.modelComponent.ModelInterface
+import de.htwg.se.wizard.model.modelComponent.{ModelInterface, Player}
 import play.api.libs.json.{JsValue, Json}
 
 import scala.collection.mutable.ListBuffer

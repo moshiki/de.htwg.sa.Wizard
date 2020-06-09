@@ -21,7 +21,9 @@ trait CardInterface {
   def fromJson(jsValue: JsValue): CardInterface
   def fromXML(node: Node): CardInterface
   def setOwner(player: String): CardInterface
-
+  def typeString: String
+  def value: Option[Int]
+  def colorOption: Option[String]
 }
 
 object CardInterface extends PlayJsonSupport {

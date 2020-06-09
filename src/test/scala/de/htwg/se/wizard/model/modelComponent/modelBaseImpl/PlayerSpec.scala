@@ -1,6 +1,7 @@
 package de.htwg.se.wizard.model.modelComponent.modelBaseImpl
 
 import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.{Card, JesterCard, WizardCard}
+import de.htwg.se.wizard.model.modelComponent.Player
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.Json

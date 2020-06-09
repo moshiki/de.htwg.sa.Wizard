@@ -1,5 +1,6 @@
 package de.htwg.se.wizard.model.modelComponent
 
+import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
 import play.api.libs.json.JsValue
 
 import scala.xml.Elem
@@ -72,4 +73,12 @@ trait ModelInterface {
   def isTimeForNextRound: Boolean
 
   def pointsForThisRound: Vector[Int]
+
+  def players: List[Player]
+
+  def predictionPerRound: List[Int]
+
+  def tricksPerRound: Map[String, Int]
+
+  def playedCards: List[CardInterface]
 }

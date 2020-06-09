@@ -42,4 +42,10 @@ case class WizardCard(owner: Option[String] = None) extends Card(owner) with Car
   }
 
   override def setOwner(player: String): CardInterface = copy(owner = Some(player))
+
+  override def typeString: String = "WizardCard"
+
+  override def value: Option[Int] = None
+
+  override def colorOption: Option[String] = None
 }
