@@ -18,7 +18,11 @@ services:
   cardmodule:
     image: wizard-cardmodule:latest
     hostname: cardmodule
-
+    depends_on:
+      - cardmoduledb
+  cardmoduledb:
+    image: wizard-cardmodule-mysql:latest
+    hostname: wizard-cardmodule-db
 
   resulttablemodule:
     image: wizard-resulttablemodule:latest
