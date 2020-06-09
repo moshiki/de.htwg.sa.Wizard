@@ -81,4 +81,14 @@ trait ModelInterface {
   def tricksPerRound: Map[String, Int]
 
   def playedCards: List[CardInterface]
+
+  def buildModel(numberOfPlayers: Int,
+                 numberOfRounds: Int,
+                 players: List[Player],
+                 currentPlayerNumber: Int,
+                 currentRound: Int,
+                 predictionPerRound: List[Int],
+                 tricksPerRound: Map[String, Int],
+                 playedCards: List[CardInterface],
+                 predictionMode: Boolean): ModelInterface
 }

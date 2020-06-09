@@ -227,6 +227,9 @@ case class RoundManager(numberOfPlayers: Int = 0,
   override def pointsForThisRound: Vector[Int] = players.map(player => {
     val playerIndex = players.indexOf(player)
     RoundManager.calcPoints(predictionPerRound(playerIndex), tricksPerRound(player.name))}).toVector
+
+  override def buildModel(numberOfPlayers: Int, numberOfRounds: Int, players: List[Player], currentPlayerNumber: Int, currentRound: Int, predictionPerRound: List[Int], tricksPerRound: Map[String, Int], playedCards: List[CardInterface], predictionMode: Boolean): ModelInterface =
+    copy(numberOfPlayers, numberOfRounds, players, currentPlayerNumber, currentRound, predictionPerRound, tricksPerRound, playedCards, predictionMode)
 }
 
 object RoundManager {

@@ -36,7 +36,7 @@ case class DaoSlick() extends DaoInterface {
   database.run(setup)
 
   override def load(modelInterface: ModelInterface): (ModelInterface, String) = {
-    val controllerStateQuery = controllerStateTable.sortBy(_.id.desc).take(1).map(_.state).result
+    val controllerStateQuery = controllerStateTable.sortBy(_.id.desc).take(1).map(_.state).result.head
     val controllerStateString = Await.result(database.run(controllerStateQuery), Duration.Inf)
 
     val roundManagerQuery = roundManagerTable.sortBy(_.id.desc).take(1).result.head
@@ -50,7 +50,7 @@ case class DaoSlick() extends DaoInterface {
       val cardTuples = Await.result(database.run(cardQuery), Duration.Inf)
       val cards = cardTuples.map(tuple => CardInterface.buildCard(tuple._2, tuple._3, tuple._4, tuple._5)).toList
       Player(playerTuple._2, cards)
-    })
+    }).toList
 
     val predictionPerRoundQuery = predictionPerRoundTable.filter(_.roundManagerId === roundManagerId).map(_.prediction).result
     val predictionsPerRound = Await.result(database.run(predictionPerRoundQuery), Duration.Inf).toList
@@ -58,14 +58,11 @@ case class DaoSlick() extends DaoInterface {
     val tricksPerRoundQuery = tricksPerRoundTable.filter(_.roundManagerId === roundManagerId).result
     val tricksPerRound = Await.result(database.run(tricksPerRoundQuery), Duration.Inf).map(tuple => tuple._2 -> tuple._3).toMap
 
-    val playedCardsQuery = cardTable.filter(_.roundManagerId === roundManagerId).result
-    //val playedCards = A
+    val playedCardsQuery = cardTable.filter(_.roundManagerId.get === roundManagerId).result // TODO: Eventuell Some(roundManagerId)
+    val playedCards = Await.result(database.run(playedCardsQuery), Duration.Inf).map(tuple => CardInterface.buildCard(tuple._2, tuple._3, tuple._4, tuple._5)).toList
 
-    /*val cardsPerPlayer = playerIds.map(id => {
-      val cardQuery = cardTable.filter(card => card.playerId.get === id).result
-      val cardTuples = Await.result(database.run(cardQuery), Duration.Inf)
-      val cards = cardTuples.map(tuple => CardInterface.buildCard(tuple._2, tuple._3, tuple._4, tuple._5))
-    })*/
+    val newModelInterface = modelInterface.buildModel(roundManagerTuple._2, roundManagerTuple._3, players, roundManagerTuple._4, roundManagerTuple._5, predictionsPerRound, tricksPerRound, playedCards, roundManagerTuple._6)
+    (newModelInterface, controllerStateString)
   }
 
   override def save(modelInterface: ModelInterface, controllerState: String): Unit = {
