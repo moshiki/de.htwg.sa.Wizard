@@ -32,6 +32,18 @@ case class CardModuleHttpServer(controller: CardControllerInterface) extends Pla
       }
     },
     get {
+      path("cardMod" / "save") {
+        controller.save()
+        complete("CardStack saved.")
+      }
+    },
+    get {
+      path("cardMod" / "load") {
+        controller.load()
+        complete("CardStack loaded.")
+      }
+    },
+    get {
       path("cardStack" / "shuffleCardStack") {
         complete(controller.shuffleCardStack())
       }
