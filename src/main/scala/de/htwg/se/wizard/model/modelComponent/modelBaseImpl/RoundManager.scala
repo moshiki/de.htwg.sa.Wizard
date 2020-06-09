@@ -35,7 +35,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
-  val cardmoduleHost: String = "http://" + sys.env.getOrElse("CARDMODULE_HOST", "localhost:1234") +"/"
+  val cardModuleHost: String = "http://" + sys.env.getOrElse("CARDMODULE_HOST", "localhost:1234") +"/"
 
   override def isNumberOfPlayersValid(number: Int): Boolean = Player.checkNumberOfPlayers(number)
 
@@ -62,20 +62,20 @@ case class RoundManager(numberOfPlayers: Int = 0,
     val playersWithCards = players map(player => {
       val playerNumber = players.indexOf(player)
       val cardsForPlayer = {
-        val response = Http().singleRequest(Post(cardmoduleHost + "cardStack/cardsForPlayer",
+        val response = Http().singleRequest(Post(cardModuleHost + "cardStack/cardsForPlayer",
           CardsForPlayerArgumentContainer(playerNumber, currentRound)))
         val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[List[CardInterface]])
         Await.result(jsonStringFuture, Duration(5, TimeUnit.SECONDS))
       }
       val assignedCards = {
-        val response = Http().singleRequest(Post(cardmoduleHost + "cardStack/assignCardsToPlayer",
+        val response = Http().singleRequest(Post(cardModuleHost + "cardStack/assignCardsToPlayer",
           AssignCardsToPlayerArgumentContainer(cardsForPlayer, player.name)))
         val jsonStringFuture = response.flatMap(r => Unmarshal(r.entity).to[List[CardInterface]])
         Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
       }
       player.assignCards(assignedCards)
     })
-    Http().singleRequest(Post(cardmoduleHost + "cardStack/splitCardStack",
+    Http().singleRequest(Post(cardModuleHost + "cardStack/splitCardStack",
       SplitCardStackArgumentContainer(numberOfPlayers, currentRound)))
     copy(players = playersWithCards)
   }
@@ -91,7 +91,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
       return "\nGame Over! Press 'q' to quit.\n"
     }
     if (predictionPerRound.size < numberOfPlayers) {
-      val trumpColorFuture = Http().singleRequest(HttpRequest(uri = cardmoduleHost + "cardStack/trumpColor"))
+      val trumpColorFuture = Http().singleRequest(HttpRequest(uri = cardModuleHost + "cardStack/trumpColor"))
       val jsonStringFuture = trumpColorFuture.flatMap(r => Unmarshal(r.entity).to[Option[String]])
       val trumpColor = Await.result(jsonStringFuture, Duration(1, TimeUnit.SECONDS))
       Player.playerPrediction(players(currentPlayerNumber), currentRound, trumpColor)
@@ -102,7 +102,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   override def nextRound: RoundManager = {
     if (currentPlayerNumber == 0 && currentRound != numberOfRounds && players.last.playerCards.isEmpty) {
-      Http().singleRequest(HttpRequest(uri = cardmoduleHost + "cardStack/shuffleCardStack"))
+      Http().singleRequest(HttpRequest(uri = cardModuleHost + "cardStack/shuffleCardStack"))
       copy(
         predictionPerRound = Nil,
         tricksPerRound = cleanMap,
@@ -122,7 +122,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
 
   def trickInThisCycle: RoundManager = {
 
-      val response = Http().singleRequest(Post(cardmoduleHost + "cardStack/playerOfHighestCard", playedCards.reverse))
+      val response = Http().singleRequest(Post(cardModuleHost + "cardStack/playerOfHighestCard", playedCards.reverse))
     var futurestring: Future[String]= Future("")
     var trickPlayerName = ""
     Try {
@@ -197,7 +197,7 @@ case class RoundManager(numberOfPlayers: Int = 0,
   override def currentPlayersCards: List[String] = players(currentPlayerNumber).playerCards.map(card => card.toString)
 
   override def topOfStackCardString: String = {
-    val response = Http().singleRequest(Get(cardmoduleHost + "cardStack/topOfCardStackString"))
+    val response = Http().singleRequest(Get(cardModuleHost + "cardStack/topOfCardStackString"))
     val topOfStackStringFuture = response.flatMap(r => Unmarshal(r.entity).to[String])
     Await.result(topOfStackStringFuture, Duration(1, TimeUnit.SECONDS))
   }
