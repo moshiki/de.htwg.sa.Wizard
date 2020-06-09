@@ -46,7 +46,7 @@ case class DaoSlick() extends DaoInterface {
     val playerQuery = playerTable.filter(_.roundManagerId === roundManagerId).result
     val players = Await.result(database.run(playerQuery), Duration.Inf).map(playerTuple => {
       val id = playerTuple._1
-      val cardQuery = cardTable.filter(card => card.playerId.get === id).result // TODO: Eventuell Some(id)
+      val cardQuery = cardTable.filter(card => card.playerId === id).result
       val cardTuples = Await.result(database.run(cardQuery), Duration.Inf)
       val cards = cardTuples.map(tuple => CardInterface.buildCard(tuple._2, tuple._3, tuple._4, tuple._5)).toList
       Player(playerTuple._2, cards)
@@ -58,7 +58,7 @@ case class DaoSlick() extends DaoInterface {
     val tricksPerRoundQuery = tricksPerRoundTable.filter(_.roundManagerId === roundManagerId).result
     val tricksPerRound = Await.result(database.run(tricksPerRoundQuery), Duration.Inf).map(tuple => tuple._2 -> tuple._3).toMap
 
-    val playedCardsQuery = cardTable.filter(_.roundManagerId.get === roundManagerId).result // TODO: Eventuell Some(roundManagerId)
+    val playedCardsQuery = cardTable.filter(_.roundManagerId === roundManagerId).result
     val playedCards = Await.result(database.run(playedCardsQuery), Duration.Inf).map(tuple => CardInterface.buildCard(tuple._2, tuple._3, tuple._4, tuple._5)).toList
 
     val newModelInterface = modelInterface.buildModel(roundManagerTuple._2, roundManagerTuple._3, players, roundManagerTuple._4, roundManagerTuple._5, predictionsPerRound, tricksPerRound, playedCards, roundManagerTuple._6)

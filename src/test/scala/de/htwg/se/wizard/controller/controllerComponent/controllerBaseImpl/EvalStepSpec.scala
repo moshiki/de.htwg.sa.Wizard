@@ -1,6 +1,6 @@
 package de.htwg.se.wizard.controller.controllerComponent.controllerBaseImpl
 
-import de.htwg.sa.wizard.resultTable.controller.controllerComponent.ResultTableControllerInterface
+import de.htwg.se.wizard.model.dbComponent.DaoInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.modelBaseImpl.RoundManager
 import org.scalamock.scalatest.MockFactory
@@ -10,8 +10,8 @@ import org.scalatest.wordspec.AnyWordSpec
 class EvalStepSpec extends AnyWordSpec with Matchers with MockFactory {
   "An EvalStep" when {
     val fileIOStub = stub[FileIOInterface]
-    val resultTableControllerStub = stub[ResultTableControllerInterface]
-    val controller = new Controller(RoundManager(), fileIOStub)
+    val daoInterfaceStub = stub[DaoInterface]
+    val controller = new Controller(RoundManager(), fileIOStub, daoInterfaceStub)
     val evalStep = new EvalStep(controller)
     "saves the current controller's state and round manager" in {
       val state = (controller.roundManager, controller.state)
