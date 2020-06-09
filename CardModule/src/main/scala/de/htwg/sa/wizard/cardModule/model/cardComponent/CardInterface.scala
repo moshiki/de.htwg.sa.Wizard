@@ -35,6 +35,14 @@ object CardInterface extends PlayJsonSupport {
     }
   }
 
+  def buildCard(cardType: String, color: Option[String], owner: Option[String], value: Option[Int]): CardInterface = {
+    cardType match {
+      case "DefaultCard" => DefaultCard(color.get, value.get, owner)
+      case "WizardCard" => WizardCard(owner)
+      case "JesterCard" => JesterCard(owner)
+    }
+  }
+
   import play.api.libs.json._
 
   implicit val cardWrites: Writes[CardInterface] = {

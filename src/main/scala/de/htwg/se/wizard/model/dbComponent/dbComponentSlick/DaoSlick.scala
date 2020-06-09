@@ -1,7 +1,8 @@
 package de.htwg.se.wizard.model.dbComponent.dbComponentSlick
 
+import de.htwg.sa.wizard.cardModule.model.cardComponent.CardInterface
 import de.htwg.se.wizard.model.dbComponent.DaoInterface
-import de.htwg.se.wizard.model.modelComponent.ModelInterface
+import de.htwg.se.wizard.model.modelComponent.{ModelInterface, Player}
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api._
 
@@ -34,7 +35,38 @@ case class DaoSlick() extends DaoInterface {
   ).createIfNotExists)
   database.run(setup)
 
-  override def load(modelInterface: ModelInterface): (ModelInterface, String) = ???
+  override def load(modelInterface: ModelInterface): (ModelInterface, String) = {
+    val controllerStateQuery = controllerStateTable.sortBy(_.id.desc).take(1).map(_.state).result
+    val controllerStateString = Await.result(database.run(controllerStateQuery), Duration.Inf)
+
+    val roundManagerQuery = roundManagerTable.sortBy(_.id.desc).take(1).result.head
+    val roundManagerTuple = Await.result(database.run(roundManagerQuery), Duration.Inf)
+    val roundManagerId = roundManagerTuple._1
+
+    val playerQuery = playerTable.filter(_.roundManagerId === roundManagerId).result
+    val players = Await.result(database.run(playerQuery), Duration.Inf).map(playerTuple => {
+      val id = playerTuple._1
+      val cardQuery = cardTable.filter(card => card.playerId.get === id).result // TODO: Eventuell Some(id)
+      val cardTuples = Await.result(database.run(cardQuery), Duration.Inf)
+      val cards = cardTuples.map(tuple => CardInterface.buildCard(tuple._2, tuple._3, tuple._4, tuple._5)).toList
+      Player(playerTuple._2, cards)
+    })
+
+    val predictionPerRoundQuery = predictionPerRoundTable.filter(_.roundManagerId === roundManagerId).map(_.prediction).result
+    val predictionsPerRound = Await.result(database.run(predictionPerRoundQuery), Duration.Inf).toList
+
+    val tricksPerRoundQuery = tricksPerRoundTable.filter(_.roundManagerId === roundManagerId).result
+    val tricksPerRound = Await.result(database.run(tricksPerRoundQuery), Duration.Inf).map(tuple => tuple._2 -> tuple._3).toMap
+
+    val playedCardsQuery = cardTable.filter(_.roundManagerId === roundManagerId).result
+    //val playedCards = A
+
+    /*val cardsPerPlayer = playerIds.map(id => {
+      val cardQuery = cardTable.filter(card => card.playerId.get === id).result
+      val cardTuples = Await.result(database.run(cardQuery), Duration.Inf)
+      val cards = cardTuples.map(tuple => CardInterface.buildCard(tuple._2, tuple._3, tuple._4, tuple._5))
+    })*/
+  }
 
   override def save(modelInterface: ModelInterface, controllerState: String): Unit = {
     Await.ready(database.run(controllerStateTable += (0, controllerState)), Duration.Inf)
