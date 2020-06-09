@@ -21,7 +21,9 @@ trait CardInterface {
   def fromJson(jsValue: JsValue): CardInterface
   def fromXML(node: Node): CardInterface
   def setOwner(player: String): CardInterface
-
+  def typeString: String
+  def value: Option[Int]
+  def colorOption: Option[String]
 }
 
 object CardInterface extends PlayJsonSupport {
@@ -30,6 +32,14 @@ object CardInterface extends PlayJsonSupport {
       case "DefaultCard" => DefaultCard("blue", 1)
       case "WizardCard" => WizardCard()
       case "JesterCard" => JesterCard()
+    }
+  }
+
+  def buildCard(cardType: String, color: Option[String], owner: Option[String], value: Option[Int]): CardInterface = {
+    cardType match {
+      case "DefaultCard" => DefaultCard(color.get, value.get, owner)
+      case "WizardCard" => WizardCard(owner)
+      case "JesterCard" => JesterCard(owner)
     }
   }
 

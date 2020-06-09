@@ -9,6 +9,7 @@ import akka.stream.ActorMaterializer
 import com.google.inject.Inject
 import de.htwg.sa.wizard.resultTable.util.{ArrayArrayIntContainer, InitializeTableArgumentContainer, UpdatePointsArgumentContainer}
 import de.htwg.se.wizard.controller.controllerComponent.ControllerInterface
+import de.htwg.se.wizard.model.dbComponent.DaoInterface
 import de.htwg.se.wizard.model.fileIOComponent.FileIOInterface
 import de.htwg.se.wizard.model.modelComponent.ModelInterface
 import de.htwg.se.wizard.util.UndoManager
@@ -16,9 +17,8 @@ import play.api.libs.json.Json
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContextExecutor}
-import scala.util.{Failure, Success}
 
-class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: FileIOInterface)
+class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: FileIOInterface, daoInterface: DaoInterface)
   extends ControllerInterface {
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
@@ -92,24 +92,21 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   override def playersAsStringList: List[String] = roundManager.playersAsStringList
 
   override def save(): Unit = {
-    fileIOInterface.save(controllerStateAsString, roundManager)
+    daoInterface.save(roundManager, controllerStateAsString)
     Await.ready(Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/save")), Duration.Inf)
     notifyObservers()
   }
 
   override def load(): Unit = {
-    val ret = fileIOInterface.load(roundManager)
-    val returnTuple = ret match {
-      case Failure(_) => return
-      case Success(stateTuple) => stateTuple
-    }
-    state = returnTuple._1 match {
+    val ret = daoInterface.load(roundManager)
+
+    state = ret._2 match {
       case "PreSetupState" => PreSetupState(this)
       case "SetupState" => SetupState(this)
       case "InGameState" => InGameState(this)
       case "GameOverState" => GameOverState(this)
     }
-    roundManager = returnTuple._2
+    roundManager = ret._1
     Await.ready(Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/load")), Duration.Inf)
     notifyObservers()
   }

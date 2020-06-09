@@ -62,4 +62,10 @@ case class DefaultCard(color: String, number: Int, owner: Option[String] = None)
   }
 
   override def setOwner(player: String): CardInterface = copy(owner = Some(player))
+
+  override def typeString: String = "DefaultCard"
+
+  override def value: Option[Int] = Some(number)
+
+  override def colorOption: Option[String] = Some(color)
 }
