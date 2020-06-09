@@ -38,6 +38,7 @@ lazy val root = (project in file(".")).settings(
     case "module-info.class"                           => MergeStrategy.concat
     case "CHANGELOG.adoc"                              => MergeStrategy.concat
     case "unwanted.txt"                                => MergeStrategy.discard
+    case PathList(ps @ _*) if ps.last endsWith ".proto" => MergeStrategy.first
     case x =>
       val oldStrategy = (assemblyMergeStrategy in assembly).value
       oldStrategy(x)
@@ -56,6 +57,7 @@ lazy val ResultTableModule = project.settings(
     case "module-info.class"                           => MergeStrategy.concat
     case "CHANGELOG.adoc"                              => MergeStrategy.concat
     case "unwanted.txt"                                => MergeStrategy.discard
+    case PathList(ps @ _*) if ps.last endsWith ".proto" => MergeStrategy.first
     case x =>
       val oldStrategy = (assemblyMergeStrategy in assembly).value
       oldStrategy(x)
@@ -73,6 +75,7 @@ lazy val CardModule = project.settings(
     case "module-info.class"                           => MergeStrategy.concat
     case "CHANGELOG.adoc"                              => MergeStrategy.concat
     case "unwanted.txt"                                => MergeStrategy.discard
+    case PathList(ps @ _*) if ps.last endsWith ".proto" => MergeStrategy.first
     case x =>
       val oldStrategy = (assemblyMergeStrategy in assembly).value
       oldStrategy(x)
