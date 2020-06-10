@@ -10,7 +10,7 @@ services:
       - rootdb
       - cardmodule
       - resulttablemodule
-    #command: ["./wait-for-it.sh", "-t", "60", "cardmodule:1234"]
+    command: ["./wait-for-it.sh", "-t", "60", "wizard-root-db:3306"]
   rootdb:
     image: wizard-root-mysql:latest
     hostname: wizard-root-db
@@ -30,6 +30,7 @@ services:
     hostname: resulttablemodule
     depends_on:
       - resulttablemoduledb
+    command: ["./wait-for-it.sh", "-t", "60", "wizard-resulttablemodule-db:3306"]
   resulttablemoduledb:
     image: wizard-resulttablemodule-mysql:latest
     hostname: wizard-resulttablemodule-db
