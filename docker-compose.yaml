@@ -10,27 +10,42 @@ services:
       - rootdb
       - cardmodule
       - resulttablemodule
-    command: ["./wait-for-it.sh", "-t", "60", "wizard-root-db:3306"]
+    links:
+      - rootdb
+    environment:
+      - DATABASE_HOST=rootdb:3306
+    command: ["./wait-for-it.sh", "-t", "60", "rootdb:3306"]
+
   rootdb:
     image: wizard-root-mysql:latest
-    hostname: wizard-root-db
+    hostname: rootdb
 
   cardmodule:
     image: wizard-cardmodule:latest
     hostname: cardmodule
     depends_on:
       - cardmoduledb
-    command: ["./wait-for-it.sh", "-t", "60", "wizard-cardmodule-db:3306"]
+    links:
+      - cardmoduledb
+    environment:
+      - DATABASE_HOST=cardmoduledb:3306
+    command: ["./wait-for-it.sh", "-t", "60", "cardmoduledb:3306"]
+
   cardmoduledb:
     image: wizard-cardmodule-mysql:latest
-    hostname: wizard-cardmodule-db
+    hostname: cardmoduledb
 
   resulttablemodule:
     image: wizard-resulttablemodule:latest
     hostname: resulttablemodule
     depends_on:
       - resulttablemoduledb
-    command: ["./wait-for-it.sh", "-t", "60", "wizard-resulttablemodule-db:3306"]
+    links:
+      - resulttablemoduledb
+    environment:
+      - DATABASE_HOST=resulttablemoduledb:3306
+    command: ["./wait-for-it.sh", "-t", "60", "resulttablemoduledb:3306"]
+
   resulttablemoduledb:
     image: wizard-resulttablemodule-mysql:latest
-    hostname: wizard-resulttablemodule-db
+    hostname: resulttablemoduledb
