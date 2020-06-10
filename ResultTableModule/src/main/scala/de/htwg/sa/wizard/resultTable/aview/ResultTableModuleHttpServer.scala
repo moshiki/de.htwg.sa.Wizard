@@ -73,6 +73,8 @@ class ResultTableModuleHttpServer(resultTableControllerInterface: ResultTableCon
     }
   )
 
+  println(s"CardModule Server online at http://0.0.0.0:54251/")
+
   val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "0.0.0.0", 54251)
 
   def shutdownWebServer() : Unit = {
