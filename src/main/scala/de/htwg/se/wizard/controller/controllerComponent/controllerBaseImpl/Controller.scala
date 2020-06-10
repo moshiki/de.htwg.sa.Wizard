@@ -28,6 +28,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   var state: ControllerState = PreSetupState(this)
 
   val resultTableHost: String = "http://" + sys.env.getOrElse("RESULTTABLEMODULE_HOST", "localhost:54251") +"/"
+  val cardModuleHost: String = "http://" + sys.env.getOrElse("CARDMODULE_HOST", "localhost:1234") +"/"
 
   def numberOfRounds(numberOfPlayers: Int): Int = numberOfPlayers match {
     case 3 => 20
@@ -94,6 +95,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   override def save(): Unit = {
     daoInterface.save(roundManager, controllerStateAsString)
     Await.ready(Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/save")), Duration.Inf)
+    Await.ready(Http().singleRequest(HttpRequest(uri = cardModuleHost + "cardMod/save")), Duration.Inf)
     notifyObservers()
   }
 
@@ -108,6 +110,7 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
     }
     roundManager = ret._1
     Await.ready(Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/load")), Duration.Inf)
+    Await.ready(Http().singleRequest(HttpRequest(uri = cardModuleHost + "cardMod/load")), Duration.Inf)
     notifyObservers()
   }
 
