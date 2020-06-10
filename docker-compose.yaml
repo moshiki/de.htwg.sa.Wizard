@@ -20,6 +20,7 @@ services:
     hostname: cardmodule
     depends_on:
       - cardmoduledb
+    command: ["./wait-for-it.sh", "-t", "60", "wizard-cardmodule-db:3306"]
   cardmoduledb:
     image: wizard-cardmodule-mysql:latest
     hostname: wizard-cardmodule-db
