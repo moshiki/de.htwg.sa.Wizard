@@ -14,7 +14,7 @@ services:
       - rootdb
     environment:
       - DATABASE_HOST=rootdb:3306
-    command: ["./wait-for-it.sh", "-t", "60", "rootdb:3306"]
+    command: ["./wait-for-it.sh", "-t", "60", "rootdb:3306", "--", "java -jar Wizard-assembly-SAR-6.jar"]
 
   rootdb:
     image: wizard-root-mysql:latest
@@ -29,7 +29,7 @@ services:
       - cardmoduledb
     environment:
       - DATABASE_HOST=cardmoduledb:3306
-    command: ["./wait-for-it.sh", "-t", "60", "cardmoduledb:3306"]
+    command: ["./wait-for-it.sh", "-t", "60", "cardmoduledb:3306", "--", "java -jar CardModule-assembly-SAR-6.jar"]
 
   cardmoduledb:
     image: wizard-cardmodule-mysql:latest
@@ -44,7 +44,7 @@ services:
       - resulttablemoduledb
     environment:
       - DATABASE_HOST=resulttablemoduledb:3306
-    command: ["./wait-for-it.sh", "-t", "60", "resulttablemoduledb:3306"]
+    command: ["./wait-for-it.sh", "-t", "60", "resulttablemoduledb:3306", "--", "java -jar ResultTableModule-assembly-SAR-6.jar"]
 
   resulttablemoduledb:
     image: wizard-resulttablemodule-mysql:latest
