@@ -11,11 +11,8 @@ services:
       - rootdb
       - cardmodule
       - resulttablemodule
-    #links:
-    #  - rootdb
     environment:
       - DATABASE_HOST=rootdb:3306
-    #command: ["./wait-for-it.sh", "-t", "60", "rootdb:3306", "--", "java -jar Wizard-assembly-SAR-6.jar"]
     command: ./wait-for-it.sh -t 60 rootdb:3306 -- java -jar Wizard-assembly-SAR-6.jar
 
   rootdb:
@@ -28,8 +25,6 @@ services:
     working_dir: /wizard
     depends_on:
       - cardmoduledb
-    #links:
-     # - cardmoduledb
     environment:
       - DATABASE_HOST=cardmoduledb:3306
     command: ./wait-for-it.sh -t 60 cardmoduledb:3306 -- java -jar CardModule-assembly-SAR-6.jar
@@ -40,16 +35,11 @@ services:
 
   resulttablemodule:
     image: wizard-resulttablemodule:latest
-    #hostname: resulttablemodule
-    working_dir: /wizard
+    hostname: resulttablemodule
     depends_on:
       - resulttablemoduledb
-    #links:
-    #  - resulttablemoduledb
     environment:
       - DATABASE_HOST=resulttablemoduledb:3306
-    #command: ["./wait-for-it.sh", "-t", "60", "resulttablemoduledb:3306", "--", "java -jar ResultTableModule-assembly-SAR-6.jar"]
-    #command: ./wait-for-it.sh -t 60 resulttablemoduledb:3306 -- java -jar ResultTableModule-assembly-SAR-6.jar
     command: ./wait-for-it.sh -t 60 resulttablemoduledb:3306 -- java -jar ResultTableModule-assembly-SAR-6.jar
 
   resulttablemoduledb:
