@@ -16,8 +16,10 @@ services:
     command: ./wait-for-it.sh -t 60 rootdb:3306 -- java -jar Wizard-assembly-SAR-6.jar
 
   rootdb:
-    image: wizard-root-mysql:latest
+    image: wizard-mysql:latest
     hostname: rootdb
+    environment:
+      - MYSQL_DATABASE=wizard
 
   cardmodule:
     image: wizard-cardmodule:latest
@@ -30,8 +32,10 @@ services:
     command: ./wait-for-it.sh -t 60 cardmoduledb:3306 -- java -jar CardModule-assembly-SAR-6.jar
 
   cardmoduledb:
-    image: wizard-cardmodule-mysql:latest
+    image: wizard-mysql:latest
     hostname: cardmoduledb
+    environment:
+      - MYSQL_DATABASE=cardmodule
 
   resulttablemodule:
     image: wizard-resulttablemodule:latest
@@ -43,5 +47,7 @@ services:
     command: ./wait-for-it.sh -t 60 resulttablemoduledb:3306 -- java -jar ResultTableModule-assembly-SAR-6.jar
 
   resulttablemoduledb:
-    image: wizard-resulttablemodule-mysql:latest
+    image: wizard-mysql:latest
     hostname: resulttablemoduledb
+    environment:
+      - MYSQL_DATABASE=resultTable
