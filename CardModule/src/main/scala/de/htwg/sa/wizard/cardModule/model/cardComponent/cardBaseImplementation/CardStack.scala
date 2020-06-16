@@ -43,7 +43,7 @@ case class CardStack(cards: List[CardInterface] = {
     } else jesterCards.head.owner.getOrElse("")
   }
   override def fromJson(jsValue: JsValue): CardStackInterface = jsValue.validate[CardStack] match {
-    case e: JsError => println(s"Error parsing CardSTack from Json: ${JsError.toJson(e)}"); this
+    case e: JsError => println(s"Error parsing CardSTack from Json: ${JsError.toJson(e)}"); this.shuffleCards()
     case JsSuccess(value, path) => value
   }
   override def toJson: JsValue = Json.toJson(this)

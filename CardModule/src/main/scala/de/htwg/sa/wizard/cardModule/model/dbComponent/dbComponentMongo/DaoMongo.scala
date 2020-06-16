@@ -31,9 +31,7 @@ case class DaoMongo() extends DaoInterface {
     })
     while(waitOnRes)
       Thread.sleep(10)
-    println(res)
-    var cards: List[CardInterface] = Nil
-    var cardStack = CardStack()
+    val cardStack = CardStack()
     cardStack.fromJson(res)
   }
 

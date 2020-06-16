@@ -37,15 +37,12 @@ case class CardController @Inject()(var cardStackInterface: CardStackInterface, 
   // ToDo: implement save an load methods for card stack
   override def save(): Unit = {
     daoInterface.save(cardStackInterface)
-    /*fileIOInterface.save(cardStackInterface.cards, "CardModule")*/
   }
 
   override def load(): Unit = {
+    println(cardStackInterface)
     cardStackInterface = daoInterface.load()
-    /*cardStackInterface = fileIOInterface.load(cardStackInterface, "CardModule") match {
-      case Failure(_) => return
-      case Success(cardStackInterface) => cardStackInterface
-    }*/
+    println(cardStackInterface)
   }
 
   override def topOfCardStackString(): String = {
