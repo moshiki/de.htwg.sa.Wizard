@@ -15,7 +15,6 @@ case class DaoMongo() extends DaoInterface() {
   val resultTableCollection: MongoCollection[Document] = database.getCollection("resultTable")
 
   override def getLatestGame(resultTableInterface: ResultTableInterface): ResultTableInterface = {
-
     val resultFuture = resultTableCollection.find().first().head()
     val result = Await.result(resultFuture, Duration.Inf)
     val res = Json.parse(result.getString("resultTable"))
@@ -24,7 +23,6 @@ case class DaoMongo() extends DaoInterface() {
 
   override def saveGame(resultTableInterface: ResultTableInterface): Unit = {
     val resultTableDoc: Document = Document("resultTable" -> Json.prettyPrint(resultTableInterface.toJson))
-
     val insertObservable: SingleObservable[InsertOneResult] = resultTableCollection.insertOne(resultTableDoc)
     insertObservable.subscribe(new Observer[InsertOneResult] {
       override def onNext(result: InsertOneResult): Unit = println(s"inserted: $result")
