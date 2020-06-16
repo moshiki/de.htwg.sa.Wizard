@@ -8,10 +8,8 @@ import org.mongodb.scala.result.InsertOneResult
 import play.api.libs.json._
 
 case class DaoMongo() extends DaoInterface {
-
-  //val uri: String = "mongodb+srv://wizard:wizard@localhost:27017/wizard?retryWrites=true&w=majority"
-  //System.setProperty("org.mongodb.async.type", "netty")
-  val client: MongoClient = MongoClient("mongodb://cardmoduledb:27017")
+  val uri: String = "mongodb://" + sys.env.getOrElse("MONGODB_HOST", "localhost")
+  val client: MongoClient = MongoClient(uri)
   val database: MongoDatabase = client.getDatabase("wizard")
   val cardStackCollection: MongoCollection[Document] = database.getCollection("cardStack")
 
