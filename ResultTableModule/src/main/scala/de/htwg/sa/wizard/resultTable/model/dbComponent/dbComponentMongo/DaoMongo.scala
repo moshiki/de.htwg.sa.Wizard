@@ -10,7 +10,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 case class DaoMongo() extends DaoInterface() {
-  val client: MongoClient = MongoClient()
+  val client: MongoClient = MongoClient("mongodb://resulttablemoduledb:27017")
   val database: MongoDatabase = client.getDatabase("wizard")
   val resultTableCollection: MongoCollection[Document] = database.getCollection("resultTable")
 

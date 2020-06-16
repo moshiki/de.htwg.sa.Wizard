@@ -4,8 +4,6 @@ import de.htwg.sa.wizard.cardModule.model.cardComponent.CardStackInterface
 import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.CardStack
 import de.htwg.sa.wizard.cardModule.model.dbComponent.DaoInterface
 import org.mongodb.scala._
-import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.result.InsertOneResult
 import play.api.libs.json._
 
@@ -13,7 +11,7 @@ case class DaoMongo() extends DaoInterface {
 
   //val uri: String = "mongodb+srv://wizard:wizard@localhost:27017/wizard?retryWrites=true&w=majority"
   //System.setProperty("org.mongodb.async.type", "netty")
-  val client: MongoClient = MongoClient()
+  val client: MongoClient = MongoClient("mongodb://cardmoduledb:27017")
   val database: MongoDatabase = client.getDatabase("wizard")
   val cardStackCollection: MongoCollection[Document] = database.getCollection("cardStack")
 
@@ -25,7 +23,7 @@ case class DaoMongo() extends DaoInterface {
 
     observable.subscribe(new Observer[Document] {
       override def onNext(result: Document): Unit = {
-        res = Json.parse(result("cards").toString)
+        res = Json.parse(result.getString("cards"))
       }
 
       override def onError(e: Throwable): Unit = println("failed to load data")

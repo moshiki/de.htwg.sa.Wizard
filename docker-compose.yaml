@@ -13,10 +13,13 @@ services:
       - resulttablemodule
     environment:
       - DATABASE_HOST=rootdb:3306
-    command: ./wait-for-it.sh -t 60 rootdb:3306 -- java -jar Wizard-assembly-SAR-6.jar
+      - MONGODB_HOST=rootdb:27017
+    #command: ./wait-for-it.sh -t 60 rootdb:3306 -- java -jar Wizard-assembly-SAR-6.jar
+    command: ./wait-for-it.sh -t 60 rootdb:27017 -- java -jar Wizard-assembly-SAR-6.jar
 
   rootdb:
-    image: wizard-mysql:latest
+    #image: wizard-mysql:latest
+    image: wizard-mongodb:latest
     hostname: rootdb
     environment:
       - MYSQL_DATABASE=wizard
@@ -29,10 +32,13 @@ services:
       - cardmoduledb
     environment:
       - DATABASE_HOST=cardmoduledb:3306
-    command: ./wait-for-it.sh -t 60 cardmoduledb:3306 -- java -jar CardModule-assembly-SAR-6.jar
+      - MONGODB_HOST=cardmoduledb:27017
+    #command: ./wait-for-it.sh -t 60 cardmoduledb:3306 -- java -jar CardModule-assembly-SAR-6.jar
+    command: ./wait-for-it.sh -t 60 cardmoduledb:27017 -- java -jar CardModule-assembly-SAR-6.jar
 
   cardmoduledb:
-    image: wizard-mysql:latest
+    #image: wizard-mysql:latest
+    image: wizard-mongodb:latest
     hostname: cardmoduledb
     environment:
       - MYSQL_DATABASE=cardmodule
@@ -44,10 +50,13 @@ services:
       - resulttablemoduledb
     environment:
       - DATABASE_HOST=resulttablemoduledb:3306
-    command: ./wait-for-it.sh -t 60 resulttablemoduledb:3306 -- java -jar ResultTableModule-assembly-SAR-6.jar
+      - MONGODB_HOST=resulttablemoduledb:27017
+    #command: ./wait-for-it.sh -t 60 resulttablemoduledb:3306 -- java -jar ResultTableModule-assembly-SAR-6.jar
+    command: ./wait-for-it.sh -t 60 resulttablemoduledb:27017 -- java -jar ResultTableModule-assembly-SAR-6.jar
 
   resulttablemoduledb:
-    image: wizard-mysql:latest
+    #image: wizard-mysql:latest
+    image: wizard-mongodb:latest
     hostname: resulttablemoduledb
     environment:
       - MYSQL_DATABASE=resultTable
