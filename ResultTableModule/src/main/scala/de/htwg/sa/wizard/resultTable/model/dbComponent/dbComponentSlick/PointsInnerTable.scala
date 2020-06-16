@@ -1,4 +1,4 @@
-package de.htwg.sa.wizard.resultTable.model.dbComponent.dbComponentSlickImplementation
+package de.htwg.sa.wizard.resultTable.model.dbComponent.dbComponentSlick
 
 import slick.jdbc.MySQLProfile.api._
 

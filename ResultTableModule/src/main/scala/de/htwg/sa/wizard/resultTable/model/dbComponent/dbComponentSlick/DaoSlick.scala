@@ -1,4 +1,4 @@
-package de.htwg.sa.wizard.resultTable.model.dbComponent.dbComponentSlickImplementation
+package de.htwg.sa.wizard.resultTable.model.dbComponent.dbComponentSlick
 
 import de.htwg.sa.wizard.resultTable.model.dbComponent.DaoInterface
 import de.htwg.sa.wizard.resultTable.model.resultTableComponent.ResultTableInterface

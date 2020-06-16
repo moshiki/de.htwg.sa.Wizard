@@ -2,7 +2,7 @@ package de.htwg.sa.wizard.resultTable
 
 import com.google.inject.AbstractModule
 import de.htwg.sa.wizard.resultTable.model.dbComponent.DaoInterface
-import de.htwg.sa.wizard.resultTable.model.dbComponent.dbComponentSlickImplementation.DaoSlick
+import de.htwg.sa.wizard.resultTable.model.dbComponent.dbComponentMongo.DaoMongo
 import de.htwg.sa.wizard.resultTable.model.fileIOComponent.FileIOInterface
 import de.htwg.sa.wizard.resultTable.model.fileIOComponent.FileIOJSON.FileIO
 import de.htwg.sa.wizard.resultTable.model.resultTableComponent.ResultTableInterface
@@ -13,6 +13,6 @@ class ResultTableModule extends AbstractModule with ScalaModule {
   override def configure(): Unit = {
     bind[ResultTableInterface].toInstance(ResultTable())
     bind[FileIOInterface].to[FileIO]
-    bind[DaoInterface].to[DaoSlick]
+    bind[DaoInterface].to[DaoMongo]
   }
 }
