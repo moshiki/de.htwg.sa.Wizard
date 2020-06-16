@@ -2,6 +2,7 @@ package de.htwg.sa.wizard.cardModule.model.cardComponent
 
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.{DefaultCard, JesterCard, WizardCard}
+import play.api.libs.json.JsValue
 
 trait CardStackInterface {
   val cards: List[CardInterface]
@@ -9,6 +10,8 @@ trait CardStackInterface {
   def split(numberOfPlayers: Int, currentRound: Int): CardStackInterface
   def topOfCardStackString: String
   def playerOfHighestCard(cardList: List[CardInterface], color: Option[String]): String
+  def fromJson(jsValue: JsValue): CardStackInterface
+  def toJson: JsValue
 }
 
 /*

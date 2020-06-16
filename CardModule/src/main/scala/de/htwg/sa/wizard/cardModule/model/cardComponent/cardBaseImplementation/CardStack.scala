@@ -1,6 +1,7 @@
 package de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation
 
 import de.htwg.sa.wizard.cardModule.model.cardComponent.{CardInterface, CardStackInterface}
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 
 import scala.util.Random
 
@@ -41,9 +42,20 @@ case class CardStack(cards: List[CardInterface] = {
       else cardsWithHighestNumberInNormalCards.head.owner.getOrElse("")
     } else jesterCards.head.owner.getOrElse("")
   }
+  override def fromJson(jsValue: JsValue): CardStackInterface = jsValue.validate[CardStack] match {
+    case e: JsError => println(s"Error parsing CardSTack from Json: ${JsError.toJson(e)}"); this
+    case JsSuccess(value, path) => value
+  }
+  override def toJson: JsValue = Json.toJson(this)
 }
 
-object CardStack { // TODO: Remove as dont needed anymore
+object CardStack {
+
+  import play.api.libs.json._
+  implicit val cardStackFormat: OFormat[CardStack] = Json.format[CardStack]
+  implicit val cardStackWrites: Writes[CardStack] = Json.writes[CardStack]
+  implicit val cardStackReads: Reads[CardStack] = Json.reads[CardStack]
+
   def playerOfHighestCard(cardList: List[CardInterface], color: Option[String]): Option[String] = {
     val actualColor = color match {
       case Some(color) => color
