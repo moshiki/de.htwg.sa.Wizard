@@ -1,7 +1,12 @@
-import de.htwg.sa.wizard.cardModule.controller.controllerComponent.controllerBaseImplementation.CardController
+import de.htwg.sa.wizard.cardModule.model.cardComponent.CardStackInterface
 import de.htwg.sa.wizard.cardModule.model.cardComponent.cardBaseImplementation.CardStack
-import de.htwg.sa.wizard.cardModule.model.fileIOComponent.FileIOJSON.FileIO
-import play.api.libs.json._
+import play.api.libs.json.Json
 
-val controller = CardController(CardStack(), FileIO())
-controller.trumpColor
+val cs = CardStack()
+
+println(cs.cards)
+
+val json = Json.toJson(cs.cards)
+
+println(Json.prettyPrint(json))
+
