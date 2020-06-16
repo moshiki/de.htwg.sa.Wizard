@@ -3,8 +3,11 @@ package de.htwg.sa.wizard.resultTable.model.dbComponent.dbComponentMongo
 import de.htwg.sa.wizard.resultTable.model.dbComponent.DaoInterface
 import de.htwg.sa.wizard.resultTable.model.resultTableComponent.ResultTableInterface
 import org.mongodb.scala.result.InsertOneResult
-import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase, Observable, Observer, SingleObservable}
-import play.api.libs.json.{JsBoolean, JsValue, Json}
+import org.mongodb.scala.{Document, MongoClient, MongoCollection, MongoDatabase, Observer, SingleObservable}
+import play.api.libs.json.Json
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 case class DaoMongo() extends DaoInterface() {
   val client: MongoClient = MongoClient()
@@ -12,27 +15,10 @@ case class DaoMongo() extends DaoInterface() {
   val resultTableCollection: MongoCollection[Document] = database.getCollection("resultTable")
 
   override def getLatestGame(resultTableInterface: ResultTableInterface): ResultTableInterface = {
-    var waitOnRes = true
-    var res: JsValue = JsBoolean(true)
-    val observable: Observable[Document] = resultTableCollection.find().first()
 
-    observable.subscribe(new Observer[Document] {
-      override def onNext(result: Document): Unit = {
-        res = Json.parse(result("resultTable").toString)
-      }
-
-      override def onError(e: Throwable): Unit = println("failed to load data")
-
-      override def onComplete(): Unit = {
-        waitOnRes = false
-        println("completed loading data")
-      }
-    })
-
-    while(waitOnRes)
-      Thread.sleep(10)
-
-    println(res)
+    val resultFuture = resultTableCollection.find().first().head()
+    val result = Await.result(resultFuture, Duration.Inf)
+    val res = Json.parse(result.getString("resultTable"))
     resultTableInterface.fromJson(res)
   }
 
