@@ -9,7 +9,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 case class DaoSlick() extends DaoInterface {
-  val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3306") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "resultTable") + "?serverTimezone=UTC"
+  val databaseUrl: String = "jdbc:mysql://" + sys.env.getOrElse("DATABASE_HOST", "localhost:3306") + "/" + sys.env.getOrElse("MYSQL_DATABASE", "wizard") + "?serverTimezone=UTC"
   val databaseUser: String = sys.env.getOrElse("MYSQL_USER", "wizard")
   val databasePassword: String = sys.env.getOrElse("MYSQL_PASSWORD", "wizard")
 

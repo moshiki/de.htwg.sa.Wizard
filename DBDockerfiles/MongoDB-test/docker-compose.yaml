@@ -1,0 +1,7 @@
+version: '3.0'
+services:
+  wizard-db:
+    image: wizard-db:v4
+    ports:
+      - "3306:3306"
+      - "27017:27017"

@@ -19,7 +19,7 @@ services:
 
   rootdb:
     #image: wizard-mysql:latest
-    image: wizard-mongodb:latest
+    image: wizard-db:latest
     hostname: rootdb
     environment:
       - MYSQL_DATABASE=wizard
@@ -38,10 +38,10 @@ services:
 
   cardmoduledb:
     #image: wizard-mysql:latest
-    image: wizard-mongodb:latest
+    image: wizard-db:latest
     hostname: cardmoduledb
     environment:
-      - MYSQL_DATABASE=cardmodule
+      - MYSQL_DATABASE=wizard
 
   resulttablemodule:
     image: wizard-resulttablemodule:latest
@@ -56,7 +56,7 @@ services:
 
   resulttablemoduledb:
     #image: wizard-mysql:latest
-    image: wizard-mongodb:latest
+    image: wizard-db:latest
     hostname: resulttablemoduledb
     environment:
-      - MYSQL_DATABASE=resultTable
+      - MYSQL_DATABASE=wizard

@@ -40,7 +40,9 @@ case class CardController @Inject()(var cardStackInterface: CardStackInterface, 
   }
 
   override def load(): Unit = {
+    println(cardStackInterface)
     cardStackInterface = daoInterface.load()
+    println(cardStackInterface)
   }
 
   override def topOfCardStackString(): String = {
