@@ -100,17 +100,20 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   }
 
   override def load(): Unit = {
-    val ret = daoInterface.load(roundManager)
+    val returnFuture = daoInterface.load(roundManager)
 
-    state = ret._2 match {
+    Await.ready(Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/load")), Duration.Inf)
+    Await.ready(Http().singleRequest(HttpRequest(uri = cardModuleHost + "cardMod/load")), Duration.Inf)
+
+    val loadedState = Await.result(returnFuture, Duration.Inf)
+
+    state = loadedState._2 match {
       case "PreSetupState" => PreSetupState(this)
       case "SetupState" => SetupState(this)
       case "InGameState" => InGameState(this)
       case "GameOverState" => GameOverState(this)
     }
-    roundManager = ret._1
-    Await.ready(Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/load")), Duration.Inf)
-    Await.ready(Http().singleRequest(HttpRequest(uri = cardModuleHost + "cardMod/load")), Duration.Inf)
+    roundManager = loadedState._1
     notifyObservers()
   }
 

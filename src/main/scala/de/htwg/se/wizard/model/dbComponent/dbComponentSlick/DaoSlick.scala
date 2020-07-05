@@ -6,7 +6,8 @@ import de.htwg.se.wizard.model.modelComponent.{ModelInterface, Player}
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.MySQLProfile.api._
 
-import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 
 case class DaoSlick() extends DaoInterface {
@@ -38,7 +39,7 @@ case class DaoSlick() extends DaoInterface {
   ).createIfNotExists)
   database.run(setup)
 
-  override def load(modelInterface: ModelInterface): (ModelInterface, String) = {
+  override def load(modelInterface: ModelInterface): Future[(ModelInterface, String)] = Future {
     val controllerStateQuery = controllerStateTable.sortBy(_.id.desc).take(1).map(_.state).result.head
     val controllerStateString = Await.result(database.run(controllerStateQuery), Duration.Inf)
 
@@ -68,7 +69,7 @@ case class DaoSlick() extends DaoInterface {
     (newModelInterface, controllerStateString)
   }
 
-  override def save(modelInterface: ModelInterface, controllerState: String): Unit = {
+  override def save(modelInterface: ModelInterface, controllerState: String): Future[Unit] = Future {
     Await.ready(database.run(controllerStateTable += (0, controllerState)), Duration.Inf)
     Await.ready(database.run(roundManagerTable += (0, modelInterface.numberOfPlayers, modelInterface.numberOfRounds, modelInterface.currentPlayerNumber, modelInterface.currentRound, modelInterface.predictionMode)), Duration.Inf)
 
