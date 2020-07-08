@@ -93,18 +93,19 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
   override def playersAsStringList: List[String] = roundManager.playersAsStringList
 
   override def save(): Unit = {
-    daoInterface.save(roundManager, controllerStateAsString)
-    Await.ready(Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/save")), Duration.Inf)
-    Await.ready(Http().singleRequest(HttpRequest(uri = cardModuleHost + "cardMod/save")), Duration.Inf)
+    val saveFuture = daoInterface.save(roundManager, controllerStateAsString)
+    val resultTableSaveFuture = Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/save"))
+    val cardModuleSaveFuture = Http().singleRequest(HttpRequest(uri = cardModuleHost + "cardMod/save"))
+    Await.ready(resultTableSaveFuture, Duration.Inf)
+    Await.ready(cardModuleSaveFuture, Duration.Inf)
+    Await.ready(saveFuture, Duration.Inf)
     notifyObservers()
   }
 
   override def load(): Unit = {
     val returnFuture = daoInterface.load(roundManager)
-
-    Await.ready(Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/load")), Duration.Inf)
-    Await.ready(Http().singleRequest(HttpRequest(uri = cardModuleHost + "cardMod/load")), Duration.Inf)
-
+    val resultTableLoadFuture = Http().singleRequest(HttpRequest(uri = resultTableHost + "resultTable/load"))
+    val cardModuleLoadFuture = Http().singleRequest(HttpRequest(uri = cardModuleHost + "cardMod/load"))
     val loadedState = Await.result(returnFuture, Duration.Inf)
 
     state = loadedState._2 match {
@@ -114,6 +115,9 @@ class Controller @Inject()(var roundManager: ModelInterface, fileIOInterface: Fi
       case "GameOverState" => GameOverState(this)
     }
     roundManager = loadedState._1
+
+    Await.ready(resultTableLoadFuture, Duration.Inf)
+    Await.ready(cardModuleLoadFuture, Duration.Inf)
     notifyObservers()
   }
 
